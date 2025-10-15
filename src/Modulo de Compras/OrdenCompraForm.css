@@ -1,0 +1,366 @@
+/* Estilos para el formulario de Orden de Compra */
+
+.orden-compra-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f8f9fa;
+  min-height: 100vh;
+}
+
+.orden-compra-form {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+}
+
+.orden-compra-form h2 {
+  color: #2c3e50;
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+.form-section {
+  margin-bottom: 30px;
+  padding: 20px;
+  border: 1px solid #e9ecef;
+  border-radius: 6px;
+  background-color: #fafbfc;
+}
+
+.form-section h3 {
+  color: #34495e;
+  margin-bottom: 20px;
+  font-size: 1.3rem;
+  font-weight: 500;
+  border-bottom: 2px solid #3498db;
+  padding-bottom: 8px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #2c3e50;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  transition: border-color 0.3s ease;
+  box-sizing: border-box;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+.form-group input.readonly {
+  background-color: #f8f9fa;
+  color: #6c757d;
+  cursor: not-allowed;
+}
+
+/* Estilos para la sección de productos */
+.producto-form {
+  background-color: white;
+  padding: 20px;
+  border-radius: 6px;
+  border: 1px solid #dee2e6;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr auto;
+  gap: 15px;
+  align-items: end;
+}
+
+@media (max-width: 768px) {
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .form-row .form-group {
+    margin-bottom: 15px;
+  }
+}
+
+/* Botones */
+.btn-agregar,
+.btn-eliminar,
+.btn-primary,
+.btn-secondary {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+}
+
+.btn-agregar {
+  background-color: #27ae60;
+  color: white;
+  height: 42px;
+  margin-top: 25px;
+}
+
+.btn-agregar:hover {
+  background-color: #219a52;
+  transform: translateY(-1px);
+}
+
+.btn-eliminar {
+  background-color: #e74c3c;
+  color: white;
+  padding: 6px 12px;
+  font-size: 12px;
+}
+
+.btn-eliminar:hover {
+  background-color: #c0392b;
+}
+
+.btn-primary {
+  background-color: #3498db;
+  color: white;
+  padding: 15px 30px;
+  font-size: 16px;
+}
+
+.btn-primary:hover {
+  background-color: #2980b9;
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background-color: #95a5a6;
+  color: white;
+  padding: 15px 30px;
+  font-size: 16px;
+  margin-left: 15px;
+}
+
+.btn-secondary:hover {
+  background-color: #7f8c8d;
+}
+
+/* Tabla de productos */
+.productos-lista {
+  margin-top: 20px;
+}
+
+.productos-lista table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.productos-lista table th,
+.productos-lista table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+.productos-lista table th {
+  background-color: #34495e;
+  color: white;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+}
+
+.productos-lista table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+.productos-lista table td:last-child {
+  text-align: center;
+}
+
+.total-section {
+  margin-top: 20px;
+  padding: 20px;
+  background-color: #ecf0f1;
+  border-radius: 6px;
+  text-align: right;
+}
+
+.total-section h3 {
+  color: #2c3e50;
+  font-size: 1.5rem;
+  margin: 0;
+  font-weight: 600;
+}
+
+/* Acciones del formulario */
+.form-actions {
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+  text-align: center;
+}
+
+/* Responsive design */
+@media (max-width: 992px) {
+  .orden-compra-container {
+    padding: 15px;
+  }
+  
+  .orden-compra-form {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .form-actions {
+    text-align: center;
+  }
+  
+  .form-actions .btn-secondary {
+    margin-left: 0;
+    margin-top: 10px;
+    display: block;
+    width: 100%;
+  }
+  
+  .btn-primary {
+    width: 100%;
+  }
+  
+  .productos-lista table {
+    font-size: 14px;
+  }
+  
+  .productos-lista table th,
+  .productos-lista table td {
+    padding: 8px 4px;
+  }
+}
+
+@media (max-width: 576px) {
+  .orden-compra-form h2 {
+    font-size: 1.5rem;
+  }
+  
+  .form-section {
+    padding: 15px;
+  }
+  
+  .form-section h3 {
+    font-size: 1.1rem;
+  }
+  
+  /* Hacer la tabla scrolleable en móviles */
+  .productos-lista {
+    overflow-x: auto;
+  }
+  
+  .productos-lista table {
+    min-width: 600px;
+  }
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.form-section {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Estados de validación */
+.form-group input:invalid,
+.form-group select:invalid {
+  border-color: #e74c3c;
+}
+
+.form-group input:valid,
+.form-group select:valid {
+  border-color: #27ae60;
+}
+
+/* Mejoras de accesibilidad */
+.form-group label::after {
+  content: "";
+}
+
+.form-group label[for="proveedor"]::after,
+.form-group label[for="fechaEntrega"]::after {
+  content: " *";
+  color: #e74c3c;
+  font-weight: bold;
+}
+
+/* Loading states (para futuro uso con API) */
+.loading {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.loading::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px;
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Estilos para mensajes de error (futuro uso) */
+.error-message {
+  color: #e74c3c;
+  font-size: 14px;
+  margin-top: 5px;
+  display: block;
+}
+
+.success-message {
+  color: #27ae60;
+  font-size: 14px;
+  margin-top: 5px;
+  display: block;
+}
