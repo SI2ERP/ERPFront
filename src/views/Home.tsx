@@ -20,24 +20,42 @@ const Home = () => {
                         backgroundColor: '#f8f9fa',
                         boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
                     }}>
-                        <h3 style={{ color: '#2c3e50', marginBottom: '15px' }}> Módulo de Compras</h3>
+                        <h3 style={{ color: '#2c3e50', marginBottom: '15px' }}>📦 Módulo de Compras</h3>
                         <p style={{ marginBottom: '15px', color: '#666' }}>
                             Gestiona las órdenes de compra, proveedores y procesos de adquisición.
                         </p>
-                        <Link 
-                            to="/compras/nueva-orden"
-                            style={{ 
-                                display: 'inline-block',
-                                padding: '10px 20px',
-                                backgroundColor: '#3498db',
-                                color: 'white',
-                                textDecoration: 'none',
-                                borderRadius: '4px',
-                                transition: 'background-color 0.3s'
-                            }}
-                        >
-                            Nueva Orden de Compra
-                        </Link>
+                        <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                            <Link 
+                                to="/compras/nueva-orden"
+                                style={{ 
+                                    display: 'inline-block',
+                                    padding: '10px 20px',
+                                    backgroundColor: '#3498db',
+                                    color: 'white',
+                                    textDecoration: 'none',
+                                    borderRadius: '4px',
+                                    transition: 'background-color 0.3s',
+                                    fontSize: '14px'
+                                }}
+                            >
+                                Nueva Orden de Compra
+                            </Link>
+                            <Link 
+                                to="/compras/ordenes"
+                                style={{ 
+                                    display: 'inline-block',
+                                    padding: '10px 20px',
+                                    backgroundColor: '#27ae60',
+                                    color: 'white',
+                                    textDecoration: 'none',
+                                    borderRadius: '4px',
+                                    transition: 'background-color 0.3s',
+                                    fontSize: '14px'
+                                }}
+                            >
+                                Ver Órdenes
+                            </Link>
+                        </div>
                     </div>
 
                     {/* Otros módulos (placeholders) */}

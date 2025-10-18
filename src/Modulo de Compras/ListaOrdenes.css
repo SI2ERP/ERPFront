@@ -1,0 +1,372 @@
+/* Estilos para la Lista de Órdenes de Compra */
+
+.lista-ordenes-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f8f9fa;
+  min-height: 100vh;
+  color: #2c3e50;
+}
+
+.lista-ordenes-container * {
+  color: inherit;
+}
+
+.lista-ordenes-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding: 20px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.lista-ordenes-header h2 {
+  color: #2c3e50;
+  margin: 0;
+  font-size: 1.8rem;
+}
+
+.acciones-header {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.filtro-estado {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  background-color: white;
+  color: #2c3e50 !important;
+  font-weight: 500;
+}
+
+.filtro-estado option {
+  color: #2c3e50 !important;
+  background-color: white !important;
+}
+
+.btn-actualizar {
+  padding: 8px 16px;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.btn-actualizar:hover {
+  background-color: #2980b9;
+}
+
+.loading-container {
+  text-align: center;
+  padding: 60px 20px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.mensaje-error {
+  background-color: #fee;
+  border: 1px solid #fcc;
+  border-radius: 6px;
+  padding: 15px;
+  margin-bottom: 20px;
+  color: #c00;
+  text-align: center;
+  font-weight: 500;
+}
+
+.sin-ordenes {
+  text-align: center;
+  padding: 60px 20px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  color: #666;
+}
+
+.tabla-container {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  margin-bottom: 30px;
+}
+
+.tabla-ordenes {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tabla-ordenes th {
+  background-color: #34495e;
+  color: white;
+  padding: 15px 12px;
+  text-align: left;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+}
+
+.tabla-ordenes td {
+  padding: 12px;
+  border-bottom: 1px solid #eee;
+  vertical-align: middle;
+  color: #2c3e50;
+  font-weight: 500;
+}
+
+.tabla-ordenes tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+.tabla-ordenes tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Estilo especial para el ID */
+.tabla-ordenes td:first-child {
+  font-weight: 700;
+  color: #3498db;
+  background-color: #f8f9fa;
+}
+
+/* Estados de las órdenes */
+.estado-badge {
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: white !important;
+}
+
+.estado-pendiente {
+  background-color: #f39c12;
+  color: white !important;
+  border: 1px solid #e67e22;
+}
+
+.estado-aprobada {
+  background-color: #3498db;
+  color: white !important;
+  border: 1px solid #2980b9;
+}
+
+.estado-rechazada {
+  background-color: #e74c3c;
+  color: white !important;
+  border: 1px solid #c0392b;
+}
+
+.estado-completada {
+  background-color: #27ae60;
+  color: white !important;
+  border: 1px solid #229954;
+}
+
+/* Acciones */
+.acciones-columna {
+  white-space: nowrap;
+}
+
+.acciones-columna button {
+  margin-right: 8px;
+  padding: 6px 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  transition: all 0.3s;
+}
+
+.btn-aprobar {
+  background-color: #27ae60;
+  color: white;
+}
+
+.btn-aprobar:hover {
+  background-color: #219a52;
+  transform: translateY(-1px);
+}
+
+.btn-rechazar {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.btn-rechazar:hover {
+  background-color: #c0392b;
+  transform: translateY(-1px);
+}
+
+.btn-completar {
+  background-color: #3498db;
+  color: white;
+}
+
+.btn-completar:hover {
+  background-color: #2980b9;
+  transform: translateY(-1px);
+}
+
+.btn-eliminar {
+  background-color: #95a5a6;
+  color: white;
+  font-size: 11px;
+}
+
+.btn-eliminar:hover {
+  background-color: #7f8c8d;
+  transform: translateY(-1px);
+}
+
+/* Estadísticas */
+.estadisticas {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.estadistica {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.estadistica .numero {
+  display: block;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 8px;
+}
+
+.estadistica .etiqueta {
+  display: block;
+  font-size: 14px;
+  color: #7f8c8d;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 500;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .lista-ordenes-container {
+    padding: 15px;
+  }
+  
+  .tabla-container {
+    overflow-x: auto;
+  }
+  
+  .tabla-ordenes {
+    min-width: 800px;
+  }
+}
+
+@media (max-width: 768px) {
+  .lista-ordenes-header {
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+  }
+  
+  .acciones-header {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .filtro-estado,
+  .btn-actualizar {
+    width: 100%;
+  }
+  
+  .estadisticas {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .tabla-ordenes th,
+  .tabla-ordenes td {
+    padding: 8px 6px;
+    font-size: 13px;
+  }
+  
+  .acciones-columna button {
+    display: block;
+    width: 100%;
+    margin-bottom: 4px;
+    margin-right: 0;
+  }
+}
+
+@media (max-width: 576px) {
+  .lista-ordenes-header h2 {
+    font-size: 1.4rem;
+  }
+  
+  .estadisticas {
+    grid-template-columns: 1fr;
+  }
+  
+  .tabla-ordenes {
+    font-size: 12px;
+  }
+  
+  .estado-badge {
+    font-size: 10px;
+    padding: 3px 8px;
+  }
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.tabla-container,
+.estadisticas,
+.lista-ordenes-header {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Estados de hover mejorados */
+.tabla-ordenes tbody tr {
+  transition: background-color 0.2s ease;
+}
+
+.acciones-columna button {
+  transition: all 0.2s ease;
+}
+
+.estadistica {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.estadistica:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}

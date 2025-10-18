@@ -1,3 +1,57 @@
+/* Mensajes de error y éxito */
+.mensaje-error {
+  background-color: #fee;
+  border: 1px solid #fcc;
+  border-radius: 6px;
+  padding: 15px;
+  margin-bottom: 20px;
+  color: #c00;
+}
+
+.mensaje-error h4 {
+  margin: 0 0 10px 0;
+  color: #c00;
+}
+
+.mensaje-error ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.mensaje-exito {
+  background-color: #efe;
+  border: 1px solid #cfc;
+  border-radius: 6px;
+  padding: 15px;
+  margin-bottom: 20px;
+  color: #060;
+  font-weight: 500;
+}
+
+/* Estados de carga */
+.loading-select,
+.loading-products {
+  padding: 12px;
+  background-color: #f8f9fa;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  color: #666;
+  font-style: italic;
+  text-align: center;
+}
+
+/* Botones deshabilitados */
+.btn-agregar:disabled,
+.btn-primary:disabled,
+.btn-secondary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-primary:disabled {
+  background-color: #95a5a6;
+}
+
 /* Estilos para el formulario de Orden de Compra */
 
 .orden-compra-container {
@@ -186,6 +240,11 @@
   border-bottom: 1px solid #eee;
 }
 
+.productos-lista table td {
+  color: #2c3e50;
+  font-weight: 500;
+}
+
 .productos-lista table th {
   background-color: #34495e;
   color: white;
@@ -197,6 +256,10 @@
 
 .productos-lista table tbody tr:hover {
   background-color: #f8f9fa;
+}
+
+.productos-lista table tbody tr:hover td {
+  color: #2c3e50;
 }
 
 .productos-lista table td:last-child {
