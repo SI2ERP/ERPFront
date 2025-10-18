@@ -17,7 +17,14 @@ export const HomeAdmin_rrhh = () => {
           </button>
         </li>
         <li>Aceptar o rechazar solicitudes de vacaciones</li>
-        <li>Ver estado/datos de los empleados</li>
+        <li>
+          <button
+            className="text-blue-600 underline"
+            onClick={() => navigate("/rrhh/estado-empleados")}
+          >
+            Ver estado/datos de los empleados
+          </button>
+        </li>
       </ul>
     </div>
   );
