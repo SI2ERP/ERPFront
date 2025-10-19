@@ -2,6 +2,7 @@ import { Grid, Typography, type SxProps, type Theme } from "@mui/material"
 import { NumberInput } from "../NumberInput"
 import type { OrderItem } from "../../types/Order"
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle'
+import { IVA } from "../../utils/IVA"
 
 export type OrderItemTableProps = {
     orderItems : OrderItem[] 
@@ -46,7 +47,7 @@ export default function OrderItemTable({ orderItems, handleQuantityItem, handleR
                     <Typography variant='body2'>${item.product.price}</Typography>
                   </Grid>
                   <Grid size={2} sx={gridRowStyle}>
-                    <Typography variant='body2'>${(item.product.price * (import.meta.env.VITE_IVA) * item.quantity).toFixed(2)}</Typography>
+                    <Typography variant='body2'>${(item.product.price * (IVA) * item.quantity).toFixed(2)}</Typography>
                   </Grid>
                   <Grid size={1} sx={{...gridRowStyle, cursor: 'pointer' }}>
                     <RemoveCircleIcon onClick={() => handleRemoveItem(item.product.id)} sx={{ cursor: 'pointer', '&:hover': { color: '#d11f25' } }} />

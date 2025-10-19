@@ -7,6 +7,7 @@ import { PaymentMethod, type PaymentMethodType, type OrderItem, PaymentTerm, typ
 import AdditionalDetails from "./AdditionalDetails"
 import TotalOrder from "./TotalOrder"
 import AddItemForm from "./AddItemForm"
+import { IVA } from "../../utils/IVA"
 
 
 
@@ -57,7 +58,7 @@ export default function OrderForm({ stateOpen } : OrderFormProps) {
 
     const iva = useMemo(() => {
         return orderItems.reduce((acc, item) => {
-            const cost = acc + (item.product.price * item.quantity)*(import.meta.env.VITE_IVA)
+            const cost = acc + (item.product.price * item.quantity)*(IVA)
             return Math.fround(cost*100)/100
         }, 0)
     }, [orderItems])
@@ -119,11 +120,11 @@ export default function OrderForm({ stateOpen } : OrderFormProps) {
             </DialogTitle>
 
             <DialogContent sx={dialogContentStyle}>
-                <Snackbar anchorOrigin={{ vertical: 'top', horizontal: 'center' }} open={snackbar.open} autoHideDuration={6000} onClose={() => (setSnackbar(prev => ({...prev, open : false})))}>
+                <Snackbar anchorOrigin={{ vertical: 'top', horizontal: 'right' }} open={snackbar.open} autoHideDuration={6000} onClose={() => (setSnackbar(prev => ({...prev, open : false})))}>
                     <Alert
                         onClose={() => (setSnackbar(prev => ({...prev, open : false})))}
                         severity={snackbar.severity}
-                        variant="filled"
+                        variant='standard'
                         sx={{ width: '100%' }}
                     >
                        {snackbar.msg}
