@@ -87,7 +87,7 @@ const OrdenCompraForm: React.FC = () => {
       setEmpleados(empleadosData);
       setCargando(prev => ({ ...prev, empleados: false }));
 
-      // Cargar productos
+      // Cargar productos (inicialmente todos)
       setCargando(prev => ({ ...prev, productos: true }));
       const productosData = await comprasService.obtenerProductos();
       setProductosDisponibles(productosData.filter(p => p.estado)); // Solo productos activos
@@ -99,11 +99,65 @@ const OrdenCompraForm: React.FC = () => {
     }
   };
 
-  const handleProveedorChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  // Nueva función para cargar productos específicos de un proveedor
+  const cargarProductosDeProveedor = async (idProveedor: number) => {
+    setCargando(prev => ({ ...prev, productos: true }));
+    try {
+      const productosData = await comprasService.obtenerProductosPorProveedor(idProveedor);
+      setProductosDisponibles(productosData.filter(p => p.estado));
+      setErrores([]); // Limpiar errores previos
+      
+      // Mostrar mensaje informativo si no hay productos
+      if (productosData.length === 0) {
+        setMensaje('Este proveedor no tiene productos disponibles');
+      } else {
+        setMensaje('');
+      }
+    } catch (error) {
+      console.error('Error al cargar productos del proveedor:', error);
+      setErrores(['Error al cargar los productos del proveedor seleccionado']);
+      setProductosDisponibles([]);
+    } finally {
+      setCargando(prev => ({ ...prev, productos: false }));
+    }
+  };
+
+  const handleProveedorChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const idProveedor = parseInt(e.target.value) || null;
+    
     setFormulario({
       ...formulario,
-      id_proveedor: parseInt(e.target.value) || null,
+      id_proveedor: idProveedor,
+      // Limpiar productos cuando cambia el proveedor
+      productos: [],
+      total: 0,
     });
+
+    // Limpiar producto temporal
+    setNuevoProducto({
+      id_producto: 0,
+      nombre: '',
+      cantidad: 1,
+      precio_unitario: 0,
+      subtotal: 0,
+    });
+
+    // Cargar productos específicos del proveedor seleccionado
+    if (idProveedor) {
+      await cargarProductosDeProveedor(idProveedor);
+    } else {
+      // Si no hay proveedor seleccionado, cargar todos los productos
+      setCargando(prev => ({ ...prev, productos: true }));
+      try {
+        const productosData = await comprasService.obtenerProductos();
+        setProductosDisponibles(productosData.filter(p => p.estado));
+      } catch (error) {
+        console.error('Error al cargar productos:', error);
+        setErrores(['Error al cargar los productos']);
+      } finally {
+        setCargando(prev => ({ ...prev, productos: false }));
+      }
+    }
   };
 
   const handleEmpleadoChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -123,13 +177,16 @@ const OrdenCompraForm: React.FC = () => {
     if (campo === 'id_producto') {
       const productoSeleccionado = productosDisponibles.find(p => p.id_producto === parseInt(valor.toString()));
       if (productoSeleccionado) {
+        // Usar precio del proveedor si está disponible, sino usar precio base
+        const precioAUsar = productoSeleccionado.precio_proveedor || productoSeleccionado.precio_unitario;
+        
         nuevoProductoActualizado = {
           ...nuevoProductoActualizado,
           id_producto: productoSeleccionado.id_producto,
           nombre: productoSeleccionado.nombre,
-          precio_unitario: productoSeleccionado.precio_unitario,
-          // Recalcular subtotal con el nuevo precio y la cantidad actual
-          subtotal: (nuevoProductoActualizado.cantidad || 0) * productoSeleccionado.precio_unitario,
+          precio_unitario: precioAUsar,
+          // Recalcular subtotal con el precio correcto y la cantidad actual
+          subtotal: (nuevoProductoActualizado.cantidad || 0) * precioAUsar,
         };
       }
     }
@@ -411,6 +468,31 @@ const OrdenCompraForm: React.FC = () => {
           {/* Agregar Productos */}
           <div className="form-section">
             <h3>Agregar Productos</h3>
+            
+            {/* Mensaje informativo sobre filtrado por proveedor */}
+            {formulario.id_proveedor && (
+              <div className="info-proveedor">
+                <div className="info-box">
+                  <i>ℹ️</i>
+                  <span>
+                    Se muestran únicamente los productos que vende este proveedor. 
+                    Los precios mostrados son los precios específicos de este proveedor.
+                  </span>
+                </div>
+              </div>
+            )}
+            
+            {!formulario.id_proveedor && (
+              <div className="info-proveedor warning">
+                <div className="info-box warning">
+                  <i>⚠️</i>
+                  <span>
+                    Debe seleccionar un proveedor antes de agregar productos.
+                  </span>
+                </div>
+              </div>
+            )}
+            
             {cargando.productos ? (
               <div className="loading-products">Cargando productos...</div>
             ) : (
@@ -422,13 +504,23 @@ const OrdenCompraForm: React.FC = () => {
                       id="nombreProducto"
                       value={nuevoProducto.id_producto || ''}
                       onChange={(e) => handleProductoChange('id_producto', parseInt(e.target.value) || 0)}
+                      disabled={!formulario.id_proveedor}
                     >
-                      <option value="">Seleccione un producto...</option>
-                      {productosDisponibles.map((producto) => (
-                        <option key={producto.id_producto} value={producto.id_producto}>
-                          {producto.nombre} - {formatearPrecio(producto.precio_unitario)}
-                        </option>
-                      ))}
+                      <option value="">
+                        {!formulario.id_proveedor 
+                          ? "Primero seleccione un proveedor..." 
+                          : "Seleccione un producto..."
+                        }
+                      </option>
+                      {productosDisponibles.map((producto) => {
+                        const precioMostrar = producto.precio_proveedor || producto.precio_unitario;
+                        
+                        return (
+                          <option key={producto.id_producto} value={producto.id_producto}>
+                            {producto.nombre} - {formatearPrecio(precioMostrar)}
+                          </option>
+                        );
+                      })}
                     </select>
                   </div>
                   

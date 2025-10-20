@@ -25,6 +25,7 @@ export interface Producto {
   precio_unitario: number;
   cantidad: number;
   estado: boolean;
+  precio_proveedor?: number; // Precio específico del proveedor cuando se filtra
 }
 
 export interface DetalleCompra {
@@ -328,6 +329,28 @@ class ComprasService {
       return this.handleResponse<Producto[]>(response);
     } catch (error) {
       console.error('Error al obtener productos:', error);
+      throw error;
+    }
+  }
+
+  // Nuevo método: Obtener productos filtrados por proveedor
+  async obtenerProductosPorProveedor(idProveedor: number): Promise<Producto[]> {
+    try {
+      const response = await fetch(`${this.baseURL}/products?supplier_id=${idProveedor}`);
+      return this.handleResponse<Producto[]>(response);
+    } catch (error) {
+      console.error('Error al obtener productos por proveedor:', error);
+      throw error;
+    }
+  }
+
+  // Nuevo método alternativo: Obtener productos de un proveedor específico
+  async obtenerProductosDeProveedor(idProveedor: number): Promise<{proveedor: Proveedor, productos: Producto[]}> {
+    try {
+      const response = await fetch(`${this.baseURL}/suppliers/${idProveedor}/products`);
+      return this.handleResponse<{proveedor: Proveedor, productos: Producto[]}>(response);
+    } catch (error) {
+      console.error('Error al obtener productos del proveedor:', error);
       throw error;
     }
   }
