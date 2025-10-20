@@ -24,11 +24,24 @@ a:hover {
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
-  justify-content: center;
   min-width: 320px;
   min-height: 100vh;
+  line-height: 1.6;
+}
+
+/* Contenedor principal de la aplicación */
+#root {
+  min-height: 100vh;
+}
+
+.app {
+  min-height: 100vh;
+}
+
+.app main {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
 }
 
 h1 {

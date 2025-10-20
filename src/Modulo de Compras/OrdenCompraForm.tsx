@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './OrdenCompraForm.css';
 import comprasService, { 
   type Proveedor, 
   type Empleado, 
   type Producto, 
-  type DetalleCompra, 
   type OrdenCompra 
 } from './comprasService';
 
@@ -20,7 +20,6 @@ interface EstadoFormulario {
   id_proveedor: number | null;
   id_empleado: number | null;
   productos: ProductoEnOrden[];
-  observaciones: string;
   total: number;
 }
 
@@ -32,12 +31,14 @@ interface EstadosCarga {
 }
 
 const OrdenCompraForm: React.FC = () => {
+  // Hook para navegación
+  const navigate = useNavigate();
+
   // Estados principales
   const [formulario, setFormulario] = useState<EstadoFormulario>({
     id_proveedor: null,
     id_empleado: null,
     productos: [],
-    observaciones: '',
     total: 0,
   });
 
@@ -249,7 +250,6 @@ const OrdenCompraForm: React.FC = () => {
         id_proveedor: null,
         id_empleado: null,
         productos: [],
-        observaciones: '',
         total: 0,
       });
 
@@ -270,7 +270,6 @@ const OrdenCompraForm: React.FC = () => {
         id_proveedor: null,
         id_empleado: null,
         productos: [],
-        observaciones: '',
         total: 0,
       });
       setNuevoProducto({
@@ -297,6 +296,32 @@ const OrdenCompraForm: React.FC = () => {
   return (
     <div className="orden-compra-container">
       <div className="orden-compra-form">
+        {/* Botón de navegación */}
+        <div style={{ marginBottom: '20px', textAlign: 'left' }}>
+          <button
+            type="button"
+            onClick={() => navigate('/')}
+            style={{
+              padding: '10px 20px',
+              backgroundColor: '#95a5a6',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontSize: '14px',
+              fontWeight: '500',
+              transition: 'background-color 0.3s',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px'
+            }}
+            onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#7f8c8d'}
+            onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#95a5a6'}
+          >
+            ← Volver al Menú Principal
+          </button>
+        </div>
+        
         <h2>Nueva Orden de Compra</h2>
         
         {/* Mensajes de error */}
@@ -482,21 +507,6 @@ const OrdenCompraForm: React.FC = () => {
               </div>
             </div>
           )}
-
-          {/* Información Adicional */}
-          <div className="form-section">
-            <h3>Información Adicional</h3>
-            <div className="form-group">
-              <label htmlFor="observaciones">Observaciones</label>
-              <textarea
-                id="observaciones"
-                rows={4}
-                value={formulario.observaciones}
-                onChange={(e) => setFormulario({ ...formulario, observaciones: e.target.value })}
-                placeholder="Ingrese observaciones adicionales..."
-              />
-            </div>
-          </div>
 
           {/* Botones de Acción */}
           <div className="form-actions">

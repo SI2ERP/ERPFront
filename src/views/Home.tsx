@@ -3,14 +3,34 @@ import { Link } from "react-router-dom";
 
 const Home = () => {
     return(
-        <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
-            <h1>Bienvenido al ERP</h1>
-            <p>Sistema de Gestión Empresarial</p>
+        <div style={{ 
+            maxWidth: '1000px', 
+            margin: '0 auto', 
+            padding: '20px', 
+            fontFamily: 'Arial, sans-serif',
+            backgroundColor: '#f8f9fa',
+            minHeight: '100vh'
+        }}>
+            <div style={{ 
+                backgroundColor: 'white', 
+                padding: '30px', 
+                borderRadius: '8px', 
+                boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                marginBottom: '20px'
+            }}>
+                <h1 style={{ color: '#2c3e50', textAlign: 'center', marginBottom: '10px' }}>Bienvenido al ERP</h1>
+                <p style={{ textAlign: 'center', color: '#666', fontSize: '18px' }}>Sistema de Gestión Empresarial</p>
+            </div>
             
-            <div style={{ marginTop: '30px' }}>
-                <h2>Módulos Disponibles</h2>
+            <div style={{ 
+                backgroundColor: 'white', 
+                padding: '30px', 
+                borderRadius: '8px', 
+                boxShadow: '0 2px 4px rgba(0,0,0,0.1)' 
+            }}>
+                <h2 style={{ color: '#2c3e50', textAlign: 'center', marginBottom: '30px' }}>Módulos Disponibles</h2>
                 
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px', marginTop: '20px' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px', marginTop: '20px' }}>
                     
                     {/* Módulo de Compras */}
                     <div style={{ 
@@ -20,7 +40,7 @@ const Home = () => {
                         backgroundColor: '#f8f9fa',
                         boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
                     }}>
-                        <h3 style={{ color: '#2c3e50', marginBottom: '15px' }}>📦 Módulo de Compras</h3>
+                        <h3 style={{ color: '#2c3e50', marginBottom: '15px' }}> Módulo de Compras</h3>
                         <p style={{ marginBottom: '15px', color: '#666' }}>
                             Gestiona las órdenes de compra, proveedores y procesos de adquisición.
                         </p>

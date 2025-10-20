@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import comprasService, { type OrdenCompraResponse } from './comprasService';
 import './ListaOrdenes.css';
 
 const ListaOrdenes: React.FC = () => {
+  // Hook para navegación
+  const navigate = useNavigate();
+  
   const [ordenes, setOrdenes] = useState<OrdenCompraResponse[]>([]);
   const [cargando, setCargando] = useState<boolean>(true);
   const [error, setError] = useState<string>('');
@@ -105,6 +109,32 @@ const ListaOrdenes: React.FC = () => {
 
   return (
     <div className="lista-ordenes-container">
+      {/* Botón de navegación */}
+      <div style={{ marginBottom: '20px', textAlign: 'left' }}>
+        <button
+          type="button"
+          onClick={() => navigate('/')}
+          style={{
+            padding: '10px 20px',
+            backgroundColor: '#95a5a6',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer',
+            fontSize: '14px',
+            fontWeight: '500',
+            transition: 'background-color 0.3s',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '8px'
+          }}
+          onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#7f8c8d'}
+          onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#95a5a6'}
+        >
+          ← Volver al Menú Principal
+        </button>
+      </div>
+      
       <div className="lista-ordenes-header">
         <h2>Órdenes de Compra</h2>
         <div className="acciones-header">
