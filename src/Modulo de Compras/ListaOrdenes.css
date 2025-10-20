@@ -1,12 +1,12 @@
 /* Estilos para la Lista de Órdenes de Compra */
 
 .lista-ordenes-container {
-  max-width: 1000px;
-  margin: 0 auto;
+  width: 100%;
   padding: 20px;
   background-color: #f8f9fa;
   min-height: 100vh;
   color: #2c3e50;
+  box-sizing: border-box;
 }
 
 .lista-ordenes-container * {
@@ -143,37 +143,44 @@
 
 /* Estados de las órdenes */
 .estado-badge {
-  padding: 4px 12px;
-  border-radius: 12px;
-  font-size: 12px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  padding: 6px 14px !important;
+  border-radius: 12px !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
   color: white !important;
+  opacity: 1 !important;
+  text-shadow: none !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2) !important;
 }
 
 .estado-pendiente {
-  background-color: #f39c12;
+  background-color: #ff9500 !important;
   color: white !important;
-  border: 1px solid #e67e22;
+  border: 1px solid #ff8c00 !important;
+  font-weight: 700 !important;
 }
 
 .estado-aprobada {
-  background-color: #3498db;
+  background-color: #27ae60 !important;
   color: white !important;
-  border: 1px solid #2980b9;
+  border: 1px solid #229954 !important;
+  font-weight: 700 !important;
 }
 
 .estado-rechazada {
-  background-color: #e74c3c;
+  background-color: #e74c3c !important;
   color: white !important;
-  border: 1px solid #c0392b;
+  border: 1px solid #c0392b !important;
+  font-weight: 700 !important;
 }
 
 .estado-completada {
-  background-color: #27ae60;
+  background-color: #3498db !important;
   color: white !important;
-  border: 1px solid #229954;
+  border: 1px solid #2980b9 !important;
+  font-weight: 700 !important;
 }
 
 /* Acciones */
@@ -190,6 +197,16 @@
   font-size: 12px;
   font-weight: 500;
   transition: all 0.3s;
+}
+
+.btn-ver {
+  background-color: #3498db;
+  color: white;
+}
+
+.btn-ver:hover {
+  background-color: #2980b9;
+  transform: translateY(-1px);
 }
 
 .btn-aprobar {
@@ -235,10 +252,11 @@
 
 /* Estadísticas */
 .estadisticas {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 30px;
   margin-top: 20px;
+  padding: 0 20px;
 }
 
 .estadistica {
@@ -247,6 +265,8 @@
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   text-align: center;
+  min-width: 120px;
+  flex-shrink: 0;
 }
 
 .estadistica .numero {
@@ -282,6 +302,10 @@
 }
 
 @media (max-width: 768px) {
+  .lista-ordenes-container {
+    padding: 10px;
+  }
+  
   .lista-ordenes-header {
     flex-direction: column;
     gap: 15px;
@@ -299,7 +323,8 @@
   }
   
   .estadisticas {
-    grid-template-columns: repeat(2, 1fr);
+    flex-wrap: wrap;
+    gap: 15px;
   }
   
   .tabla-ordenes th,
@@ -317,12 +342,18 @@
 }
 
 @media (max-width: 576px) {
+  .lista-ordenes-container {
+    padding: 5px;
+  }
+  
   .lista-ordenes-header h2 {
     font-size: 1.4rem;
   }
   
   .estadisticas {
-    grid-template-columns: 1fr;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
   }
   
   .tabla-ordenes {
@@ -330,8 +361,9 @@
   }
   
   .estado-badge {
-    font-size: 10px;
-    padding: 3px 8px;
+    font-size: 10px !important;
+    padding: 4px 10px !important;
+    font-weight: 700 !important;
   }
 }
 

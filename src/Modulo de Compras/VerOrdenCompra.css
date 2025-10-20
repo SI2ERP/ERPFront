@@ -1,0 +1,371 @@
+/* Contenedor principal */
+.ver-orden-container {
+  width: 100%;
+  padding: 20px;
+  background-color: #f8f9fa;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+/* Header de la orden */
+.ver-orden-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.header-left h1 {
+  margin: 0;
+  color: #343a40;
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+}
+
+/* Botón volver */
+.btn-volver {
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.btn-volver:hover {
+  background-color: #5a6268;
+}
+
+/* Contenido principal */
+.orden-contenido {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Secciones de información */
+.seccion-info {
+  background-color: white;
+  padding: 25px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.seccion-info h2 {
+  margin: 0 0 20px 0;
+  color: #495057;
+  font-size: 1.3rem;
+  font-weight: 600;
+  border-bottom: 2px solid #e9ecef;
+  padding-bottom: 10px;
+}
+
+/* Grid de información */
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.info-item label {
+  font-weight: 600;
+  color: #6c757d;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.info-item span {
+  color: #343a40;
+  font-size: 1rem;
+  padding: 8px 0;
+}
+
+.total-orden {
+  font-weight: 700;
+  font-size: 1.2rem !important;
+  color: #28a745 !important;
+}
+
+/* Estados */
+.estado-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+}
+
+.estado-pendiente {
+  background-color: #ff9500;
+  color: white;
+  border: 1px solid #ff8c00;
+}
+
+.estado-aprobada {
+  background-color: #27ae60;
+  color: white;
+  border: 1px solid #229954;
+}
+
+.estado-rechazada {
+  background-color: #e74c3c;
+  color: white;
+  border: 1px solid #c0392b;
+}
+
+.estado-completada {
+  background-color: #3498db;
+  color: white;
+  border: 1px solid #2980b9;
+}
+
+/* Sección de productos */
+.seccion-productos {
+  background-color: white;
+  padding: 25px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.seccion-productos h2 {
+  margin: 0 0 20px 0;
+  color: #495057;
+  font-size: 1.3rem;
+  font-weight: 600;
+  border-bottom: 2px solid #e9ecef;
+  padding-bottom: 10px;
+}
+
+/* Tabla de productos */
+.tabla-productos-container {
+  overflow-x: auto;
+  margin-bottom: 20px;
+}
+
+.tabla-productos {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.tabla-productos th {
+  background-color: #f8f9fa;
+  color: #495057;
+  font-weight: 600;
+  padding: 12px 10px;
+  text-align: left;
+  border-bottom: 2px solid #dee2e6;
+  position: sticky;
+  top: 0;
+}
+
+.tabla-productos td {
+  padding: 12px 10px;
+  border-bottom: 1px solid #dee2e6;
+  vertical-align: top;
+}
+
+.tabla-productos tr:hover {
+  background-color: #f8f9fa;
+}
+
+/* Columnas específicas */
+.producto-nombre {
+  font-weight: 600;
+  color: #495057;
+  min-width: 150px;
+}
+
+.producto-descripcion {
+  color: #6c757d;
+  font-size: 0.9rem;
+  max-width: 200px;
+  word-wrap: break-word;
+}
+
+.cantidad {
+  text-align: center;
+  font-weight: 600;
+  color: #495057;
+  min-width: 80px;
+}
+
+.precio-unitario,
+.subtotal {
+  text-align: right;
+  font-weight: 600;
+  color: #495057;
+  min-width: 100px;
+}
+
+.subtotal {
+  color: #28a745;
+}
+
+/* Total final */
+.total-final {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 15px;
+  border-top: 2px solid #dee2e6;
+}
+
+.total-row {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  background-color: #f8f9fa;
+  padding: 15px 20px;
+  border-radius: 8px;
+}
+
+.total-label {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #495057;
+}
+
+.total-valor {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #28a745;
+}
+
+/* Estados de carga y error */
+.cargando,
+.error-mensaje {
+  background-color: white;
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.cargando p {
+  color: #6c757d;
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+.error-mensaje h3 {
+  color: #dc3545;
+  margin: 0 0 15px 0;
+}
+
+.error-mensaje p {
+  color: #6c757d;
+  margin: 0 0 20px 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .ver-orden-container {
+    padding: 10px;
+  }
+
+  .ver-orden-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+    padding: 15px;
+  }
+
+  .header-left {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .header-left h1 {
+    font-size: 1.5rem;
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .seccion-info,
+  .seccion-productos {
+    padding: 20px 15px;
+  }
+
+  .tabla-productos {
+    font-size: 0.85rem;
+  }
+
+  .tabla-productos th,
+  .tabla-productos td {
+    padding: 8px 6px;
+  }
+
+  .producto-descripcion {
+    max-width: 150px;
+  }
+
+  .total-row {
+    flex-direction: column;
+    text-align: center;
+    gap: 5px;
+  }
+}
+
+@media (max-width: 576px) {
+  .ver-orden-container {
+    padding: 5px;
+  }
+  
+  .ver-orden-header {
+    padding: 10px;
+  }
+
+  .header-left h1 {
+    font-size: 1.3rem;
+  }
+
+  .seccion-info h2,
+  .seccion-productos h2 {
+    font-size: 1.1rem;
+  }
+
+  .tabla-productos {
+    font-size: 0.8rem;
+  }
+
+  .tabla-productos th,
+  .tabla-productos td {
+    padding: 6px 4px;
+  }
+
+  .estado-badge {
+    font-size: 0.7rem;
+    padding: 3px 6px;
+  }
+}

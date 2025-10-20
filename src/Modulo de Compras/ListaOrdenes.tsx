@@ -87,8 +87,7 @@ const ListaOrdenes: React.FC = () => {
       case 'pendiente': return 'estado-pendiente';
       case 'aprobada': return 'estado-aprobada';
       case 'rechazada': return 'estado-rechazada';
-      case 'recibida': return 'estado-completada'; // Mapear 'recibida' como completada
-      case 'completada': return 'estado-completada'; // Por compatibilidad
+      case 'completada': return 'estado-completada';
       default: return '';
     }
   };
@@ -147,7 +146,6 @@ const ListaOrdenes: React.FC = () => {
             <option value="pendiente">Pendiente</option>
             <option value="aprobada">Aprobada</option>
             <option value="rechazada">Rechazada</option>
-            <option value="recibida">Recibida</option>
           </select>
           <button 
             onClick={cargarOrdenes}
@@ -173,7 +171,6 @@ const ListaOrdenes: React.FC = () => {
           <table className="tabla-ordenes">
             <thead>
               <tr>
-                <th>ID</th>
                 <th>Proveedor</th>
                 <th>Empleado</th>
                 <th>Fecha</th>
@@ -184,7 +181,6 @@ const ListaOrdenes: React.FC = () => {
             <tbody>
               {ordenesFiltradas.map((orden) => (
                 <tr key={orden.id_orden_compra}>
-                  <td>#{orden.id_orden_compra}</td>
                   <td>{orden.proveedor_nombre || 'N/A'}</td>
                   <td>{orden.empleado_nombre || 'N/A'}</td>
                   <td>{formatearFecha(orden.fecha)}</td>
@@ -194,6 +190,13 @@ const ListaOrdenes: React.FC = () => {
                     </span>
                   </td>
                   <td className="acciones-columna">
+                    <button
+                      onClick={() => navigate(`/compras/ordenes/ver/${orden.id_orden_compra}`)}
+                      className="btn-ver"
+                      title="Ver orden completa"
+                    >
+                      👁 Ver
+                    </button>
                     {orden.estado.toLowerCase() === 'pendiente' && (
                       <>
                         <button
@@ -211,15 +214,6 @@ const ListaOrdenes: React.FC = () => {
                           ✗ Rechazar
                         </button>
                       </>
-                    )}
-                    {orden.estado.toLowerCase() === 'aprobada' && (
-                      <button
-                        onClick={() => cambiarEstadoOrden(orden.id_orden_compra, 'recibida')}
-                        className="btn-completar"
-                        title="Marcar como recibida"
-                      >
-                        ✓ Marcar Recibida
-                      </button>
                     )}
                     <button
                       onClick={() => eliminarOrden(orden.id_orden_compra)}
@@ -245,10 +239,6 @@ const ListaOrdenes: React.FC = () => {
         <div className="estadistica">
           <span className="numero">{ordenes.filter(o => o.estado.toLowerCase() === 'aprobada').length}</span>
           <span className="etiqueta">Aprobadas</span>
-        </div>
-        <div className="estadistica">
-          <span className="numero">{ordenes.filter(o => ['recibida', 'completada'].includes(o.estado.toLowerCase())).length}</span>
-          <span className="etiqueta">Recibidas</span>
         </div>
         <div className="estadistica">
           <span className="numero">{ordenes.length}</span>

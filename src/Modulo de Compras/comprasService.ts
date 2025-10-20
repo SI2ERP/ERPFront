@@ -42,7 +42,7 @@ export interface OrdenCompra {
   id_proveedor: number;
   id_empleado: number;
   fecha?: string;
-  estado?: 'pendiente' | 'aprobada' | 'rechazada' | 'completada';
+  estado?: 'PENDIENTE' | 'APROBADA' | 'RECHAZADA' | 'COMPLETADA';
   proveedor_nombre?: string;
   empleado_nombre?: string;
   detalle: DetalleCompra[];
@@ -53,10 +53,45 @@ export interface OrdenCompraResponse {
   id_proveedor: number;
   id_empleado: number;
   fecha: string;
-  estado: 'pendiente' | 'aprobada' | 'rechazada' | 'completada';
+  estado: 'PENDIENTE' | 'APROBADA' | 'RECHAZADA' | 'COMPLETADA';
   proveedor_nombre?: string;
   empleado_nombre?: string;
   detalle?: DetalleCompra[];
+}
+
+// Interfaces para el endpoint de información completa
+export interface ProveedorCompleto {
+  nombre: string;
+  rut: string;
+  direccion: string;
+  telefono: string;
+}
+
+export interface EmpleadoCompleto {
+  nombre: string;
+  email: string;
+}
+
+export interface DetalleCompletoCompra {
+  id_detalle_compra: number;
+  id_producto: number;
+  producto_nombre: string;
+  producto_descripcion: string;
+  cantidad: number;
+  precio_unitario: number;
+  subtotal: number;
+}
+
+export interface OrdenCompraCompleta {
+  id_orden_compra: number;
+  id_proveedor: number;
+  id_empleado: number;
+  fecha: string;
+  estado: string;
+  total_orden: number;
+  proveedor: ProveedorCompleto;
+  empleado: EmpleadoCompleto;
+  detalle: DetalleCompletoCompra[];
 }
 
 // Servicio para manejar todas las APIs del módulo de compras
@@ -144,6 +179,16 @@ class ComprasService {
       return this.handleResponse<OrdenCompraResponse[]>(response);
     } catch (error) {
       console.error('Error al obtener órdenes:', error);
+      throw error;
+    }
+  }
+
+  async obtenerOrdenesCompletas(): Promise<OrdenCompraCompleta[]> {
+    try {
+      const response = await fetch(`${this.baseURL}/purchases/info-completa`);
+      return this.handleResponse<OrdenCompraCompleta[]>(response);
+    } catch (error) {
+      console.error('Error al obtener órdenes completas:', error);
       throw error;
     }
   }

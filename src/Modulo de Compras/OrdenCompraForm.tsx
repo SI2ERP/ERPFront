@@ -129,7 +129,7 @@ const OrdenCompraForm: React.FC = () => {
           nombre: productoSeleccionado.nombre,
           precio_unitario: productoSeleccionado.precio_unitario,
           // Recalcular subtotal con el nuevo precio y la cantidad actual
-          subtotal: nuevoProductoActualizado.cantidad * productoSeleccionado.precio_unitario,
+          subtotal: (nuevoProductoActualizado.cantidad || 0) * productoSeleccionado.precio_unitario,
         };
       }
     }
@@ -137,7 +137,9 @@ const OrdenCompraForm: React.FC = () => {
     // Calcular subtotal automáticamente cuando cambia la cantidad
     // El precio unitario no se puede modificar manualmente
     if (campo === 'cantidad') {
-      nuevoProductoActualizado.subtotal = nuevoProductoActualizado.cantidad * nuevoProductoActualizado.precio_unitario;
+      const cantidad = typeof valor === 'string' && valor === '' ? 0 : (valor as number);
+      nuevoProductoActualizado.cantidad = cantidad;
+      nuevoProductoActualizado.subtotal = cantidad * nuevoProductoActualizado.precio_unitario;
     }
 
     setNuevoProducto(nuevoProductoActualizado);
@@ -356,6 +358,7 @@ const OrdenCompraForm: React.FC = () => {
                   id="proveedor"
                   value={formulario.id_proveedor || ''}
                   onChange={handleProveedorChange}
+                  disabled={formulario.productos.length > 0}
                   required
                 >
                   <option value="">Seleccione un proveedor...</option>
@@ -365,6 +368,11 @@ const OrdenCompraForm: React.FC = () => {
                     </option>
                   ))}
                 </select>
+              )}
+              {formulario.productos.length > 0 && (
+                <div className="campo-bloqueado-info">
+                  <small>⚠️ No se puede cambiar el proveedor una vez agregados los productos. Para cambiar, elimine todos los productos primero.</small>
+                </div>
               )}
             </div>
           </div>
@@ -381,6 +389,7 @@ const OrdenCompraForm: React.FC = () => {
                   id="empleado"
                   value={formulario.id_empleado || ''}
                   onChange={handleEmpleadoChange}
+                  disabled={formulario.productos.length > 0}
                   required
                 >
                   <option value="">Seleccione un empleado...</option>
@@ -390,6 +399,11 @@ const OrdenCompraForm: React.FC = () => {
                     </option>
                   ))}
                 </select>
+              )}
+              {formulario.productos.length > 0 && (
+                <div className="campo-bloqueado-info">
+                  <small>⚠️ No se puede cambiar el empleado una vez agregados los productos. Para cambiar, elimine todos los productos primero.</small>
+                </div>
               )}
             </div>
           </div>
@@ -424,8 +438,15 @@ const OrdenCompraForm: React.FC = () => {
                       type="number"
                       id="cantidad"
                       min="1"
-                      value={nuevoProducto.cantidad}
-                      onChange={(e) => handleProductoChange('cantidad', parseInt(e.target.value) || 1)}
+                      value={nuevoProducto.cantidad || ''}
+                      onChange={(e) => {
+                        const valor = e.target.value;
+                        if (valor === '') {
+                          handleProductoChange('cantidad', '');
+                        } else {
+                          handleProductoChange('cantidad', parseInt(valor) || 1);
+                        }
+                      }}
                     />
                   </div>
                   
