@@ -1,6 +1,6 @@
 import { Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle, Snackbar, type AlertColor, type SxProps, type Theme } from "@mui/material"
 import OrderHeader from "./OrderHeader"
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import type { Client } from "../../types/Client"
 import OrderItemTable from "./OrderItemTable"
 import { PaymentMethod, type PaymentMethodType, type OrderItem, PaymentTerm, type PaymentTermType, type OrderFormError } from "../../types/Order"
@@ -8,6 +8,8 @@ import AdditionalDetails from "./AdditionalDetails"
 import TotalOrder from "./TotalOrder"
 import AddItemForm from "./AddItemForm"
 import { IVA } from "../../utils/IVA"
+import { useClients } from "../../api/queries/ClientQueries"
+import { usePostOrders } from "../../api/queries/OrderQueries"
 
 
 
@@ -17,7 +19,16 @@ export type OrderFormProps = {
 
 export default function OrderForm({ stateOpen } : OrderFormProps) {
     const [open, setOpen] = stateOpen
+
+    const clients = useClients().data
+    const { mutate, data } = usePostOrders()
     
+    const [ orderItems, setOrderItems ] = useState<OrderItem[]>([{ product: { id: 1, name: "Mouse", price: 231}, quantity: 5}, { product: { id: 2, name: "PC-GAMER", price: 2131}, quantity: 1}])
+    const [ selectedClient, setSelectedClient ] = useState<Client | null>(null)
+    const [ selectedPaymentMethod, setSelectedPaymentMethod ] = useState<PaymentMethodType | null>(null)
+    const [ selectedPaymentTerms, setSelectedPaymentTerms ] = useState<PaymentTermType | null>(null)
+
+
     const [snackbar, setSnackbar] = useState<{
         open : boolean
         msg : string | null
@@ -28,14 +39,11 @@ export default function OrderForm({ stateOpen } : OrderFormProps) {
         severity: undefined,
     })
     
-    const [ clients,  ] = useState<Client[]>([{ id: 1, name: "Cristian"}, { id: 2, name: "Manuel" }])
-    
-    const [ orderItems, setOrderItems ] = useState<OrderItem[]>([{ product: { id: 1, name: "Mouse", price: 231}, quantity: 5}, { product: { id: 2, name: "PC-GAMER", price: 2131}, quantity: 1}])
-    const [ selectedClient, setSelectedClient ] = useState<Client | null>(null)
-    const [ selectedPaymentMethod, setSelectedPaymentMethod ] = useState<PaymentMethodType | null>(null)
-    const [ selectedPaymentTerms, setSelectedPaymentTerms ] = useState<PaymentTermType | null>(null)
-
-
+    useEffect(() => {
+        if(data) {
+            console.log(data)
+        }
+    }, [data])
 
     const [ errors, setErrors ] = useState<OrderFormError>({
         client : null,
@@ -72,7 +80,6 @@ export default function OrderForm({ stateOpen } : OrderFormProps) {
         if(!selectedClient) {
             setErrors({...errors, client: 'Selecciona un cliente'})
             setSnackbar({ open: true, severity: 'error', msg : 'Debes de seleccionar un cliente antes de generar el pedido'})
-
             return 
         } 
 
@@ -94,6 +101,16 @@ export default function OrderForm({ stateOpen } : OrderFormProps) {
             return
         }
 
+        mutate({
+            orderItems: orderItems,
+            client: selectedClient,
+            AdditionalDetails: {
+                paymentMethod: selectedPaymentMethod,
+                paymentTerm: selectedPaymentTerms,
+            },
+            createdAt: new Date(),
+            total: total,
+        })
         setSnackbar({open: true, severity: 'success', msg : "Order esta correcta para ser creada"})
 
     }
@@ -130,13 +147,16 @@ export default function OrderForm({ stateOpen } : OrderFormProps) {
                        {snackbar.msg}
                     </Alert>
                 </Snackbar>
-                <OrderHeader 
-                    clients={clients}       
-                    selectedClient={selectedClient} 
-                    handleSelectedClient={setSelectedClient} 
-                    errorClient={errors.client}
-                    setErrorClient={( msg ) => setErrors( prev => ({...prev, client: msg }))}
-                />
+                { clients ? 
+                    <OrderHeader 
+                        clients={clients}       
+                        selectedClient={selectedClient} 
+                        handleSelectedClient={setSelectedClient} 
+                        errorClient={errors.client}
+                        setErrorClient={( msg ) => setErrors( prev => ({...prev, client: msg }))}
+                    /> :
+                    <></>
+                }
                 <OrderItemTable 
                     orderItems={orderItems} 
                     handleQuantityItem={handleQuantityItem} 
@@ -170,7 +190,7 @@ export default function OrderForm({ stateOpen } : OrderFormProps) {
                 <Button variant='outlined' sx={{ color: '#99CC17', borderColor: '#99CC17'}} onClick={handleSubmitOrder}>
                     Crear Pedido
                 </Button>
-                <Button variant='outlined' sx={{ color: '#B61C23', borderColor: '#B61C23'}} onClick={handleCancelOrder}>
+                <Button variant='outlined' sx={{ color: '#ff5c5c', borderColor: '#ff5c5c'}} onClick={handleCancelOrder}>
                     Cancelar Pedido
                 </Button>                
             </DialogActions>
@@ -188,7 +208,7 @@ const dialogTitleStyle : SxProps<Theme> =  {
   fontSize: '22px',
   padding: '16px 24px',
   marginBottom: '2rem',
-  background: '#99CC17',
+  background: '#1c1b1b',
 }
 
 const dialogContentStyle : SxProps<Theme> = { 

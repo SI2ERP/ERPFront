@@ -1,6 +1,12 @@
 import { Routes, Route } from 'react-router-dom'
 import Home from './views/Home'
-import Venta from './views/Venta'
+import Venta from './Modulo de Ventas/views'
+import Order from './Modulo de Ventas/views/Order'
+import Client from './Modulo de Ventas/views/Client'
+import Invoice from './Modulo de Ventas/views/Invoice'
+import Report from './Modulo de Ventas/views/Report'
+import Dashboard from './Modulo de Ventas/views/Dashboard'
+
 
 function App() {
   return (
@@ -8,7 +14,13 @@ function App() {
       <main>
         <Routes>
           <Route path="/" element={<Home />}></Route>
-          <Route path="/venta" element={<Venta />}></Route>
+          <Route path="/ventas" element={<Venta />}>
+            <Route index element={<Dashboard />}></Route>
+            <Route path='pedidos' element={<Order />}></Route>
+            <Route path='clientes' element={<Client />}></Route>
+            <Route path='facturas' element={<Invoice />}></Route>
+            <Route path='reportes' element={<Report />}></Route>
+          </Route>
           {/* Acá añadan sus rutas con el url correspondiente */}
         </Routes>
       </main>

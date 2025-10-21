@@ -1,6 +1,6 @@
 import { FormLabel, TextField, Typography } from "@mui/material";
 import type { Client } from "../../types/Client";
-
+import { format } from 'date-fns';
 
 
 export type OrderHeaderProps = {
@@ -23,10 +23,10 @@ export default function OrderHeader({ clients, selectedClient, handleSelectedCli
                         error={!!errorClient}
                         helperText={errorClient}
                         size="small"
-                        value={selectedClient?.id ?? ''}
+                        value={selectedClient?.id_cliente ?? ''}
                         onChange={(e) => {
-                            const id = Number(e.target.value)
-                            const client = clients.find(c => c.id === id) || null
+                            const id_cliente = Number(e.target.value)
+                            const client = clients.find(c => c.id_cliente === id_cliente) || null
                             handleSelectedClient(client)
                         }}
                         slotProps={{
@@ -40,8 +40,8 @@ export default function OrderHeader({ clients, selectedClient, handleSelectedCli
                     >
                         <option value={''}>Selecciona un cliente</option>
                         {clients.map(client => (
-                            <option key={client.id} value={client.id}>
-                            {client.name}
+                            <option key={client.id_cliente} value={client.id_cliente}>
+                            {client.nombre}
                             </option>
                         ))}
                     </TextField>
@@ -60,7 +60,7 @@ export default function OrderHeader({ clients, selectedClient, handleSelectedCli
                 <div className='flex flex-row items-center gap-3'>
                     <Typography variant='body1'>Fecha:</Typography>
                     <TextField
-                    value='12/10/2025'
+                    value={format(new Date(), 'dd-MM-yyyy')}
                     variant='outlined'
                     disabled
                     size='small'

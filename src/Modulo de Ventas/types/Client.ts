@@ -1,6 +1,12 @@
 
 
+// Cambiar * 
 export type Client = {
-    id: number 
-    name: string
+    id_cliente: number 
+    nombre: string
+    apellido: string
+    direccion: string
+    telefono: string
+    email: string
+    estado: boolean
 }

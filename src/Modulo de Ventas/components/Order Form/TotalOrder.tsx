@@ -1,4 +1,5 @@
 import { Typography, Divider } from "@mui/material";
+import { IVA } from "../../utils/IVA";
 
 
 type TotalOrderProps = {
@@ -16,7 +17,7 @@ export default function TotalOrder({ subTotal, iva, total } : TotalOrderProps) {
                 <Typography>${subTotal}</Typography>
             </div>
             <div className='flex flex-row gap-4'>
-                <Typography className='min-w-40'>IVA:</Typography>
+                <Typography className='min-w-40'>IVA ({(IVA*100).toString()}%):</Typography>
                 <Typography>${iva}</Typography>
             </div>
             <Divider />
