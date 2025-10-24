@@ -1,12 +1,31 @@
-/* Estilos para la Lista de Órdenes de Compra */
+      Estilos para la Lista de Órdenes de Compra */
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background-color: #0d1117;
+  overflow-x: hidden;
+  width: 100%;
+  height: 100%;
+}
+
+#root {
+  background-color: #0d1117;
+  min-height: 100vh;
+  width: 100%;
+}
 
 .lista-ordenes-container {
-  width: 100%;
-  padding: 20px;
-  background-color: #f8f9fa;
+  padding: 2.5rem;
+  width: 100vw;
+  box-sizing: border-box; 
+  display: flex;
+  flex-direction: column;
   min-height: 100vh;
-  color: #2c3e50;
-  box-sizing: border-box;
+  background-color: #0d1117;
+  color: #fff;
+  margin: 0;
+  position: relative;
 }
 
 .lista-ordenes-container * {
@@ -17,17 +36,16 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 30px;
-  padding: 20px;
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #444; 
+  flex-shrink: 0;
 }
 
 .lista-ordenes-header h2 {
-  color: #2c3e50;
+  font-size: 2.2em;
   margin: 0;
-  font-size: 1.8rem;
+  color: #fff;
 }
 
 .acciones-header {
@@ -37,97 +55,152 @@
 }
 
 .filtro-estado {
-  padding: 8px 12px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 14px;
-  background-color: white;
-  color: #2c3e50 !important;
-  font-weight: 500;
+  padding: 0.8em 1.2em;
+  font-size: 1em;
+  border-radius: 8px;
+  border: 1px solid #555;
+  background-color: #242424;
+  color: #fff;
+  font-family: inherit;
+  box-sizing: border-box;
 }
 
 .filtro-estado option {
-  color: #2c3e50 !important;
-  background-color: white !important;
+  color: #fff !important;
+  background-color: #242424 !important;
 }
 
 .btn-actualizar {
-  padding: 8px 16px;
-  background-color: #3498db;
-  color: white;
-  border: none;
-  border-radius: 4px;
+  background-color: #3a3a3a;
+  color: #f0f0f0;
+  border: 1px solid #555;
+  font-size: 0.9em;
+  padding: 0.6em 1.2em;
+  font-weight: 500;
+  border-radius: 8px;
   cursor: pointer;
-  font-size: 14px;
-  transition: background-color 0.3s;
+  transition: all 0.3s;
 }
 
 .btn-actualizar:hover {
-  background-color: #2980b9;
+  background-color: #4a4a4a;
+  border-color: #666;
 }
 
 .loading-container {
   text-align: center;
   padding: 60px 20px;
-  background-color: white;
+  background-color: #1a1a1a;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border: 1px solid #444;
+  color: #fff;
 }
 
 .mensaje-error {
-  background-color: #fee;
-  border: 1px solid #fcc;
-  border-radius: 6px;
+  color: #ff6b6b;
+  font-weight: 600;
+  margin: 0.5rem 0;
+  background-color: #2a1a1a;
+  border: 1px solid #444;
+  border-radius: 8px;
   padding: 15px;
   margin-bottom: 20px;
-  color: #c00;
   text-align: center;
-  font-weight: 500;
 }
 
 .sin-ordenes {
   text-align: center;
   padding: 60px 20px;
-  background-color: white;
+  background-color: #1a1a1a;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  color: #666;
+  border: 1px solid #444;
+  color: #ccc;
 }
 
 .tabla-container {
-  background-color: white;
+  flex-grow: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  border: 1px solid #444;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
+  width: 100%;
   margin-bottom: 30px;
 }
 
 .tabla-ordenes {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: collapse; 
+  text-align: left;
+  table-layout: fixed;
+  min-width: 100%;
 }
 
 .tabla-ordenes th {
-  background-color: #34495e;
-  color: white;
-  padding: 15px 12px;
-  text-align: left;
+  position: sticky;
+  top: 0;
+  background-color: #3a3a3a;
+  color: #fff;
+  padding: 0.75rem 1rem;
   font-weight: 600;
+  z-index: 1;
+  border-bottom: 1px solid #444;
   text-transform: uppercase;
   font-size: 13px;
   letter-spacing: 0.5px;
+  white-space: nowrap;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.tabla-ordenes th:first-child {
+  width: 22%;
+  text-align: left;
+}
+
+.tabla-ordenes td:first-child {
+  text-align: left;
+}
+
+.tabla-ordenes th:nth-child(2) {
+  width: 18%;
+  text-align: left;
+}
+
+.tabla-ordenes td:nth-child(2) {
+  text-align: left;
+}
+
+.tabla-ordenes th:nth-child(3) {
+  width: 18%;
+}
+
+.tabla-ordenes th:nth-child(4) {
+  width: 12%;
+}
+
+.tabla-ordenes th:last-child {
+  width: 30%;
 }
 
 .tabla-ordenes td {
-  padding: 12px;
-  border-bottom: 1px solid #eee;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #444;
   vertical-align: middle;
-  color: #2c3e50;
+  color: #fff;
   font-weight: 500;
+  word-wrap: break-word;
+  text-align: center;
+  height: 60px;
+  box-sizing: border-box;
+}
+
+.tabla-ordenes td:last-child {
+  vertical-align: middle;
+  display: table-cell;
 }
 
 .tabla-ordenes tbody tr:hover {
-  background-color: #f8f9fa;
+  background-color: #2a2a2a;
 }
 
 .tabla-ordenes tbody tr:last-child td {
@@ -137,8 +210,8 @@
 /* Estilo especial para el ID */
 .tabla-ordenes td:first-child {
   font-weight: 700;
-  color: #3498db;
-  background-color: #f8f9fa;
+  color: #646cff;
+  background-color: #1a1a1a;
 }
 
 /* Estados de las órdenes */
@@ -152,7 +225,7 @@
   color: white !important;
   opacity: 1 !important;
   text-shadow: none !important;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2) !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3) !important;
 }
 
 .estado-pendiente {
@@ -177,76 +250,108 @@
 }
 
 .estado-completada {
-  background-color: #3498db !important;
+  background-color: #646cff !important;
   color: white !important;
-  border: 1px solid #2980b9 !important;
+  border: 1px solid #535bf2 !important;
   font-weight: 700 !important;
 }
 
 /* Acciones */
 .acciones-columna {
   white-space: nowrap;
+  text-align: center;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: nowrap;
+  height: 100%;
+  padding: 0;
 }
 
 .acciones-columna button {
-  margin-right: 8px;
-  padding: 6px 10px;
-  border: none;
-  border-radius: 4px;
+  margin: 0 2px;
+  padding: 0.4em 0.6em;
+  border: 1px solid #555;
+  border-radius: 6px;
   cursor: pointer;
-  font-size: 12px;
+  font-size: 0.75em;
   font-weight: 500;
   transition: all 0.3s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 60px;
+  height: 32px;
+  text-align: center;
+  line-height: 1;
+  box-sizing: border-box;
 }
 
 .btn-ver {
-  background-color: #3498db;
+  background-color: #646cff;
   color: white;
+  border-color: #646cff;
 }
 
 .btn-ver:hover {
-  background-color: #2980b9;
+  background-color: #535bf2;
+  border-color: #535bf2;
   transform: translateY(-1px);
 }
 
 .btn-aprobar {
   background-color: #27ae60;
   color: white;
+  border-color: #27ae60;
 }
 
 .btn-aprobar:hover {
   background-color: #219a52;
+  border-color: #219a52;
   transform: translateY(-1px);
 }
 
 .btn-rechazar {
-  background-color: #e74c3c;
+  background-color: #a94442;
   color: white;
+  border-color: #a94442;
 }
 
 .btn-rechazar:hover {
-  background-color: #c0392b;
+  background-color: #8c3836;
+  border-color: #8c3836;
   transform: translateY(-1px);
 }
 
 .btn-completar {
-  background-color: #3498db;
+  background-color: #646cff;
   color: white;
+  border-color: #646cff;
 }
 
 .btn-completar:hover {
-  background-color: #2980b9;
+  background-color: #535bf2;
+  border-color: #535bf2;
   transform: translateY(-1px);
 }
 
 .btn-eliminar {
-  background-color: #95a5a6;
+  background-color: #4a4a4a;
   color: white;
-  font-size: 11px;
+  border-color: #555;
+  font-size: 0.75em;
+  margin: 0 2px;
+  padding: 0.4em 0.6em;
+  min-width: 60px;
+  height: 32px;
+  line-height: 1;
 }
 
 .btn-eliminar:hover {
-  background-color: #7f8c8d;
+  background-color: #5a5a5a;
+  border-color: #666;
   transform: translateY(-1px);
 }
 
@@ -255,15 +360,16 @@
   display: flex;
   justify-content: center;
   gap: 30px;
-  margin-top: 20px;
-  padding: 0 20px;
+  margin-top: auto;
+  padding: 2rem 20px;
+  flex-shrink: 0;
 }
 
 .estadistica {
-  background-color: white;
+  background-color: #1a1a1a;
   padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border: 1px solid #444;
   text-align: center;
   min-width: 120px;
   flex-shrink: 0;
@@ -273,14 +379,14 @@
   display: block;
   font-size: 2rem;
   font-weight: 700;
-  color: #2c3e50;
+  color: #fff;
   margin-bottom: 8px;
 }
 
 .estadistica .etiqueta {
   display: block;
   font-size: 14px;
-  color: #7f8c8d;
+  color: #ccc;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   font-weight: 500;
@@ -297,7 +403,7 @@
   }
   
   .tabla-ordenes {
-    min-width: 800px;
+    min-width: 100%;
   }
 }
 
@@ -333,11 +439,15 @@
     font-size: 13px;
   }
   
+  .acciones-columna {
+    flex-direction: column;
+    gap: 2px;
+  }
+  
   .acciones-columna button {
-    display: block;
     width: 100%;
-    margin-bottom: 4px;
-    margin-right: 0;
+    margin: 1px 0;
+    min-width: auto;
   }
 }
 

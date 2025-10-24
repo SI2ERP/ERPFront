@@ -1,16 +1,17 @@
 /* Mensajes de error y éxito */
 .mensaje-error {
-  background-color: #fee;
-  border: 1px solid #fcc;
-  border-radius: 6px;
+  background-color: #2a1a1a;
+  border: 1px solid #444;
+  border-radius: 8px;
   padding: 15px;
   margin-bottom: 20px;
-  color: #c00;
+  color: #ff6b6b;
+  font-weight: 600;
 }
 
 .mensaje-error h4 {
   margin: 0 0 10px 0;
-  color: #c00;
+  color: #ff6b6b;
 }
 
 .mensaje-error ul {
@@ -19,12 +20,12 @@
 }
 
 .mensaje-exito {
-  background-color: #efe;
-  border: 1px solid #cfc;
-  border-radius: 6px;
+  background-color: #1a2a1a;
+  border: 1px solid #444;
+  border-radius: 8px;
   padding: 15px;
   margin-bottom: 20px;
-  color: #060;
+  color: #4caf50;
   font-weight: 500;
 }
 
@@ -32,10 +33,10 @@
 .loading-select,
 .loading-products {
   padding: 12px;
-  background-color: #f8f9fa;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  color: #666;
+  background-color: #1a1a1a;
+  border: 1px solid #444;
+  border-radius: 8px;
+  color: #ccc;
   font-style: italic;
   text-align: center;
 }
@@ -47,10 +48,10 @@
 
 .info-box {
   padding: 12px 15px;
-  border-radius: 6px;
-  background-color: #e3f2fd;
-  border: 1px solid #bbdefb;
-  color: #1565c0;
+  border-radius: 8px;
+  background-color: #1a2a3a;
+  border: 1px solid #444;
+  color: #79b8ff;
   display: flex;
   align-items: flex-start;
   gap: 10px;
@@ -59,9 +60,9 @@
 }
 
 .info-box.warning {
-  background-color: #fff3e0;
-  border: 1px solid #ffcc02;
-  color: #ef6c00;
+  background-color: #2a2a1a;
+  border: 1px solid #666;
+  color: #ffcc02;
 }
 
 .info-box i {
@@ -78,9 +79,10 @@
 
 /* Productos deshabilitados cuando no hay proveedor */
 .form-group select:disabled {
-  background-color: #f5f5f5;
-  color: #999;
+  background-color: #1a1a1a;
+  color: #666;
   cursor: not-allowed;
+  border-color: #444;
 }
 
 /* Botones deshabilitados */
@@ -93,12 +95,12 @@
 
 /* Mensaje informativo para campos bloqueados */
 .campo-bloqueado-info {
-  background-color: #fff3cd;
-  border: 1px solid #ffeaa7;
-  border-radius: 4px;
+  background-color: #2a2a1a;
+  border: 1px solid #666;
+  border-radius: 8px;
   padding: 8px 12px;
   margin-top: 5px;
-  color: #856404;
+  color: #ffcc02;
 }
 
 .campo-bloqueado-info small {
@@ -108,56 +110,61 @@
 
 /* Campos select deshabilitados */
 select:disabled {
-  background-color: #f8f9fa;
-  color: #6c757d;
-  border-color: #dee2e6;
+  background-color: #1a1a1a;
+  color: #666;
+  border-color: #444;
   cursor: not-allowed;
   opacity: 0.8;
 }
 
 .btn-primary:disabled {
-  background-color: #95a5a6;
+  background-color: #4a4a4a;
+  border-color: #555;
 }
 
 /* Estilos para el formulario de Orden de Compra */
 
 .orden-compra-container {
+  padding: 2.5rem;
   width: 100%;
-  padding: 20px;
-  background-color: #f8f9fa;
+  box-sizing: border-box; 
+  display: flex;
+  flex-direction: column;
   min-height: 100vh;
-  box-sizing: border-box;
+  background-color: #0d1117;
+  color: #fff;
 }
 
 .orden-compra-form {
-  background-color: white;
+  background-color: #1a1a1a;
   border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  border: 1px solid #444;
   padding: 30px;
+  flex-grow: 1;
 }
 
 .orden-compra-form h2 {
-  color: #2c3e50;
+  color: #fff;
   text-align: center;
   margin-bottom: 30px;
-  font-size: 2rem;
+  font-size: 2.2em;
   font-weight: 600;
 }
 
 .form-section {
   margin-bottom: 30px;
   padding: 20px;
-  border: 1px solid #e9ecef;
-  border-radius: 6px;
-  background-color: #fafbfc;
+  border: 1px solid #444;
+  border-radius: 8px;
+  background-color: #242424;
 }
 
 .form-section h3 {
-  color: #34495e;
+  color: #fff;
   margin-bottom: 20px;
   font-size: 1.3rem;
   font-weight: 500;
-  border-bottom: 2px solid #3498db;
+  border-bottom: 2px solid #646cff;
   padding-bottom: 8px;
 }
 
@@ -169,41 +176,44 @@ select:disabled {
   display: block;
   margin-bottom: 8px;
   font-weight: 500;
-  color: #2c3e50;
+  color: #ccc;
 }
 
 .form-group input,
 .form-group select,
 .form-group textarea {
   width: 100%;
-  padding: 12px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 14px;
-  transition: border-color 0.3s ease;
+  padding: 0.8em 1.2em;
+  font-size: 1em;
+  border-radius: 8px;
+  border: 1px solid #555;
+  background-color: #2a2a2a;
+  color: #fff;
+  font-family: inherit;
   box-sizing: border-box;
+  transition: border-color 0.3s ease;
 }
 
 .form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus {
   outline: none;
-  border-color: #3498db;
-  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+  border-color: #646cff;
+  box-shadow: 0 0 0 2px rgba(100, 108, 255, 0.2);
 }
 
 .form-group input.readonly {
-  background-color: #f8f9fa;
-  color: #6c757d;
+  background-color: #1a1a1a;
+  color: #888;
   cursor: not-allowed;
 }
 
 /* Estilos para la sección de productos */
 .producto-form {
-  background-color: white;
+  background-color: #2a2a2a;
   padding: 20px;
-  border-radius: 6px;
-  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  border: 1px solid #444;
 }
 
 .form-row {
@@ -228,62 +238,71 @@ select:disabled {
 .btn-eliminar,
 .btn-primary,
 .btn-secondary {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 4px;
+  padding: 0.6em 1.2em;
+  border: 1px solid #555;
+  border-radius: 8px;
   cursor: pointer;
   font-weight: 500;
   transition: all 0.3s ease;
   text-decoration: none;
   display: inline-block;
   text-align: center;
+  font-family: inherit;
 }
 
 .btn-agregar {
   background-color: #27ae60;
   color: white;
+  border-color: #27ae60;
   height: 42px;
   margin-top: 25px;
 }
 
 .btn-agregar:hover {
   background-color: #219a52;
+  border-color: #219a52;
   transform: translateY(-1px);
 }
 
 .btn-eliminar {
-  background-color: #e74c3c;
+  background-color: #a94442;
   color: white;
-  padding: 6px 12px;
-  font-size: 12px;
+  border-color: #a94442;
+  padding: 0.4em 0.8em;
+  font-size: 0.9em;
 }
 
 .btn-eliminar:hover {
-  background-color: #c0392b;
+  background-color: #8c3836;
+  border-color: #8c3836;
 }
 
 .btn-primary {
-  background-color: #3498db;
+  background-color: #646cff;
   color: white;
+  border-color: #646cff;
   padding: 15px 30px;
   font-size: 16px;
 }
 
 .btn-primary:hover {
-  background-color: #2980b9;
+  background-color: #535bf2;
+  border-color: #535bf2;
   transform: translateY(-1px);
 }
 
 .btn-secondary {
-  background-color: #95a5a6;
-  color: white;
+  background-color: #4a4a4a;
+  color: #f0f0f0;
+  border-color: #555;
   padding: 15px 30px;
   font-size: 16px;
   margin-left: 15px;
 }
 
 .btn-secondary:hover {
-  background-color: #7f8c8d;
+  background-color: #5a5a5a;
+  border-color: #666;
 }
 
 /* Tabla de productos */
@@ -294,27 +313,27 @@ select:disabled {
 .productos-lista table {
   width: 100%;
   border-collapse: collapse;
-  background-color: white;
-  border-radius: 6px;
+  background-color: #2a2a2a;
+  border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid #444;
 }
 
 .productos-lista table th,
 .productos-lista table td {
-  padding: 12px;
+  padding: 0.75rem 1rem;
   text-align: left;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid #444;
 }
 
 .productos-lista table td {
-  color: #2c3e50;
+  color: #fff;
   font-weight: 500;
 }
 
 .productos-lista table th {
-  background-color: #34495e;
-  color: white;
+  background-color: #3a3a3a;
+  color: #fff;
   font-weight: 600;
   text-transform: uppercase;
   font-size: 13px;
@@ -322,11 +341,11 @@ select:disabled {
 }
 
 .productos-lista table tbody tr:hover {
-  background-color: #f8f9fa;
+  background-color: #1a1a1a;
 }
 
 .productos-lista table tbody tr:hover td {
-  color: #2c3e50;
+  color: #fff;
 }
 
 .productos-lista table td:last-child {
@@ -336,13 +355,14 @@ select:disabled {
 .total-section {
   margin-top: 20px;
   padding: 20px;
-  background-color: #ecf0f1;
-  border-radius: 6px;
+  background-color: #1a1a1a;
+  border-radius: 8px;
+  border: 1px solid #444;
   text-align: right;
 }
 
 .total-section h3 {
-  color: #2c3e50;
+  color: #fff;
   font-size: 1.5rem;
   margin: 0;
   font-weight: 600;
@@ -352,7 +372,7 @@ select:disabled {
 .form-actions {
   margin-top: 40px;
   padding-top: 20px;
-  border-top: 1px solid #eee;
+  border-top: 1px solid #444;
   text-align: center;
 }
 
@@ -443,12 +463,31 @@ select:disabled {
 /* Estados de validación */
 .form-group input:invalid,
 .form-group select:invalid {
-  border-color: #e74c3c;
+  border-color: #a94442;
 }
 
 .form-group input:valid,
 .form-group select:valid {
   border-color: #27ae60;
+}
+
+/* Filtros de entrada adicionales */
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #646cff;
+}
+
+/* Inputs tipo número sin controles de spinner */
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+input[type=number] {
+  -moz-appearance: textfield;
+  appearance: textfield;
 }
 
 /* Mejoras de accesibilidad */
