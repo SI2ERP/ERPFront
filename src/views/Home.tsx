@@ -1,4 +1,4 @@
-import React from "react";
+
 import './Home.css';
 import { useNavigate } from 'react-router-dom';
 
@@ -8,6 +8,11 @@ const Home = () => {
   // Ir a la página de inventario
   const irAInventario = () => {
     navigate('/inventario'); 
+  };
+
+  // Ir a la página de compras
+  const irACompras = () => {
+    navigate('/compras');
   };
 
   return (
@@ -26,7 +31,7 @@ const Home = () => {
           Ventas
         </button>
 
-        <button className="module-button disabled" disabled>
+        <button className="module-button" onClick={irACompras}>
           Compras
         </button>
 

@@ -83,7 +83,7 @@ const VerOrdenCompra: React.FC = () => {
         <div className="error-mensaje">
           <h3>Error</h3>
           <p>{error}</p>
-          <button onClick={() => navigate('/compras/ordenes')} className="btn-volver">
+          <button onClick={() => navigate('/compras')} className="btn-volver">
             Volver a la lista
           </button>
         </div>
@@ -97,7 +97,7 @@ const VerOrdenCompra: React.FC = () => {
         <div className="error-mensaje">
           <h3>Orden no encontrada</h3>
           <p>La orden de compra solicitada no existe o ha sido eliminada.</p>
-          <button onClick={() => navigate('/compras/ordenes')} className="btn-volver">
+          <button onClick={() => navigate('/compras')} className="btn-volver">
             Volver a la lista
           </button>
         </div>
@@ -109,7 +109,7 @@ const VerOrdenCompra: React.FC = () => {
     <div className="ver-orden-container">
       <div className="ver-orden-header">
         <div className="header-left">
-          <button onClick={() => navigate('/compras/ordenes')} className="btn-volver">
+          <button onClick={() => navigate('/compras')} className="btn-volver">
             ← Volver
           </button>
           <h1>Orden de Compra #{orden.id_orden_compra}</h1>

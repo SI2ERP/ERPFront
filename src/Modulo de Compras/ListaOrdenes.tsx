@@ -191,7 +191,7 @@ const ListaOrdenes: React.FC = () => {
                   </td>
                   <td className="acciones-columna">
                     <button
-                      onClick={() => navigate(`/compras/ordenes/ver/${orden.id_orden_compra}`)}
+                      onClick={() => navigate(`/compras/ver/${orden.id_orden_compra}`)}
                       className="btn-ver"
                       title="Ver orden completa"
                     >
