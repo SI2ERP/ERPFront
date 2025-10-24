@@ -315,6 +315,11 @@ const OrdenCompraForm: React.FC = () => {
       // Scroll hacia arriba para mostrar el mensaje
       window.scrollTo({ top: 0, behavior: 'smooth' });
 
+      // Navegar a la lista de órdenes después de 3 segundos
+      setTimeout(() => {
+        navigate('/compras');
+      }, 3000);
+
     } catch (error) {
       console.error('Error al crear orden:', error);
       setErrores([`Error al crear la orden: ${error instanceof Error ? error.message : 'Error desconocido'}`]);
@@ -356,7 +361,29 @@ const OrdenCompraForm: React.FC = () => {
     <div className="orden-compra-container">
       <div className="orden-compra-form">
         {/* Botón de navegación */}
-        <div style={{ marginBottom: '20px', textAlign: 'left' }}>
+        <div style={{ marginBottom: '20px', textAlign: 'left', display: 'flex', gap: '10px' }}>
+          <button
+            type="button"
+            onClick={() => navigate('/compras')}
+            style={{
+              padding: '10px 20px',
+              backgroundColor: '#646cff',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontSize: '14px',
+              fontWeight: '500',
+              transition: 'background-color 0.3s',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px'
+            }}
+            onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#535bf2'}
+            onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#646cff'}
+          >
+            ← Volver a Órdenes
+          </button>
           <button
             type="button"
             onClick={() => navigate('/')}
@@ -377,7 +404,7 @@ const OrdenCompraForm: React.FC = () => {
             onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#7f8c8d'}
             onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#95a5a6'}
           >
-            ← Volver al Menú Principal
+            ← Menú Principal
           </button>
         </div>
         

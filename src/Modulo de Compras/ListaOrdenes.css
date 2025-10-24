@@ -52,6 +52,7 @@ html, body {
   display: flex;
   gap: 15px;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 .filtro-estado {
@@ -68,6 +69,25 @@ html, body {
 .filtro-estado option {
   color: #fff !important;
   background-color: #242424 !important;
+}
+
+.btn-nueva-orden {
+  background-color: #646cff;
+  color: #fff;
+  border: 1px solid #646cff;
+  font-size: 0.9em;
+  padding: 0.6em 1.2em;
+  font-weight: 500;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+  margin-right: 1rem;
+}
+
+.btn-nueva-orden:hover {
+  background-color: #535bf2;
+  border-color: #535bf2;
+  transform: translateY(-1px);
 }
 
 .btn-actualizar {
@@ -421,11 +441,14 @@ html, body {
   .acciones-header {
     flex-direction: column;
     width: 100%;
+    gap: 10px;
   }
   
+  .btn-nueva-orden,
   .filtro-estado,
   .btn-actualizar {
     width: 100%;
+    margin-right: 0;
   }
   
   .estadisticas {

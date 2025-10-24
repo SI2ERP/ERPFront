@@ -137,6 +137,12 @@ const ListaOrdenes: React.FC = () => {
       <div className="lista-ordenes-header">
         <h2>Órdenes de Compra</h2>
         <div className="acciones-header">
+          <button 
+            onClick={() => navigate('/compras/nueva')}
+            className="btn-nueva-orden"
+          >
+            + Nueva Orden
+          </button>
           <select
             value={filtroEstado}
             onChange={(e) => setFiltroEstado(e.target.value)}
