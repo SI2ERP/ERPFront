@@ -1,14 +1,32 @@
 import { useState } from "react";
+import axios from "axios";
 
 export const Login_rrhh = () =>{
-    const [username,setUsername] = useState("");
-    const [password,setPassword] = useState("");
+    const [correo,setCorreo] = useState("");
+    const [pass,setPass] = useState("");
 
-    const handleLogin = (e: React.FormEvent) =>{
+    const handleLogin = async (e: React.FormEvent) =>{
         e.preventDefault();
         console.log("enter o click");
-        // fetch, confirma usuario valido
-        // y se redirige a /rrhh/admin o a /rrhh/empleado dependiendo si contiene el rol admin o no
+        try {
+            const url = "http://localhost:3000/auth/login";
+            const bodyJson = {
+                email: correo,
+                password: pass
+            }
+            const res = await axios.post(url,bodyJson);
+            if(res.status == 201){
+                console.log("puede entrar");
+
+            }
+            else{
+                console.warn("credenciales invalidas o error de conexion");
+            }
+
+        } catch (error) {
+            console.error("ocurrio un error: ",error);
+        }
+        // redirige a /rrhh/admin o a /rrhh/empleado dependiendo si contiene el rol admin o no
     };
 
     return (
@@ -23,11 +41,11 @@ export const Login_rrhh = () =>{
                 <form onSubmit={handleLogin}>
                 <div className="mb-4">
                     <input
-                    id="username"
+                    id="correo"
                     type="text"
                     className="bg-[#27ae60] border border-[#1e8449] rounded-md p-3 text-white placeholder-green-300 focus:outline-none focus:ring-2 focus:ring-green-400 hover:bg-[#2ecc71] w-full"
-                    placeholder="ingrese nombre..."
-                    onChange={(e) => setUsername(e.target.value)}
+                    placeholder="ingrese correo..."
+                    onChange={(e) => setCorreo(e.target.value)}
                     />
                 </div>
 
@@ -37,7 +55,7 @@ export const Login_rrhh = () =>{
                     type="password"
                     className="bg-[#27ae60] border border-[#1e8449] rounded-md p-3 text-white placeholder-green-300 focus:outline-none focus:ring-2 focus:ring-green-400 hover:bg-[#2ecc71] w-full"
                     placeholder="ingrese contraseña"
-                    onChange={(e) => setPassword(e.target.value)}
+                    onChange={(e) => setPass(e.target.value)}
                     />
                 </div>
 
