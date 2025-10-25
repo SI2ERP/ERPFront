@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface Empleado {
   id_empleado: number;
@@ -15,6 +16,8 @@ interface Empleado {
 }
 
 export const EstadoEmpleados_rrhh = () => {
+  const navigate = useNavigate();
+
   const [empleados, setEmpleados] = useState<Empleado[]>([]);
   const [filtro, setFiltro] = useState("todos");
   const [cargando, setCargando] = useState(true);
@@ -41,7 +44,12 @@ export const EstadoEmpleados_rrhh = () => {
   return (
     <div className="p-8">
       <h1 className="text-2xl font-bold mb-4">Estado / Datos de Empleados</h1>
-
+        <button
+          onClick={() => navigate("/rrhh/admin")}
+          className="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300"
+        >
+          ← Volver al panel admin
+        </button>
       {/* Filtros */}
       <div className="mb-4 flex gap-2">
         <button
@@ -73,9 +81,9 @@ export const EstadoEmpleados_rrhh = () => {
       {cargando ? (
         <p>Cargando empleados...</p>
       ) : (
-        <table className="min-w-full bg-white border border-gray-300">
+        <table className="min-w-full bg-black border border-gray-300">
           <thead>
-            <tr className="bg-gray-100">
+            <tr className="bg-white-100">
               <th className="border px-4 py-2 text-left">Nombre</th>
               <th className="border px-4 py-2 text-left">RUT</th>
               <th className="border px-4 py-2 text-left">Departamento</th>

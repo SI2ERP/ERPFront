@@ -6,6 +6,8 @@ import Home from './views/Home'
 import { Login_rrhh } from './Modulo de Recursos Humanos/Login_rrhh'
 import { HomeAdmin_rrhh } from './Modulo de Recursos Humanos/Admin/HomeAdmin_rrhh'
 import { HomeEmpleado_rrhh } from './Modulo de Recursos Humanos/Empleado/HomeEmpleado_rrhh'
+import { GestionEmpleados_rrhh } from "./Modulo de Recursos Humanos/Admin/GestionEmpleados_rrhh";
+import { EstadoEmpleados_rrhh } from "./Modulo de Recursos Humanos/Admin/EstadoEmpleados_rrhh";
 
 import { AsignarRol } from './Modulo de Recursos Humanos/Admin/AsignarRol'
 import { ListarEmpleados } from './Modulo de Recursos Humanos/Admin/ListarEmpleados'
@@ -22,6 +24,8 @@ function App() {
           <Route path="/rrhh/admin/" element={<HomeAdmin_rrhh/>}></Route>
           <Route path="/rrhh/empleado/" element={<HomeEmpleado_rrhh/>}></Route>
           <Route path="/rrhh/admin/elegirEmpleado/" element={<ListarEmpleados />}></Route>
+          <Route path="/rrhh/gestion-empleados" element={<GestionEmpleados_rrhh />} />
+          <Route path="/rrhh/estado-empleados" element={<EstadoEmpleados_rrhh />} />
 
           <Route path="/rrhh/admin/elegirEmpleado/asignarRol/:idEmpleado" element={<AsignarRol />}></Route>
         </Routes>
