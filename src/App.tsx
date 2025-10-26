@@ -24,8 +24,8 @@ function App() {
           <Route path="/rrhh/admin/" element={<HomeAdmin_rrhh/>}></Route>
           <Route path="/rrhh/empleado/" element={<HomeEmpleado_rrhh/>}></Route>
           <Route path="/rrhh/admin/elegirEmpleado/" element={<ListarEmpleados />}></Route>
-          <Route path="/rrhh/gestion-empleados" element={<GestionEmpleados_rrhh />} />
-          <Route path="/rrhh/estado-empleados" element={<EstadoEmpleados_rrhh />} />
+          <Route path="/rrhh/admin/gestion-empleados" element={<GestionEmpleados_rrhh />} />
+          <Route path="/rrhh/admin/estado-empleados" element={<EstadoEmpleados_rrhh />} />
 
           <Route path="/rrhh/admin/elegirEmpleado/asignarRol/:idEmpleado" element={<AsignarRol />}></Route>
         </Routes>

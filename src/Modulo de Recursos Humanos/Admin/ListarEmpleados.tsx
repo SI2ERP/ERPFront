@@ -88,6 +88,13 @@ export const ListarEmpleados: React.FC = () => {
         Listado de Empleados
       </h2>
 
+      <button
+          onClick={() => navigate("/rrhh/admin")}
+          className="px-3 py-1 rounded hover:!bg-gray-100 active:scale-95"
+        >
+          ← Volver al panel admin
+      </button>
+
       <div className="overflow-x-auto">
         <table className="min-w-full border border-[#1e8449] bg-[#cde3d6] shadow-lg rounded-md">
           <thead className="bg-[#1a8a5b] text-white">
