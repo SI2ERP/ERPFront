@@ -33,7 +33,7 @@ export const Login_rrhh = () =>{
                 const empleadoData: Empleado = res.data.empleado;
                 setEmpleado(empleadoData);
                 setLoginError(false);
-                if (empleadoData.rol === "Administrador") {
+                if (empleadoData.rol === "ADMIN" || empleadoData.rol === "ADMIN_TI") {
                     console.log("admin");
                     navigate("/rrhh/admin/");
                 } else {
