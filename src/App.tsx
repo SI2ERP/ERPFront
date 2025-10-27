@@ -11,6 +11,8 @@ import { EstadoEmpleados_rrhh } from "./Modulo de Recursos Humanos/Admin/EstadoE
 
 import { AsignarRol } from './Modulo de Recursos Humanos/Admin/AsignarRol'
 import { ListarEmpleados } from './Modulo de Recursos Humanos/Admin/ListarEmpleados'
+import { ProtectedRoute } from './Modulo de Recursos Humanos/ProtectedRoute'
+import Unauthorized from './Modulo de Recursos Humanos/Unauthorized'
 
 function App() {
   return (
@@ -21,13 +23,40 @@ function App() {
           {/* Acá añadan sus rutas con el url correspondiente */}
 
           <Route path="/rrhh/" element={<Login_rrhh/>}></Route>
-          <Route path="/rrhh/admin/" element={<HomeAdmin_rrhh/>}></Route>
           <Route path="/rrhh/empleado/" element={<HomeEmpleado_rrhh/>}></Route>
-          <Route path="/rrhh/admin/elegirEmpleado/" element={<ListarEmpleados />}></Route>
-          <Route path="/rrhh/admin/gestion-empleados" element={<GestionEmpleados_rrhh />} />
-          <Route path="/rrhh/admin/estado-empleados" element={<EstadoEmpleados_rrhh />} />
 
-          <Route path="/rrhh/admin/elegirEmpleado/asignarRol/:idEmpleado" element={<AsignarRol />}></Route>
+
+          <Route path="/rrhh/admin/" element={
+            <ProtectedRoute requiredRole='ADMIN'>
+              <HomeAdmin_rrhh/>
+            </ProtectedRoute>
+            }></Route>
+
+          <Route path="/rrhh/admin/elegirEmpleado/" element={
+            <ProtectedRoute requiredRole='ADMIN'>
+              <ListarEmpleados />
+            </ProtectedRoute>
+            }></Route>
+          <Route path="/rrhh/admin/gestion-empleados" element={
+            <ProtectedRoute requiredRole='ADMIN'>
+              <GestionEmpleados_rrhh />
+            </ProtectedRoute>
+            } />
+          <Route path="/rrhh/admin/estado-empleados" element={
+            <ProtectedRoute requiredRole='ADMIN'>
+              <EstadoEmpleados_rrhh />
+            </ProtectedRoute>
+            } />
+
+          <Route path="/rrhh/admin/elegirEmpleado/asignarRol/:idEmpleado" element={
+            <ProtectedRoute requiredRole='ADMIN'>
+              <AsignarRol />
+            </ProtectedRoute>
+            }></Route>
+
+          <Route path='/unauthorized' element={
+            <Unauthorized />
+          }></Route>
         </Routes>
       </main>
     </div>

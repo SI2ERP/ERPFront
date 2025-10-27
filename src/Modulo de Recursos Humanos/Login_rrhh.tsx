@@ -33,6 +33,9 @@ export const Login_rrhh = () =>{
                 const empleadoData: Empleado = res.data.empleado;
                 setEmpleado(empleadoData);
                 setLoginError(false);
+                localStorage.setItem("rol",empleadoData.rol);
+                localStorage.setItem("token",res.data.access_token);
+
                 if (empleadoData.rol === "ADMIN" || empleadoData.rol === "ADMIN_TI") {
                     console.log("admin");
                     navigate("/rrhh/admin/");

@@ -3,6 +3,11 @@ import { useNavigate } from "react-router-dom";
 export const HomeAdmin_rrhh = () => {
   const navigate = useNavigate();
 
+  const handleLogout = () =>{
+    localStorage.clear();
+    navigate("/rrhh");
+  }
+
   return (
     <div className="p-10 bg-[#e8f3ed] min-h-screen flex flex-col items-center">
       <div className="w-full max-w-3xl bg-[#cde3d6] border border-[#1e8449] shadow-lg rounded-md p-8">
@@ -63,6 +68,14 @@ export const HomeAdmin_rrhh = () => {
           </li>
 
         </ul>
+        <div className="mt-8 text-center">
+          <button
+            onClick={handleLogout}
+            className="px-6 py-3 !bg-red-200 text-black font-semibold rounded-md shadow hover:!bg-red-400 active:scale-95 transition duration-200"
+          >
+            🔒 Cerrar sesión
+          </button>
+        </div>
       </div>
     </div>
   );
