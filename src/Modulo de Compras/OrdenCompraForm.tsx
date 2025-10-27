@@ -14,10 +14,12 @@ interface ProductoEnOrden {
   cantidad: number;
   precio_unitario: number;
   subtotal: number;
+  id_proveedor: number | null;
+  proveedor_nombre?: string;
+  proveedores_disponibles?: Proveedor[];
 }
 
 interface EstadoFormulario {
-  id_proveedor: number | null;
   id_empleado: number | null;
   productos: ProductoEnOrden[];
   total: number;
@@ -36,7 +38,6 @@ const OrdenCompraForm: React.FC = () => {
 
   // Estados principales
   const [formulario, setFormulario] = useState<EstadoFormulario>({
-    id_proveedor: null,
     id_empleado: null,
     productos: [],
     total: 0,
@@ -66,6 +67,8 @@ const OrdenCompraForm: React.FC = () => {
     cantidad: 1,
     precio_unitario: 0,
     subtotal: 0,
+    id_proveedor: null,
+    proveedores_disponibles: [],
   });
 
   // Cargar datos al montar el componente
@@ -99,100 +102,56 @@ const OrdenCompraForm: React.FC = () => {
     }
   };
 
-  // Nueva función para cargar productos específicos de un proveedor
-  const cargarProductosDeProveedor = async (idProveedor: number) => {
-    setCargando(prev => ({ ...prev, productos: true }));
+  const obtenerProveedoresDeProducto = async (idProducto: number): Promise<Proveedor[]> => {
     try {
-      const productosData = await comprasService.obtenerProductosPorProveedor(idProveedor);
-      setProductosDisponibles(productosData.filter(p => p.estado));
-      setErrores([]); // Limpiar errores previos
+      const proveedoresDelProducto: Proveedor[] = [];
       
-      // Mostrar mensaje informativo si no hay productos
-      if (productosData.length === 0) {
-        setMensaje('Este proveedor no tiene productos disponibles');
-      } else {
-        setMensaje('');
+      for (const proveedor of proveedores) {
+        try {
+          const productosProveedor = await comprasService.obtenerProductosPorProveedor(proveedor.id_proveedor);
+          const tieneProducto = productosProveedor.some(p => p.id_producto === idProducto);
+          
+          if (tieneProducto) {
+            proveedoresDelProducto.push(proveedor);
+          }
+        } catch (error) {
+          console.error(`Error al verificar producto ${idProducto} del proveedor ${proveedor.id_proveedor}:`, error);
+        }
       }
+      
+      return proveedoresDelProducto;
     } catch (error) {
-      console.error('Error al cargar productos del proveedor:', error);
-      setErrores(['Error al cargar los productos del proveedor seleccionado']);
-      setProductosDisponibles([]);
-    } finally {
-      setCargando(prev => ({ ...prev, productos: false }));
+      console.error('Error al obtener proveedores del producto:', error);
+      return [];
     }
   };
 
-  const handleProveedorChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const idProveedor = parseInt(e.target.value) || null;
-    
-    setFormulario({
-      ...formulario,
-      id_proveedor: idProveedor,
-      // Limpiar productos cuando cambia el proveedor
-      productos: [],
-      total: 0,
-    });
-
-    // Limpiar producto temporal
-    setNuevoProducto({
-      id_producto: 0,
-      nombre: '',
-      cantidad: 1,
-      precio_unitario: 0,
-      subtotal: 0,
-    });
-
-    // Cargar productos específicos del proveedor seleccionado
-    if (idProveedor) {
-      await cargarProductosDeProveedor(idProveedor);
-    } else {
-      // Si no hay proveedor seleccionado, cargar todos los productos
-      setCargando(prev => ({ ...prev, productos: true }));
-      try {
-        const productosData = await comprasService.obtenerProductos();
-        setProductosDisponibles(productosData.filter(p => p.estado));
-      } catch (error) {
-        console.error('Error al cargar productos:', error);
-        setErrores(['Error al cargar los productos']);
-      } finally {
-        setCargando(prev => ({ ...prev, productos: false }));
-      }
-    }
-  };
-
-  const handleEmpleadoChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setFormulario({
-      ...formulario,
-      id_empleado: parseInt(e.target.value) || null,
-    });
-  };
-
-  const handleProductoChange = (campo: keyof ProductoEnOrden, valor: string | number) => {
+  const handleProductoChange = async (campo: keyof ProductoEnOrden, valor: string | number) => {
     let nuevoProductoActualizado = {
       ...nuevoProducto,
       [campo]: valor,
     };
 
-    // Si se selecciona un producto, cargar su información
+    // Si se selecciona un producto, cargar su información y proveedores
     if (campo === 'id_producto') {
       const productoSeleccionado = productosDisponibles.find(p => p.id_producto === parseInt(valor.toString()));
       if (productoSeleccionado) {
-        // Usar precio del proveedor si está disponible, sino usar precio base
-        const precioAUsar = productoSeleccionado.precio_proveedor || productoSeleccionado.precio_unitario;
+        // Obtener proveedores que venden este producto
+        const proveedoresDelProducto = await obtenerProveedoresDeProducto(productoSeleccionado.id_producto);
         
         nuevoProductoActualizado = {
           ...nuevoProductoActualizado,
           id_producto: productoSeleccionado.id_producto,
           nombre: productoSeleccionado.nombre,
-          precio_unitario: precioAUsar,
-          // Recalcular subtotal con el precio correcto y la cantidad actual
-          subtotal: (nuevoProductoActualizado.cantidad || 0) * precioAUsar,
+          precio_unitario: productoSeleccionado.precio_unitario, // precio base inicialmente
+          subtotal: (nuevoProductoActualizado.cantidad || 0) * productoSeleccionado.precio_unitario,
+          id_proveedor: null, // resetear proveedor
+          proveedores_disponibles: proveedoresDelProducto,
         };
       }
     }
 
     // Calcular subtotal automáticamente cuando cambia la cantidad
-    // El precio unitario no se puede modificar manualmente
     if (campo === 'cantidad') {
       const cantidad = typeof valor === 'string' && valor === '' ? 0 : (valor as number);
       nuevoProductoActualizado.cantidad = cantidad;
@@ -200,6 +159,47 @@ const OrdenCompraForm: React.FC = () => {
     }
 
     setNuevoProducto(nuevoProductoActualizado);
+  };
+
+  const handleProveedorProductoChange = async (indexProducto: number, idProveedor: number | null) => {
+    if (!idProveedor) return;
+    
+    try {
+      const productosActualizados = [...formulario.productos];
+      const producto = productosActualizados[indexProducto];
+      
+      // Obtener precio específico del proveedor
+      const productosProveedor = await comprasService.obtenerProductosPorProveedor(idProveedor);
+      const productoConPrecio = productosProveedor.find(p => p.id_producto === producto.id_producto);
+      
+      if (productoConPrecio) {
+        const nuevoPrecio = productoConPrecio.precio_proveedor || productoConPrecio.precio_unitario;
+        const nuevoSubtotal = producto.cantidad * nuevoPrecio;
+        
+        // Obtener nombre del proveedor
+        const proveedor = proveedores.find(p => p.id_proveedor === idProveedor);
+        
+        productosActualizados[indexProducto] = {
+          ...producto,
+          id_proveedor: idProveedor,
+          proveedor_nombre: proveedor?.nombre,
+          precio_unitario: nuevoPrecio,
+          subtotal: nuevoSubtotal,
+        };
+        
+        // Calcular nuevo total
+        const nuevoTotal = productosActualizados.reduce((sum, prod) => sum + prod.subtotal, 0);
+        
+        setFormulario({
+          ...formulario,
+          productos: productosActualizados,
+          total: nuevoTotal,
+        });
+      }
+    } catch (error) {
+      console.error('Error al actualizar precio del proveedor:', error);
+      setErrores(['Error al obtener el precio del proveedor seleccionado']);
+    }
   };
 
   const agregarProducto = () => {
@@ -218,13 +218,43 @@ const OrdenCompraForm: React.FC = () => {
     // La validación del precio se hace implícitamente al seleccionar el producto
 
     // Verificar si el producto ya está en la orden
-    const productoExistente = formulario.productos.find(p => p.id_producto === nuevoProducto.id_producto);
-    if (productoExistente) {
-      setErrores(['Este producto ya está agregado a la orden']);
-      return;
+    const indiceProductoExistente = formulario.productos.findIndex(p => p.id_producto === nuevoProducto.id_producto);
+    
+    let productosActualizados;
+    
+    if (indiceProductoExistente !== -1) {
+      // El producto ya existe, sumar la cantidad
+      productosActualizados = [...formulario.productos];
+      const productoExistente = productosActualizados[indiceProductoExistente];
+      
+      // Sumar las cantidades
+      const nuevaCantidad = productoExistente.cantidad + nuevoProducto.cantidad;
+      const nuevoSubtotal = nuevaCantidad * productoExistente.precio_unitario;
+      
+      // Actualizar el producto existente
+      productosActualizados[indiceProductoExistente] = {
+        ...productoExistente,
+        cantidad: nuevaCantidad,
+        subtotal: nuevoSubtotal
+      };
+      
+      // Mostrar mensaje informativo
+      setMensaje(`Se sumó ${nuevoProducto.cantidad} unidad(es) al producto "${nuevoProducto.nombre}". Nueva cantidad: ${nuevaCantidad}`);
+      
+      // Limpiar el mensaje después de 3 segundos
+      setTimeout(() => {
+        setMensaje('');
+      }, 3000);
+      
+    } else {
+      // Producto nuevo, agregarlo a la lista con sus proveedores disponibles
+      const productoConProveedores = {
+        ...nuevoProducto,
+        proveedores_disponibles: nuevoProducto.proveedores_disponibles || []
+      };
+      productosActualizados = [...formulario.productos, productoConProveedores];
     }
 
-    const productosActualizados = [...formulario.productos, nuevoProducto];
     const nuevoTotal = productosActualizados.reduce((sum, prod) => sum + prod.subtotal, 0);
     
     setFormulario({
@@ -233,6 +263,8 @@ const OrdenCompraForm: React.FC = () => {
       total: nuevoTotal,
     });
 
+
+
     // Limpiar formulario de producto
     setNuevoProducto({
       id_producto: 0,
@@ -240,6 +272,8 @@ const OrdenCompraForm: React.FC = () => {
       cantidad: 1,
       precio_unitario: 0,
       subtotal: 0,
+      id_proveedor: null,
+      proveedores_disponibles: [],
     });
 
     setErrores([]);
@@ -254,14 +288,18 @@ const OrdenCompraForm: React.FC = () => {
       productos: productosActualizados,
       total: nuevoTotal,
     });
+
+  };
+
+  const handleEmpleadoChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setFormulario({
+      ...formulario,
+      id_empleado: parseInt(e.target.value) || null,
+    });
   };
 
   const validarFormulario = (): string[] => {
     const erroresValidacion: string[] = [];
-
-    if (!formulario.id_proveedor) {
-      erroresValidacion.push('Debe seleccionar un proveedor');
-    }
 
     if (!formulario.id_empleado) {
       erroresValidacion.push('Debe seleccionar un empleado');
@@ -269,6 +307,12 @@ const OrdenCompraForm: React.FC = () => {
 
     if (formulario.productos.length === 0) {
       erroresValidacion.push('Debe agregar al menos un producto');
+    }
+
+    // Validar que todos los productos tengan proveedor seleccionado
+    const productosSinProveedor = formulario.productos.filter(p => !p.id_proveedor);
+    if (productosSinProveedor.length > 0) {
+      erroresValidacion.push(`Debe seleccionar proveedor para todos los productos (${productosSinProveedor.length} producto(s) sin proveedor)`);
     }
 
     return erroresValidacion;
@@ -285,40 +329,85 @@ const OrdenCompraForm: React.FC = () => {
     }
 
     // Preparar datos para enviar al backend
-    const ordenParaEnviar: OrdenCompra = {
-      id_proveedor: formulario.id_proveedor!,
-      id_empleado: formulario.id_empleado!,
-      detalle: formulario.productos.map(producto => ({
-        id_producto: producto.id_producto,
-        cantidad: producto.cantidad,
-        precio_unitario: producto.precio_unitario,
-      }))
-    };
+    // Crear una orden separada por cada proveedor único
+    const proveedoresUnicos = [...new Set(formulario.productos.map(p => p.id_proveedor).filter(Boolean))];
+    
+    if (proveedoresUnicos.length === 0) {
+      setErrores(['Debe seleccionar al menos un proveedor para los productos']);
+      return;
+    }
+
+    // Agrupar productos por proveedor
+    const productosPorProveedor = new Map<number, typeof formulario.productos>();
+    
+    formulario.productos.forEach(producto => {
+      if (producto.id_proveedor) {
+        if (!productosPorProveedor.has(producto.id_proveedor)) {
+          productosPorProveedor.set(producto.id_proveedor, []);
+        }
+        productosPorProveedor.get(producto.id_proveedor)!.push(producto);
+      }
+    });
 
     setCargando(prev => ({ ...prev, enviando: true }));
     setErrores([]);
     setMensaje('');
 
     try {
-      const ordenCreada = await comprasService.crearOrden(ordenParaEnviar);
+      const ordenesCreadas = [];
       
-      setMensaje(`¡Orden de compra #${ordenCreada.id_orden_compra} creada exitosamente!`);
+      // Crear una orden por cada proveedor
+      for (const [idProveedor, productos] of productosPorProveedor) {
+        const ordenParaEnviar: OrdenCompra = {
+          id_proveedor: idProveedor,
+          id_empleado: formulario.id_empleado!,
+          detalle: productos.map(producto => ({
+            id_producto: producto.id_producto,
+            cantidad: producto.cantidad,
+            precio_unitario: producto.precio_unitario,
+          }))
+        };
+
+        const ordenCreada = await comprasService.crearOrden(ordenParaEnviar);
+        ordenesCreadas.push(ordenCreada);
+      }
       
-      // Resetear formulario
+      // Mostrar mensaje de éxito con todas las órdenes creadas
+      if (ordenesCreadas.length === 1) {
+        setMensaje(`¡Orden de compra #${ordenesCreadas[0].id_orden_compra} creada exitosamente! Puede crear otra orden o volver a la lista.`);
+      } else {
+        const numerosOrdenes = ordenesCreadas.map(o => `#${o.id_orden_compra}`).join(', ');
+        setMensaje(`¡${ordenesCreadas.length} órdenes creadas exitosamente: ${numerosOrdenes}! Se creó una orden por cada proveedor. Puede crear otra orden o volver a la lista.`);
+      }
+      
+      // Resetear formulario para permitir crear otra orden
       setFormulario({
-        id_proveedor: null,
         id_empleado: null,
         productos: [],
         total: 0,
       });
 
+      // Limpiar producto temporal
+      setNuevoProducto({
+        id_producto: 0,
+        nombre: '',
+        cantidad: 1,
+        precio_unitario: 0,
+        subtotal: 0,
+        id_proveedor: null,
+        proveedores_disponibles: [],
+      });
+
+      // Recargar productos disponibles (limpiar filtro de proveedor)
+      try {
+        const productosData = await comprasService.obtenerProductos();
+        setProductosDisponibles(productosData.filter(p => p.estado));
+      } catch (productsError) {
+        console.error('Error al recargar productos:', productsError);
+      }
+
       // Scroll hacia arriba para mostrar el mensaje
       window.scrollTo({ top: 0, behavior: 'smooth' });
-
-      // Navegar a la lista de órdenes después de 3 segundos
-      setTimeout(() => {
-        navigate('/compras');
-      }, 3000);
 
     } catch (error) {
       console.error('Error al crear orden:', error);
@@ -331,7 +420,6 @@ const OrdenCompraForm: React.FC = () => {
   const limpiarFormulario = () => {
     if (confirm('¿Está seguro de que desea limpiar el formulario? Se perderán todos los datos ingresados.')) {
       setFormulario({
-        id_proveedor: null,
         id_empleado: null,
         productos: [],
         total: 0,
@@ -342,6 +430,8 @@ const OrdenCompraForm: React.FC = () => {
         cantidad: 1,
         precio_unitario: 0,
         subtotal: 0,
+        id_proveedor: null,
+        proveedores_disponibles: [],
       });
       setErrores([]);
       setMensaje('');
@@ -355,6 +445,36 @@ const OrdenCompraForm: React.FC = () => {
       currency: 'CLP',
       minimumFractionDigits: 0,
     }).format(precio);
+  };
+
+  // Crear resumen de órdenes que se van a generar
+  const obtenerResumenOrdenes = () => {
+    if (formulario.productos.length === 0) return null;
+
+    const productosPorProveedor = new Map<number, typeof formulario.productos>();
+    
+    formulario.productos.forEach(producto => {
+      if (producto.id_proveedor) {
+        if (!productosPorProveedor.has(producto.id_proveedor)) {
+          productosPorProveedor.set(producto.id_proveedor, []);
+        }
+        productosPorProveedor.get(producto.id_proveedor)!.push(producto);
+      }
+    });
+
+    const resumen = Array.from(productosPorProveedor.entries()).map(([idProveedor, productos]) => {
+      const proveedor = proveedores.find(p => p.id_proveedor === idProveedor);
+      const totalProveedor = productos.reduce((sum, prod) => sum + prod.subtotal, 0);
+      
+      return {
+        proveedor: proveedor?.nombre || 'Proveedor desconocido',
+        productos: productos.length,
+        total: totalProveedor,
+        items: productos
+      };
+    });
+
+    return resumen;
   };
 
   return (
@@ -430,95 +550,20 @@ const OrdenCompraForm: React.FC = () => {
         )}
         
         <form onSubmit={handleSubmit}>
-          {/* Información del Proveedor */}
-          <div className="form-section">
-            <h3>Información del Proveedor</h3>
-            <div className="form-group">
-              <label htmlFor="proveedor">Proveedor *</label>
-              {cargando.proveedores ? (
-                <div className="loading-select">Cargando proveedores...</div>
-              ) : (
-                <select
-                  id="proveedor"
-                  value={formulario.id_proveedor || ''}
-                  onChange={handleProveedorChange}
-                  disabled={formulario.productos.length > 0}
-                  required
-                >
-                  <option value="">Seleccione un proveedor...</option>
-                  {proveedores.map((proveedor) => (
-                    <option key={proveedor.id_proveedor} value={proveedor.id_proveedor}>
-                      {proveedor.nombre} - {proveedor.rut}
-                    </option>
-                  ))}
-                </select>
-              )}
-              {formulario.productos.length > 0 && (
-                <div className="campo-bloqueado-info">
-                  <small>⚠️ No se puede cambiar el proveedor una vez agregados los productos. Para cambiar, elimine todos los productos primero.</small>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Información del Empleado */}
-          <div className="form-section">
-            <h3>Empleado Responsable</h3>
-            <div className="form-group">
-              <label htmlFor="empleado">Empleado *</label>
-              {cargando.empleados ? (
-                <div className="loading-select">Cargando empleados...</div>
-              ) : (
-                <select
-                  id="empleado"
-                  value={formulario.id_empleado || ''}
-                  onChange={handleEmpleadoChange}
-                  disabled={formulario.productos.length > 0}
-                  required
-                >
-                  <option value="">Seleccione un empleado...</option>
-                  {empleados.map((empleado) => (
-                    <option key={empleado.id_empleado} value={empleado.id_empleado}>
-                      {empleado.nombre} {empleado.apellido} - {empleado.rol}
-                    </option>
-                  ))}
-                </select>
-              )}
-              {formulario.productos.length > 0 && (
-                <div className="campo-bloqueado-info">
-                  <small>⚠️ No se puede cambiar el empleado una vez agregados los productos. Para cambiar, elimine todos los productos primero.</small>
-                </div>
-              )}
-            </div>
-          </div>
-
           {/* Agregar Productos */}
           <div className="form-section">
             <h3>Agregar Productos</h3>
             
-            {/* Mensaje informativo sobre filtrado por proveedor */}
-            {formulario.id_proveedor && (
-              <div className="info-proveedor">
-                <div className="info-box">
-                  <i>ℹ️</i>
-                  <span>
-                    Se muestran únicamente los productos que vende este proveedor. 
-                    Los precios mostrados son los precios específicos de este proveedor.
-                  </span>
-                </div>
+            {/* Mensaje informativo sobre flujo de trabajo */}
+            <div className="info-proveedor">
+              <div className="info-box">
+                <i>ℹ️</i>
+                <span>
+                  Seleccione los productos que necesita. Los precios mostrados son los precios base.
+                  Después podrá elegir el proveedor específico para cada producto en la tabla.
+                </span>
               </div>
-            )}
-            
-            {!formulario.id_proveedor && (
-              <div className="info-proveedor warning">
-                <div className="info-box warning">
-                  <i>⚠️</i>
-                  <span>
-                    Debe seleccionar un proveedor antes de agregar productos.
-                  </span>
-                </div>
-              </div>
-            )}
+            </div>
             
             {cargando.productos ? (
               <div className="loading-products">Cargando productos...</div>
@@ -531,16 +576,11 @@ const OrdenCompraForm: React.FC = () => {
                       id="nombreProducto"
                       value={nuevoProducto.id_producto || ''}
                       onChange={(e) => handleProductoChange('id_producto', parseInt(e.target.value) || 0)}
-                      disabled={!formulario.id_proveedor}
                     >
-                      <option value="">
-                        {!formulario.id_proveedor 
-                          ? "Primero seleccione un proveedor..." 
-                          : "Seleccione un producto..."
-                        }
-                      </option>
+                      <option value="">Seleccione un producto...</option>
                       {productosDisponibles.map((producto) => {
-                        const precioMostrar = producto.precio_proveedor || producto.precio_unitario;
+                        // Mostrar precio base inicialmente
+                        const precioMostrar = producto.precio_unitario;
                         
                         return (
                           <option key={producto.id_producto} value={producto.id_producto}>
@@ -616,6 +656,7 @@ const OrdenCompraForm: React.FC = () => {
                     <tr>
                       <th>Producto</th>
                       <th>Cantidad</th>
+                      <th>Proveedor</th>
                       <th>Precio Unit.</th>
                       <th>Subtotal</th>
                       <th>Acciones</th>
@@ -626,6 +667,25 @@ const OrdenCompraForm: React.FC = () => {
                       <tr key={index}>
                         <td>{producto.nombre || 'Sin nombre'}</td>
                         <td>{producto.cantidad || 0}</td>
+                        <td>
+                          <select
+                            value={producto.id_proveedor || ''}
+                            onChange={(e) => handleProveedorProductoChange(index, parseInt(e.target.value) || null)}
+                            className="proveedor-select"
+                          >
+                            <option value="">Seleccionar proveedor...</option>
+                            {(producto.proveedores_disponibles || []).map((proveedor) => (
+                              <option key={proveedor.id_proveedor} value={proveedor.id_proveedor}>
+                                {proveedor.nombre}
+                              </option>
+                            ))}
+                          </select>
+                          {producto.proveedor_nombre && (
+                            <div className="proveedor-seleccionado">
+                              <small>✓ {producto.proveedor_nombre}</small>
+                            </div>
+                          )}
+                        </td>
                         <td>{formatearPrecio(producto.precio_unitario || 0)}</td>
                         <td>{formatearPrecio(producto.subtotal || 0)}</td>
                         <td>
@@ -644,6 +704,66 @@ const OrdenCompraForm: React.FC = () => {
                 <div className="total-section">
                   <h3>Total: {formatearPrecio(formulario.total)}</h3>
                 </div>
+              </div>
+            </div>
+          )}
+
+          {/* Resumen de Órdenes a Crear */}
+          {formulario.productos.length > 0 && obtenerResumenOrdenes() && obtenerResumenOrdenes()!.length > 1 && (
+            <div className="form-section">
+              <h3>📋 Resumen de Órdenes</h3>
+              <div className="info-proveedor">
+                <div className="info-box warning">
+                  <i>⚠️</i>
+                  <span>
+                    Tiene productos de diferentes proveedores. Se crearán <strong>{obtenerResumenOrdenes()!.length} órdenes separadas</strong>, una por cada proveedor:
+                  </span>
+                </div>
+              </div>
+              <div className="resumen-ordenes">
+                {obtenerResumenOrdenes()!.map((resumen, index) => (
+                  <div key={index} className="resumen-orden">
+                    <h4>🏪 {resumen.proveedor}</h4>
+                    <div className="resumen-detalles">
+                      <span>{resumen.productos} producto(s)</span>
+                      <span className="resumen-total">{formatearPrecio(resumen.total)}</span>
+                    </div>
+                    <div className="resumen-productos">
+                      {resumen.items.map((item, itemIndex) => (
+                        <small key={itemIndex}>
+                          • {item.nombre} (x{item.cantidad})
+                        </small>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Información del Empleado */}
+          {formulario.productos.length > 0 && (
+            <div className="form-section">
+              <h3>Empleado Responsable</h3>
+              <div className="form-group">
+                <label htmlFor="empleado">Empleado *</label>
+                {cargando.empleados ? (
+                  <div className="loading-select">Cargando empleados...</div>
+                ) : (
+                  <select
+                    id="empleado"
+                    value={formulario.id_empleado || ''}
+                    onChange={handleEmpleadoChange}
+                    required
+                  >
+                    <option value="">Seleccione un empleado...</option>
+                    {empleados.map((empleado) => (
+                      <option key={empleado.id_empleado} value={empleado.id_empleado}>
+                        {empleado.nombre} {empleado.apellido} - {empleado.rol}
+                      </option>
+                    ))}
+                  </select>
+                )}
               </div>
             </div>
           )}

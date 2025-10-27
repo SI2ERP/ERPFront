@@ -12,6 +12,8 @@ const ListaOrdenes: React.FC = () => {
   const [error, setError] = useState<string>('');
   const [filtroEstado, setFiltroEstado] = useState<string>('');
   const [eliminando, setEliminando] = useState<number | null>(null);
+  const [ordenesSeleccionadas, setOrdenesSeleccionadas] = useState<Set<number>>(new Set());
+  const [eliminandoSeleccionadas, setEliminandoSeleccionadas] = useState<boolean>(false);
 
   useEffect(() => {
     cargarOrdenes();
@@ -60,6 +62,13 @@ const ListaOrdenes: React.FC = () => {
         // Actualizar la lista local
         setOrdenes(ordenes.filter(orden => orden.id_orden_compra !== id));
         
+        // Remover de seleccionadas si estaba seleccionada
+        setOrdenesSeleccionadas(prev => {
+          const nuevasSeleccionadas = new Set(prev);
+          nuevasSeleccionadas.delete(id);
+          return nuevasSeleccionadas;
+        });
+        
         // Mostrar mensaje de éxito
         alert('Orden eliminada exitosamente');
       } catch (error) {
@@ -67,6 +76,66 @@ const ListaOrdenes: React.FC = () => {
         alert(`Error al eliminar la orden: ${error instanceof Error ? error.message : 'Error desconocido'}`);
       } finally {
         setEliminando(null); // Limpiar el estado de eliminando
+      }
+    }
+  };
+
+  const toggleSeleccionOrden = (id: number) => {
+    setOrdenesSeleccionadas(prev => {
+      const nuevasSeleccionadas = new Set(prev);
+      if (nuevasSeleccionadas.has(id)) {
+        nuevasSeleccionadas.delete(id);
+      } else {
+        nuevasSeleccionadas.add(id);
+      }
+      return nuevasSeleccionadas;
+    });
+  };
+
+  const toggleSeleccionarTodas = () => {
+    const todasSeleccionadas = ordenesSeleccionadas.size === ordenesFiltradas.length && ordenesFiltradas.length > 0;
+    
+    if (todasSeleccionadas) {
+      // Deseleccionar todas
+      setOrdenesSeleccionadas(new Set());
+    } else {
+      // Seleccionar todas las filtradas
+      const idsVisibles = ordenesFiltradas.map(orden => orden.id_orden_compra);
+      setOrdenesSeleccionadas(new Set(idsVisibles));
+    }
+  };
+
+  const eliminarSeleccionadas = async () => {
+    const cantidadSeleccionadas = ordenesSeleccionadas.size;
+    
+    if (cantidadSeleccionadas === 0) {
+      alert('No hay órdenes seleccionadas para eliminar.');
+      return;
+    }
+
+    if (confirm(`¿Está seguro de que desea eliminar ${cantidadSeleccionadas} orden(es) seleccionada(s)? Esta acción no se puede deshacer.`)) {
+      try {
+        setEliminandoSeleccionadas(true);
+        
+        // Eliminar todas las órdenes seleccionadas
+        const promesasEliminacion = Array.from(ordenesSeleccionadas).map(id => 
+          comprasService.eliminarOrden(id)
+        );
+        
+        await Promise.all(promesasEliminacion);
+        
+        // Actualizar la lista local
+        setOrdenes(ordenes.filter(orden => !ordenesSeleccionadas.has(orden.id_orden_compra)));
+        
+        // Limpiar selecciones
+        setOrdenesSeleccionadas(new Set());
+        
+        alert(`${cantidadSeleccionadas} orden(es) eliminada(s) exitosamente`);
+      } catch (error) {
+        console.error('Error al eliminar órdenes seleccionadas:', error);
+        alert(`Error al eliminar algunas órdenes: ${error instanceof Error ? error.message : 'Error desconocido'}`);
+      } finally {
+        setEliminandoSeleccionadas(false);
       }
     }
   };
@@ -143,6 +212,15 @@ const ListaOrdenes: React.FC = () => {
           >
             + Nueva Orden
           </button>
+          {ordenesSeleccionadas.size > 0 && (
+            <button 
+              onClick={eliminarSeleccionadas}
+              className="btn-eliminar-seleccionadas"
+              disabled={eliminandoSeleccionadas}
+            >
+              {eliminandoSeleccionadas ? 'Eliminando...' : `🗑 Eliminar ${ordenesSeleccionadas.size} seleccionada(s)`}
+            </button>
+          )}
           <select
             value={filtroEstado}
             onChange={(e) => setFiltroEstado(e.target.value)}
@@ -177,6 +255,14 @@ const ListaOrdenes: React.FC = () => {
           <table className="tabla-ordenes">
             <thead>
               <tr>
+                <th className="checkbox-columna">
+                  <input
+                    type="checkbox"
+                    checked={ordenesSeleccionadas.size === ordenesFiltradas.length && ordenesFiltradas.length > 0}
+                    onChange={toggleSeleccionarTodas}
+                    title="Seleccionar/Deseleccionar todas"
+                  />
+                </th>
                 <th>Proveedor</th>
                 <th>Empleado</th>
                 <th>Fecha</th>
@@ -186,7 +272,14 @@ const ListaOrdenes: React.FC = () => {
             </thead>
             <tbody>
               {ordenesFiltradas.map((orden) => (
-                <tr key={orden.id_orden_compra}>
+                <tr key={orden.id_orden_compra} className={ordenesSeleccionadas.has(orden.id_orden_compra) ? 'fila-seleccionada' : ''}>
+                  <td className="checkbox-columna">
+                    <input
+                      type="checkbox"
+                      checked={ordenesSeleccionadas.has(orden.id_orden_compra)}
+                      onChange={() => toggleSeleccionOrden(orden.id_orden_compra)}
+                    />
+                  </td>
                   <td>{orden.proveedor_nombre || 'N/A'}</td>
                   <td>{orden.empleado_nombre || 'N/A'}</td>
                   <td>{formatearFecha(orden.fecha)}</td>
@@ -250,6 +343,12 @@ const ListaOrdenes: React.FC = () => {
           <span className="numero">{ordenes.length}</span>
           <span className="etiqueta">Total</span>
         </div>
+        {ordenesSeleccionadas.size > 0 && (
+          <div className="estadistica estadistica-seleccionadas">
+            <span className="numero">{ordenesSeleccionadas.size}</span>
+            <span className="etiqueta">Seleccionadas</span>
+          </div>
+        )}
       </div>
     </div>
   );

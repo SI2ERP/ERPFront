@@ -541,3 +541,160 @@ input[type=number] {
   margin-top: 5px;
   display: block;
 }
+
+/* Estilos para la columna de proveedor en la tabla */
+.proveedor-select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #444;
+  border-radius: 4px;
+  background-color: #1a1a1a;
+  color: #fff;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.proveedor-select:focus {
+  outline: none;
+  border-color: #646cff;
+  box-shadow: 0 0 0 2px rgba(100, 108, 255, 0.2);
+}
+
+.proveedor-select option {
+  background-color: #1a1a1a;
+  color: #fff;
+  padding: 8px;
+}
+
+.proveedor-seleccionado {
+  margin-top: 4px;
+  font-size: 11px;
+  color: #4ade80;
+  font-weight: 500;
+}
+
+.proveedor-seleccionado small {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Ajustes para la tabla con la nueva columna */
+.productos-lista table {
+  table-layout: fixed;
+  width: 100%;
+}
+
+.productos-lista th:nth-child(1) { width: 25%; } /* Producto */
+.productos-lista th:nth-child(2) { width: 10%; } /* Cantidad */
+.productos-lista th:nth-child(3) { width: 25%; } /* Proveedor */
+.productos-lista th:nth-child(4) { width: 15%; } /* Precio Unit */
+.productos-lista th:nth-child(5) { width: 15%; } /* Subtotal */
+.productos-lista th:nth-child(6) { width: 10%; } /* Acciones */
+
+/* Responsivo para dispositivos móviles */
+@media (max-width: 768px) {
+  .proveedor-select {
+    font-size: 12px;
+    padding: 6px;
+  }
+  
+  .proveedor-seleccionado {
+    font-size: 10px;
+  }
+  
+  .productos-lista th:nth-child(3) { width: 30%; } /* Más espacio para proveedor en móvil */
+  .productos-lista th:nth-child(1) { width: 20%; } /* Menos espacio para producto */
+}
+
+/* Estilos para el resumen de órdenes */
+.resumen-ordenes {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.resumen-orden {
+  background-color: #1a1a1a;
+  border: 1px solid #444;
+  border-radius: 8px;
+  padding: 15px;
+  transition: all 0.3s ease;
+}
+
+.resumen-orden:hover {
+  border-color: #646cff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.resumen-orden h4 {
+  margin: 0 0 10px 0;
+  color: #646cff;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.resumen-detalles {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+
+.resumen-total {
+  color: #4ade80;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.resumen-productos {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.resumen-productos small {
+  color: #b0b0b0;
+  font-size: 13px;
+  padding-left: 10px;
+}
+
+/* Animación para el resumen */
+.resumen-ordenes {
+  animation: slideInUp 0.3s ease-out;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive para el resumen */
+@media (max-width: 768px) {
+  .resumen-orden {
+    padding: 12px;
+  }
+  
+  .resumen-orden h4 {
+    font-size: 14px;
+  }
+  
+  .resumen-total {
+    font-size: 16px;
+  }
+  
+  .resumen-productos small {
+    font-size: 12px;
+  }
+}
