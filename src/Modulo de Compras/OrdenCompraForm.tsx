@@ -22,6 +22,8 @@ interface ProductoEnOrden {
 interface EstadoFormulario {
   id_empleado: number | null;
   productos: ProductoEnOrden[];
+  subtotal: number;
+  iva: number;
   total: number;
 }
 
@@ -40,6 +42,8 @@ const OrdenCompraForm: React.FC = () => {
   const [formulario, setFormulario] = useState<EstadoFormulario>({
     id_empleado: null,
     productos: [],
+    subtotal: 0,
+    iva: 0,
     total: 0,
   });
 
@@ -75,6 +79,14 @@ const OrdenCompraForm: React.FC = () => {
   useEffect(() => {
     cargarDatosIniciales();
   }, []);
+
+  // Función helper para calcular subtotal, IVA (19%) y total
+  const calcularTotales = (productos: ProductoEnOrden[]) => {
+    const subtotal = productos.reduce((sum, prod) => sum + prod.subtotal, 0);
+    const iva = subtotal * 0.19;
+    const total = subtotal + iva;
+    return { subtotal, iva, total };
+  };
 
   const cargarDatosIniciales = async () => {
     try {
@@ -187,13 +199,13 @@ const OrdenCompraForm: React.FC = () => {
           subtotal: nuevoSubtotal,
         };
         
-        // Calcular nuevo total
-        const nuevoTotal = productosActualizados.reduce((sum, prod) => sum + prod.subtotal, 0);
+        // Calcular subtotal, IVA y total
+        const totales = calcularTotales(productosActualizados);
         
         setFormulario({
           ...formulario,
           productos: productosActualizados,
-          total: nuevoTotal,
+          ...totales,
         });
       }
     } catch (error) {
@@ -255,12 +267,12 @@ const OrdenCompraForm: React.FC = () => {
       productosActualizados = [...formulario.productos, productoConProveedores];
     }
 
-    const nuevoTotal = productosActualizados.reduce((sum, prod) => sum + prod.subtotal, 0);
+    const totales = calcularTotales(productosActualizados);
     
     setFormulario({
       ...formulario,
       productos: productosActualizados,
-      total: nuevoTotal,
+      ...totales,
     });
 
 
@@ -281,12 +293,12 @@ const OrdenCompraForm: React.FC = () => {
 
   const eliminarProducto = (index: number) => {
     const productosActualizados = formulario.productos.filter((_, i) => i !== index);
-    const nuevoTotal = productosActualizados.reduce((sum, prod) => sum + prod.subtotal, 0);
+    const totales = calcularTotales(productosActualizados);
     
     setFormulario({
       ...formulario,
       productos: productosActualizados,
-      total: nuevoTotal,
+      ...totales,
     });
 
   };
@@ -384,6 +396,8 @@ const OrdenCompraForm: React.FC = () => {
       setFormulario({
         id_empleado: null,
         productos: [],
+        subtotal: 0,
+        iva: 0,
         total: 0,
       });
 
@@ -422,6 +436,8 @@ const OrdenCompraForm: React.FC = () => {
       setFormulario({
         id_empleado: null,
         productos: [],
+        subtotal: 0,
+        iva: 0,
         total: 0,
       });
       setNuevoProducto({
@@ -702,7 +718,18 @@ const OrdenCompraForm: React.FC = () => {
                   </tbody>
                 </table>
                 <div className="total-section">
-                  <h3>Total: {formatearPrecio(formulario.total)}</h3>
+                  <div className="total-row">
+                    <span className="total-label">Subtotal:</span>
+                    <span className="total-value">{formatearPrecio(formulario.subtotal)}</span>
+                  </div>
+                  <div className="total-row">
+                    <span className="total-label">IVA (19%):</span>
+                    <span className="total-value">{formatearPrecio(formulario.iva)}</span>
+                  </div>
+                  <div className="total-row total-final">
+                    <span className="total-label">Total:</span>
+                    <span className="total-value">{formatearPrecio(formulario.total)}</span>
+                  </div>
                 </div>
               </div>
             </div>

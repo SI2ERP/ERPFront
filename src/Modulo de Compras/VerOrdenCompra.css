@@ -275,34 +275,100 @@ html, body {
   color: #4caf50;
 }
 
-/* Total final */
-.total-final {
-  display: flex;
-  justify-content: flex-end;
-  padding-top: 1.5rem;
+/* Estilos para el tfoot (totales integrados en la tabla) */
+.tabla-productos tfoot tr {
   border-top: 2px solid #444;
-  flex-shrink: 0;
+  background-color: #1a1a1a;
 }
 
+.tabla-productos tfoot td {
+  padding: 12px 15px;
+  font-size: 1rem;
+}
+
+.texto-derecha {
+  text-align: right !important;
+  color: #ccc;
+  padding-right: 20px;
+}
+
+.valor-total {
+  text-align: center !important;
+  color: #fff;
+  font-size: 1.1rem;
+}
+
+.fila-iva {
+  background-color: #1a1a1a;
+}
+
+.fila-total {
+  background-color: #1a2a1a;
+  border-top: 2px solid #4caf50 !important;
+}
+
+.fila-total td {
+  padding: 15px !important;
+}
+
+.fila-total .texto-derecha {
+  color: #fff;
+  font-size: 1.1rem;
+}
+
+.valor-total-final {
+  text-align: center !important;
+  color: #4caf50 !important;
+  font-size: 1.3rem !important;
+  font-weight: 700 !important;
+}
+
+/* Total final (ahora oculto, se usa el tfoot) */
+.total-final {
+  display: none;
+}
+
+/* Resto de estilos de total-row para otras vistas */
 .total-row {
   display: flex;
   align-items: center;
   gap: 15px;
   background-color: #2a2a2a;
-  padding: 15px 20px;
+  padding: 12px 20px;
   border-radius: 8px;
   border: 1px solid #444;
+  min-width: 350px;
+}
+
+.total-row.total-principal {
+  background-color: #1a2a1a;
+  border: 2px solid #4caf50;
+  padding: 15px 20px;
+  margin-top: 5px;
 }
 
 .total-label {
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: 600;
+  color: #ccc;
+  flex: 1;
+}
+
+.total-row.total-principal .total-label {
+  font-size: 1.2rem;
   color: #fff;
 }
 
 .total-valor {
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   font-weight: 700;
+  color: #fff;
+  min-width: 150px;
+  text-align: right;
+}
+
+.total-row.total-principal .total-valor {
+  font-size: 1.4rem;
   color: #4caf50;
 }
 

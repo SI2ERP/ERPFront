@@ -46,6 +46,9 @@ export interface OrdenCompra {
   estado?: 'PENDIENTE' | 'APROBADA' | 'RECHAZADA' | 'COMPLETADA';
   proveedor_nombre?: string;
   empleado_nombre?: string;
+  subtotal?: number;
+  iva?: number;
+  total?: number;
   detalle: DetalleCompra[];
 }
 
@@ -57,6 +60,9 @@ export interface OrdenCompraResponse {
   estado: 'PENDIENTE' | 'APROBADA' | 'RECHAZADA' | 'COMPLETADA';
   proveedor_nombre?: string;
   empleado_nombre?: string;
+  subtotal?: number;
+  iva?: number;
+  total?: number;
   detalle?: DetalleCompra[];
 }
 
@@ -89,6 +95,9 @@ export interface OrdenCompraCompleta {
   id_empleado: number;
   fecha: string;
   estado: string;
+  subtotal?: number;
+  iva?: number;
+  total?: number;
   total_orden: number;
   proveedor: ProveedorCompleto;
   empleado: EmpleadoCompleto;

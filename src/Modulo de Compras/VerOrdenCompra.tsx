@@ -194,7 +194,6 @@ const VerOrdenCompra: React.FC = () => {
                   <th>Descripción</th>
                   <th>Cantidad</th>
                   <th>Precio Unitario</th>
-                  <th>Subtotal</th>
                 </tr>
               </thead>
               <tbody>
@@ -204,19 +203,24 @@ const VerOrdenCompra: React.FC = () => {
                     <td className="producto-descripcion">{item.producto_descripcion}</td>
                     <td className="cantidad">{item.cantidad}</td>
                     <td className="precio-unitario">{formatearMoneda(item.precio_unitario)}</td>
-                    <td className="subtotal">{formatearMoneda(item.subtotal)}</td>
                   </tr>
                 ))}
               </tbody>
+              <tfoot>
+                <tr className="fila-subtotal">
+                  <td colSpan={3} className="texto-derecha"><strong>Subtotal:</strong></td>
+                  <td className="valor-total"><strong>{formatearMoneda(orden.subtotal ?? 0)}</strong></td>
+                </tr>
+                <tr className="fila-iva">
+                  <td colSpan={3} className="texto-derecha"><strong>IVA (19%):</strong></td>
+                  <td className="valor-total"><strong>{formatearMoneda(orden.iva ?? 0)}</strong></td>
+                </tr>
+                <tr className="fila-total">
+                  <td colSpan={3} className="texto-derecha"><strong>Total de la Orden:</strong></td>
+                  <td className="valor-total-final"><strong>{formatearMoneda(orden.total ?? orden.total_orden ?? 0)}</strong></td>
+                </tr>
+              </tfoot>
             </table>
-          </div>
-          
-          {/* Total Final */}
-          <div className="total-final">
-            <div className="total-row">
-              <span className="total-label">Total de la Orden:</span>
-              <span className="total-valor">{formatearMoneda(orden.total_orden)}</span>
-            </div>
           </div>
         </div>
       </div>
