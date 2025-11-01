@@ -1,5 +1,5 @@
 import { Typography, TextField } from "@mui/material";
-import { PaymentTerm,  PaymentMethod, type PaymentMethodType, type PaymentTermType } from "../../types/Order";
+import {  PaymentMethod, type PaymentMethodType, type PaymentTermType } from "../../types/Order";
 
 
 type AdditionalDetailsProps = {
@@ -14,7 +14,7 @@ type AdditionalDetailsProps = {
     setErrorPaymentTerm : (msg : string | null) => void
 } 
 
-export default function AdditionalDetails({ selectedPaymentMethod, handlePaymentMethod, selectedPaymentTerms, handlePaymentTerms, errorPaymentMethod, setErrorPaymentMethod, errorPaymentTerm, setErrorPaymentTerm } : AdditionalDetailsProps) {
+export default function AdditionalDetails({ selectedPaymentMethod, handlePaymentMethod, errorPaymentMethod, setErrorPaymentMethod } : AdditionalDetailsProps) {
 
     return (
         <div className='flex flex-col gap-4 flex-1 px-8 py-4'>
@@ -39,12 +39,11 @@ export default function AdditionalDetails({ selectedPaymentMethod, handlePayment
                 }}
                 >
                     <option value={''}>Selecciona un método de pago</option>
-                    <option value={PaymentMethod.CASH}>{PaymentMethod.CASH}</option>
                     <option value={PaymentMethod.DEBIT_CARD}>{PaymentMethod.DEBIT_CARD}</option>
                     <option value={PaymentMethod.TRANSFER}>{PaymentMethod.TRANSFER}</option>
-                    <option value={PaymentMethod.CHECK}>{PaymentMethod.CHECK}</option>
                 </TextField>
             </div>
+            {/*
             <div className='flex flex-col gap-2'>
                 <Typography variant='body2'>Condiciones de Pago:</Typography>
                 <TextField
@@ -68,7 +67,8 @@ export default function AdditionalDetails({ selectedPaymentMethod, handlePayment
                     <option value={PaymentTerm.IN_60_DAYS}>{PaymentTerm.IN_60_DAYS}</option>
                     <option value={PaymentTerm.IN_90_DAYS}>{PaymentTerm.IN_90_DAYS}</option>
                 </TextField>
-            </div>              
+            </div>    
+            */}          
         </div>        
     )    
 };

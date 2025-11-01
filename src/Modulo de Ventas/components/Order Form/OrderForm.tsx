@@ -1,5 +1,5 @@
 import { Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle, Snackbar, type AlertColor, type SxProps, type Theme } from "@mui/material"
-import OrderHeader from "./OrderHeader"
+//import OrderHeader from "./OrderHeader"
 import { useEffect, useMemo, useState } from "react"
 import type { Client } from "../../types/Client"
 import OrderItemTable from "./OrderItemTable"
@@ -8,7 +8,7 @@ import AdditionalDetails from "./AdditionalDetails"
 import TotalOrder from "./TotalOrder"
 import AddItemForm from "./AddItemForm"
 import { IVA } from "../../utils/IVA"
-import { useClients } from "../../api/queries/ClientQueries"
+//import { useClients } from "../../api/queries/ClientQueries"
 import { usePostOrders } from "../../api/queries/OrderQueries"
 
 
@@ -20,7 +20,7 @@ export type OrderFormProps = {
 export default function OrderForm({ stateOpen } : OrderFormProps) {
     const [open, setOpen] = stateOpen
 
-    const clients = useClients().data
+    //const clients = useClients().data
     const { mutate, data } = usePostOrders()
     
     const [ orderItems, setOrderItems ] = useState<OrderItem[]>([{ product: { id: 1, name: "Mouse", price: 231}, quantity: 5}, { product: { id: 2, name: "PC-GAMER", price: 2131}, quantity: 1}])
@@ -77,11 +77,6 @@ export default function OrderForm({ stateOpen } : OrderFormProps) {
 
 
     const handleSubmitOrder = () => {
-        if(!selectedClient) {
-            setErrors({...errors, client: 'Selecciona un cliente'})
-            setSnackbar({ open: true, severity: 'error', msg : 'Debes de seleccionar un cliente antes de generar el pedido'})
-            return 
-        } 
 
         if(orderItems.length === 0) {
             setErrors({...errors, orderItems: 'Agrega al menos un producto al pedido'})
@@ -95,18 +90,13 @@ export default function OrderForm({ stateOpen } : OrderFormProps) {
             return 
         }
 
-        if(!selectedPaymentTerms) {
-            setErrors({...errors, paymentTerm: 'Selecciona una condición de pago'})
-            setSnackbar({open: true, severity: 'error', msg : 'Debes de seleccionar una condición de pago'})
-            return
-        }
 
         mutate({
             orderItems: orderItems,
-            client: selectedClient,
+            client: selectedClient as Client,
             AdditionalDetails: {
                 paymentMethod: selectedPaymentMethod,
-                paymentTerm: selectedPaymentTerms,
+                paymentTerm: '',
             },
             createdAt: new Date(),
             total: total,
@@ -147,16 +137,6 @@ export default function OrderForm({ stateOpen } : OrderFormProps) {
                        {snackbar.msg}
                     </Alert>
                 </Snackbar>
-                { clients ? 
-                    <OrderHeader 
-                        clients={clients}       
-                        selectedClient={selectedClient} 
-                        handleSelectedClient={setSelectedClient} 
-                        errorClient={errors.client}
-                        setErrorClient={( msg ) => setErrors( prev => ({...prev, client: msg }))}
-                    /> :
-                    <></>
-                }
                 <OrderItemTable 
                     orderItems={orderItems} 
                     handleQuantityItem={handleQuantityItem} 

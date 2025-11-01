@@ -5,6 +5,7 @@ import type { TClient } from "./ClientService"
 
 const RESOURCE_NAME = 'sales'
 
+
 type TEmpleado = {
     id_empleado: number
     nombre: string
@@ -71,7 +72,7 @@ const transformOrderResponse = (response: TOrderResponse): Order => {
             quantity: detalle.cantidad
         })),
         client: {
-            id_cliente: response.cliente.id_cliente,
+            id_cliente: response.id_cliente,
             nombre: response.cliente.nombre,
             apellido: response.cliente.apellido,
             email: response.cliente.email,
@@ -90,7 +91,7 @@ const transformOrderResponse = (response: TOrderResponse): Order => {
 
 const transformOrderToRequest = (order: Omit<Order, 'id' | 'createdAt'>): TCreateOrderRequest => {
     return {
-        id_cliente: order.client.id_cliente,
+        id_cliente: 1,
         id_empleado: 1,
         fecha_pedido: new Date(),
         detalles_venta: order.orderItems.map(item => ({
@@ -108,6 +109,7 @@ export class OrderService {
     static async FindAllOrders(): Promise<Order[]> {
         const { data } = await axiosInstance.get<TOrderResponse[]>(`/${RESOURCE_NAME}`)  
         console.log(data)      
+        console.log(data.map(transformOrderResponse))
         return data.map(transformOrderResponse)
     }
 
@@ -117,8 +119,9 @@ export class OrderService {
     }
 
     static async PostOrder(order: Omit<Order, 'id'>): Promise<Order> {
+        console.log("sdjdsj")
         const body = transformOrderToRequest(order)
-        console.log(body)
+        console.log("post: ", body)
         const { data } = await axiosInstance.post<TOrderResponse>(`/${RESOURCE_NAME}`, body)
         return transformOrderResponse(data)
     }

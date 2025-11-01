@@ -6,6 +6,7 @@ import Client from './Modulo de Ventas/views/Client'
 import Invoice from './Modulo de Ventas/views/Invoice'
 import Report from './Modulo de Ventas/views/Report'
 import Dashboard from './Modulo de Ventas/views/Dashboard'
+import ClientView from './Modulo de Ventas/views/ClientView'
 
 
 function App() {
@@ -13,6 +14,7 @@ function App() {
     <div className="app">
       <main>
         <Routes>
+          <Route path='/cliente' element={<ClientView />}></Route>
           <Route path="/" element={<Home />}></Route>
           <Route path="/ventas" element={<Venta />}>
             <Route index element={<Dashboard />}></Route>

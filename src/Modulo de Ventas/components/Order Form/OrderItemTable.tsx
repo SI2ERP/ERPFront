@@ -20,13 +20,13 @@ export default function OrderItemTable({ orderItems, handleQuantityItem, handleR
                 <Typography variant='body2' sx={{ fontWeight: 'bold' }}>Cantidad</Typography>
               </Grid>
               <Grid size={1} sx={gridHeaderStyle}>
-                <Typography variant='body2' sx={{ fontWeight: 'bold' }}>IVA</Typography>
+                <Typography variant='body2' sx={{ fontWeight: 'bold' }}>IVA %</Typography>
               </Grid>
               <Grid size={2} sx={gridHeaderStyle}>
                 <Typography variant='body2' sx={{ fontWeight: 'bold' }}>Precio sin IVA (unitario)</Typography>
               </Grid>
               <Grid size={2} sx={gridHeaderStyle}>
-                <Typography variant='body2' sx={{ fontWeight: 'bold' }}>Precio con IVA (unitario)</Typography>
+                <Typography variant='body2' sx={{ fontWeight: 'bold' }}>IVA</Typography>
               </Grid>
               <Grid size={1} sx={gridHeaderStyle}>
                 <Typography variant='body2' sx={{ fontWeight: 'bold' }}>Eliminar</Typography>
@@ -38,7 +38,7 @@ export default function OrderItemTable({ orderItems, handleQuantityItem, handleR
                     <Typography className='pl-2' variant='body2' fontWeight='bold'>{item.product.name}</Typography>
                   </Grid>
                   <Grid size={2} sx={gridRowStyle}>
-                   <NumberInput cantidad={item.quantity} onChange={(newQuantity : number) => {handleQuantityItem(item.product.id, newQuantity )}} />
+                   <NumberInput cantidad={item.quantity} onChange={(newQuantity : number) => {handleQuantityItem(item.product.id, newQuantity > 0 ? newQuantity : 1)}} />
                   </Grid>
                   <Grid size={1} sx={gridRowStyle}>
                     <Typography variant='body2'>19%</Typography>
