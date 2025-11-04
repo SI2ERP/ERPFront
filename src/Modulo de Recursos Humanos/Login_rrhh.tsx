@@ -62,7 +62,7 @@ export const Login_rrhh = () =>{
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-[#0f1115]">
+        <div className="min-h-screen flex items-center justify-center bg-[#0f1115] ">
             <div className="px-6 bg-gradient-to-tr from-[#2b3036] to-[#1e2328] w-full max-w-sm py-16 rounded-md shadow-2xl">
                 <div>
                     <header className="mb-8 text-center">

@@ -8,6 +8,8 @@ interface Empleado {
   rut: string;
   nombre: string;
   apellido: string;
+  rol: string;
+  email: string;
   fecha_ingreso: string;
   estado: "ACTIVO" | "INACTIVO" | string;
   fecha_baja?: string | null;
@@ -63,7 +65,7 @@ export const EstadoEmpleados_rrhh = () => {
   }
 
   return (
-    <div className="p-8 bg-[#0f1115] min-h-screen text-[#d5d9de]">
+    <div className="p-9 bg-[#0f1115] min-h-screen text-[#d5d9de]">
       <h2 className="text-3xl font-semibold mb-6 text-[#d5d9de]">
         Estado / Datos de Empleados
       </h2>
@@ -111,12 +113,12 @@ export const EstadoEmpleados_rrhh = () => {
           <thead className="bg-[#2b3036] text-[#d5d9de]">
             <tr>
               <th className="border-b border-[#3a3f45] p-3 text-left font-medium">Nombre</th>
-              <th className="border-b border-[#3a3f45] p-3 text-left font-medium">RUT</th>
-              <th className="border-b border-[#3a3f45] p-3 text-left font-medium">Departamento</th>
+              <th className="border-b border-[#3a3f45] p-3 text-left font-medium">Apellido</th>
+              <th className="border-b border-[#3a3f45] p-3 text-left font-medium">Rol</th>
+              <th className="border-b border-[#3a3f45] p-3 text-left font-medium">Email</th>
               <th className="border-b border-[#3a3f45] p-3 text-left font-medium">Estado</th>
-              <th className="border-b border-[#3a3f45] p-3 text-left font-medium">Fecha ingreso</th>
-              <th className="border-b border-[#3a3f45] p-3 text-left font-medium">Fecha baja</th>
-              <th className="border-b border-[#3a3f45] p-3 text-left font-medium">Motivo baja</th>
+              {/*<th className="border-b border-[#3a3f45] p-3 text-left font-medium">Fecha baja</th>
+              <th className="border-b border-[#3a3f45] p-3 text-left font-medium">Motivo baja</th>*/}
             </tr>
           </thead>
           <tbody>
@@ -131,24 +133,24 @@ export const EstadoEmpleados_rrhh = () => {
                 <tr key={e.id_empleado}
                   className={`${idx % 2 === 0 ? "bg-[#2b3036]" : "bg-[#23272b]"} hover:bg-[#3a3f45] transition-colors duration-200`}>
                   <td className="border-b border-[#3a3f45] p-3 text-[#d5d9de] font-medium">
-                    {e.nombre} {e.apellido}
+                    {e.nombre} 
                   </td>
-                  <td className="border-b border-[#3a3f45] p-3 text-[#d5d9de] font-medium">{e.rut}</td>
+                  <td className="border-b border-[#3a3f45] p-3 text-[#d5d9de] font-medium">{e.apellido}</td>
                   <td className="border-b border-[#3a3f45] p-3 text-[#d5d9de] font-medium">
-                    {e.departamento?.id_departamento ?? "—"}
+                    {e.rol}
+                  </td>
+                  <td className="border-b border-[#3a3f45] p-3 text-[#d5d9de] font-medium">
+                    {e.email}
                   </td>
                   <td className="border-b border-[#3a3f45] p-3 font-semibold text-[#d5d9de]"> 
                     {e.estado === "ACTIVO" ? "ACTIVO" : "INACTIVO"}
                   </td>
-                  <td className="border-b border-[#3a3f45] p-3 text-[#d5d9de] font-medium">
-                    {e.fecha_ingreso ? new Date(e.fecha_ingreso).toLocaleDateString() : "—"}
-                  </td>
-                  <td className="border-b border-[#3a3f45] p-3 text-[#d5d9de] font-medium">
+                  {/*<td className="border-b border-[#3a3f45] p-3 text-[#d5d9de] font-medium">
                     {e.fecha_baja ? new Date(e.fecha_baja).toLocaleDateString() : "—"}
                   </td>
                   <td className="border-b border-[#3a3f45] p-3 text-[#d5d9de] font-medium">
                     {e.motivo_baja ?? "—"}
-                  </td>
+                  </td>*/}
                 </tr>
               ))
             )}
