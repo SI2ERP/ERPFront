@@ -43,24 +43,24 @@ export const ListarEmpleados: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-screen">
-        <p className="text-gray-600 text-lg animate-pulse">Cargando empleados...</p>
+      <div className="flex items-center justify-center h-screen bg-[#0f1115]">
+        <p className="text-[#c7cdd4] text-lg animate-pulse">Cargando empleados...</p>
       </div>
     );
   }
 
   if (errorConexion) {
     return (
-      <div className="flex flex-col items-center justify-center h-screen text-center">
+      <div className="flex flex-col items-center justify-center h-screen text-center bg-[#0f1115]">
         <h2 className="text-2xl font-semibold text-red-600 mb-2">
           ❌ Error de conexión
         </h2>
-        <p className="text-gray-600 mb-4">
+        <p className="text-[#c7cdd4] mb-4">
           No se pudo conectar con el servidor. Verifica tu conexión o que el backend esté activo.
         </p>
         <button
           onClick={() => window.location.reload()}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
+          className="bg-[#a7aeb6] hover:bg-[#d5d9de] text-[#0f1115] px-4 py-2 rounded font-semibold transition duration-200"
         >
           Reintentar
         </button>
@@ -70,11 +70,11 @@ export const ListarEmpleados: React.FC = () => {
 
   if (empleados.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center h-screen text-center">
-        <h2 className="text-2xl font-semibold text-gray-700 mb-2">
+      <div className="flex flex-col items-center justify-center h-screen text-center bg-[#0f1115]">
+        <h2 className="text-2xl font-semibold text-[#d5d9de] mb-2">
           😕 No hay empleados registrados
         </h2>
-        <p className="text-gray-500">
+        <p className="text-[#a7aeb6]">
           Actualmente no hay registros disponibles en la base de datos.
         </p>
       </div>
@@ -83,29 +83,29 @@ export const ListarEmpleados: React.FC = () => {
 
 
   return (
-    <div className="p-8 bg-[#e8f3ed] min-h-screen">
-      <h2 className="text-3xl font-semibold mb-6 text-[#1a8a5b]">
+    <div className="p-8 bg-[#0f1115] min-h-screen text-[#c7cdd4]">
+      <h2 className="text-3xl font-semibold mb-6 text-[#d5d9de]">
         Listado de Empleados
       </h2>
 
       <button
           onClick={() => navigate("/rrhh/admin")}
-          className="px-3 py-1 rounded hover:!bg-gray-100 active:scale-95"
+          className="px-3 py-1 rounded text-[#d5d9de] border border-[#3a3f45] hover:bg-[#2b3036] active:scale-95 mb-4"
         >
           ← Volver al panel admin
       </button>
 
       <div className="overflow-x-auto">
-        <table className="min-w-full border border-[#1e8449] bg-[#cde3d6] shadow-lg rounded-md">
-          <thead className="bg-[#1a8a5b] text-white">
+        <table className="min-w-full border border-[#3a3f45] bg-[#2b3036] shadow-lg rounded-md">
+          <thead className="bg-[#353a40] text-[#d5d9de]">
             <tr>
-              <th className="border-b border-[#1e8449] p-3 text-left font-medium">
+              <th className="border-b border-[#3a3f45] p-3 text-left font-medium">
                 Nombre
               </th>
-              <th className="border-b border-[#1e8449] p-3 text-left font-medium">
+              <th className="border-b border-[#3a3f45] p-3 text-left font-medium">
                 Rol
               </th>
-              <th className="border-b border-[#1e8449] p-3 text-center font-medium">
+              <th className="border-b border-[#3a3f45] p-3 text-center font-medium">
                 Acción
               </th>
             </tr>
@@ -115,19 +115,19 @@ export const ListarEmpleados: React.FC = () => {
               <tr
                 key={emp.id_empleado}
                 className={`${
-                  index % 2 === 0 ? "bg-[#a8bfb2]" : "bg-[#97b5a5]"
-                } hover:bg-[#86ab98] transition-colors duration-200`}
+                  index % 2 === 0 ? "bg-[#1a1d21]" : "bg-[#23272b]"
+                } hover:bg-[#2e3237] transition-colors duration-200`}
               >
-                <td className="border-b border-[#1e8449] p-3 text-white font-medium">
+                <td className="border-b border-[#3a3f45] p-3">
                   {emp.nombre} {emp.apellido}
                 </td>
-                <td className="border-b border-[#1e8449] p-3 text-white font-medium">
+                <td className="border-b border-[#3a3f45] p-3">
                   {emp.rol}
                 </td>
-                <td className="border-b border-[#1e8449] p-3 text-center">
+                <td className="border-b border-[#3a3f45] p-3">
                   <button
                     onClick={() => manejarAsignarRol(emp.id_empleado)}
-                    className="bg-white text-[#1a8a5b] border border-[#1a8a5b] hover:bg-[#2ecc71] hover:text-black active:scale-95 px-4 py-2 rounded-md font-semibold transition duration-200"
+                    className="bg-gradient-to-tr from-[#c7ccd2] to-[#a7aeb6] text-[#0f1115] hover:from-[#d5d9de] hover:to-[#b3bbc3] active:scale-95 px-4 py-2 rounded-md font-semibold transition duration-200"
                   >
                     Asignar Rol
                   </button>

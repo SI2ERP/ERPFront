@@ -62,12 +62,18 @@ export const Login_rrhh = () =>{
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center">
-            <div className="px-6 bg-[#1a8a5b] w-full max-w-sm py-16 rounded-md shadow-md">
+        <div className="min-h-screen flex items-center justify-center bg-[#0f1115]">
+            <div className="px-6 bg-gradient-to-tr from-[#2b3036] to-[#1e2328] w-full max-w-sm py-16 rounded-md shadow-2xl">
                 <div>
-                <h1 className="mb-16 text-white font-bold text-4xl sm:text-3xl">
-                    Modulo RRHH
-                </h1>
+                    <header className="mb-8 text-center">
+                        <h1 className="text-3xl font-bold tracking-tight text-[#d5d9de]">
+                            Modulo RRHH
+                        </h1>
+
+                        <p className="mt-1 text-sm text-[#c7cdd4] mb-3">
+                            Ingresa tus credenciales para continuar.
+                        </p>
+                    </header>
                 </div>
 
                 <form onSubmit={handleLogin}>
@@ -75,7 +81,13 @@ export const Login_rrhh = () =>{
                     <input
                     id="correo"
                     type="text"
-                    className="bg-[#27ae60] border border-[#1e8449] rounded-md p-3 text-white placeholder-green-300 focus:outline-none focus:ring-2 focus:ring-green-400 hover:bg-[#2ecc71] w-full"
+                    className="w-full rounded-xl border border-[#3a3f45]
+                           bg-gradient-to-b from-[#2e3237] to-[#23272b]
+                           px-3.5 py-3 text-[15px] text-[#E6E8EB]
+                           placeholder-[#9aa2ab]
+                           outline-none transition
+                           hover:from-[#3a3f45] hover:to-[#2e3237]
+                           focus:border-[#6a727a] focus:ring-2 focus:ring-[#c0c6cf]"
                     placeholder="ingrese correo..."
                     onChange={(e) => setCorreo(e.target.value)}
                     />
@@ -85,7 +97,13 @@ export const Login_rrhh = () =>{
                     <input
                     id="password"
                     type="password"
-                    className="bg-[#27ae60] border border-[#1e8449] rounded-md p-3 text-white placeholder-green-300 focus:outline-none focus:ring-2 focus:ring-green-400 hover:bg-[#2ecc71] w-full"
+                    className="w-full rounded-xl border border-[#3a3f45]
+                           bg-gradient-to-b from-[#2e3237] to-[#23272b]
+                           px-3.5 py-3 text-[15px] text-[#E6E8EB]
+                           placeholder-[#9aa2ab]
+                           outline-none transition
+                           hover:from-[#3a3f45] hover:to-[#2e3237]
+                           focus:border-[#6a727a] focus:ring-2 focus:ring-[#c0c6cf]"
                     placeholder="ingrese contraseña"
                     onChange={(e) => setPass(e.target.value)}
                     />
@@ -100,9 +118,13 @@ export const Login_rrhh = () =>{
                 <div className="flex justify-center mt-10">
                     <button
                     type="submit"
-                    className="py-3 px-20 text-[#1a8a5b] border border-[#1a8a5b] rounded-md hover:bg-[#166e47] active:scale-95 font-semibold transition-colors duration-200"
+                    className="w-full py-3 px-5 font-semibold rounded-xl
+                                bg-gradient-to-tr from-[#c7ccd2] to-[#a7aeb6]
+                                text-[#0f1115] border border-gray-500
+                                hover:from-[#d5d9de] hover:to-[#b3bbc3]
+                                transition-transform duration-200 active:scale-95"
                     >
-                    Log in
+                    Iniciar Sesión
                     </button>
                 </div>
                 </form>

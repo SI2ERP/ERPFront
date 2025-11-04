@@ -9,13 +9,13 @@ export const HomeAdmin_rrhh = () => {
   }
 
   return (
-    <div className="p-10 bg-[#e8f3ed] min-h-screen flex flex-col items-center">
-      <div className="w-full max-w-3xl bg-[#cde3d6] border border-[#1e8449] shadow-lg rounded-md p-8">
-        <h1 className="text-3xl font-semibold text-[#1a8a5b] mb-6 text-center">
+    <div className="p-10 bg-[#0f1115] min-h-screen flex flex-col items-center">
+      <div className="w-full max-w-3xl bg-gradient-to-tr from-[#2b3036] to-[#1e2328] border border-[#3a3f45] shadow-md rounded-md p-8">
+        <h1 className="text-3xl font-semibold text-[#d5d9de] mb-6 text-center">
           Panel del Administrador RRHH
         </h1>
 
-        <p className="text-[#1e293b] mb-6 text-center">
+        <p className="text-[#c7cdd4] mb-6 text-center">
           Desde aquí puedes gestionar empleados, revisar solicitudes y
           administrar roles del personal.
         </p>
@@ -24,7 +24,7 @@ export const HomeAdmin_rrhh = () => {
           <li>
             <button
               onClick={() => navigate("/rrhh/admin/gestion-empleados")}
-              className="w-full bg-white text-[#1a8a5b] border border-[#1a8a5b] py-3 rounded-md font-medium shadow-sm hover:bg-[#2ecc71] hover:text-black active:scale-95 transition duration-200"
+              className="w-full bg-gradient-to-tr from-[#c7ccd2] to-[#a7aeb6] text-[#0f1115] border border-[#3a3f45] py-3 rounded-md font-medium shadow-md hover:from-[#d5d9de] hover:to-[#b3bbc3] hover:text-black active:scale-95 transition duration-200"
             >
               👥 Agregar o despedir empleados
             </button>
@@ -34,7 +34,7 @@ export const HomeAdmin_rrhh = () => {
             <button
               onClick={() => navigate("/rrhh/admin/solicitudes-vacaciones")}
               disabled={true}
-              className="w-full bg-white text-[#1a8a5b] border hover:!border-red-600 py-3 rounded-md font-medium shadow-sm"
+              className="w-full bg-gradient-to-tr from-[#c7ccd2] to-[#a7aeb6] text-[#0f1115] border border-[#3a3f45] py-3 rounded-md font-medium shadow-md cursor-not-allowed opacity-50"
             >
               🌴 Aceptar o rechazar solicitudes de vacaciones
             </button>
@@ -43,7 +43,7 @@ export const HomeAdmin_rrhh = () => {
           <li>
             <button
               onClick={() => navigate("/rrhh/admin/estado-empleados")}
-              className="w-full bg-white text-[#1a8a5b] border border-[#1a8a5b] py-3 rounded-md font-medium shadow-sm hover:bg-[#2ecc71] hover:text-black active:scale-95 transition duration-200"
+              className="w-full bg-gradient-to-tr from-[#c7ccd2] to-[#a7aeb6] text-[#0f1115] border border-[#3a3f45] py-3 rounded-md font-medium shadow-md hover:from-[#d5d9de] hover:to-[#b3bbc3] hover:text-black active:scale-95 transition duration-200"
             >
               📊 Ver estado y datos de empleados
             </button>
@@ -52,7 +52,7 @@ export const HomeAdmin_rrhh = () => {
           <li>
             <button
               onClick={() => navigate("/rrhh/admin/elegirEmpleado")}
-              className="w-full bg-white text-[#1a8a5b] border border-[#1a8a5b] py-3 rounded-md font-medium shadow-sm hover:bg-[#2ecc71] hover:text-black active:scale-95 transition duration-200"
+              className="w-full bg-gradient-to-tr from-[#c7ccd2] to-[#a7aeb6] text-[#0f1115] border border-[#3a3f45] py-3 rounded-md font-medium shadow-md hover:from-[#d5d9de] hover:to-[#b3bbc3] hover:text-black active:scale-95 transition duration-200"
             >
               🧩 Asignar roles a empleados
             </button>
@@ -61,7 +61,7 @@ export const HomeAdmin_rrhh = () => {
             <button
               onClick={() => navigate("/rrhh/admin/crearCuentaDeTrabajo")}
               disabled={true}
-              className="w-full bg-white text-[#1a8a5b] border hover:!border-red-600 py-3 rounded-md font-medium shadow-sm"
+              className="w-full bg-gradient-to-tr from-[#c7ccd2] to-[#a7aeb6] text-[#0f1115] border border-[#3a3f45] py-3 rounded-md font-medium shadow-md cursor-not-allowed opacity-50"
             >
               🧑‍💻 Crear cuenta de trabajo para empleados
             </button>
@@ -71,7 +71,7 @@ export const HomeAdmin_rrhh = () => {
         <div className="mt-8 text-center">
           <button
             onClick={handleLogout}
-            className="px-6 py-3 !bg-red-200 text-black font-semibold rounded-md shadow hover:!bg-red-400 active:scale-95 transition duration-200"
+            className="px-6 py-3 bg-gradient-to-tr from-[#f87171] to-[#ef4444] text-black font-semibold rounded-md shadow-md hover:from-[#ef4444] hover:to-[#dc2626] active:scale-95 transition duration-200"
           >
             🔒 Cerrar sesión
           </button>

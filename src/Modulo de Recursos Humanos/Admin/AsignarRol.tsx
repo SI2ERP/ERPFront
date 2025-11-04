@@ -62,12 +62,12 @@ export const AsignarRol: React.FC = () => {
         <h2 className="text-2xl font-semibold text-red-600 mb-2">
           ❌ Error: No se ha seleccionado un empleado
         </h2>
-        <p className="text-gray-600 mb-4">
+        <p className="text-[#c7cdd4] mb-4">
           Debes elegir un empleado desde la lista antes de asignar un rol.
         </p>
         <button
           onClick={() => navigate("/rrhh/admin/elegirEmpleado")}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
+          className="bg-[#a7aeb6] hover:bg-[#d5d9de] text-[#0f1115] px-4 py-2 rounded font-semibold transition duration-200"
         >
           Volver a empleados
         </button>
@@ -77,24 +77,24 @@ export const AsignarRol: React.FC = () => {
 
   if (loadingRoles) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <p className="text-gray-600 text-lg animate-pulse">Cargando roles...</p>
+      <div className="flex items-center justify-center min-h-screen bg-[#0f1115]">
+        <p className="text-[#c7cdd4] text-lg animate-pulse">Cargando roles...</p>
       </div>
     );
   }
 
   if (errorRoles) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen text-center px-4">
+      <div className="flex flex-col items-center justify-center min-h-screen text-center px-4 bg-[#0f1115]">
         <h2 className="text-2xl font-semibold text-red-600 mb-2">
           ❌ Error al cargar roles
         </h2>
-        <p className="text-gray-600 mb-4">
+        <p className="text-[#c7cdd4] mb-4">
           No se pudieron obtener los roles desde el servidor.
         </p>
         <button
           onClick={() => window.location.reload()}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
+          className="bg-[#a7aeb6] hover:bg-[#d5d9de] text-[#0f1115] px-4 py-2 rounded font-semibold transition duration-200"
         >
           Reintentar
         </button>
@@ -103,16 +103,16 @@ export const AsignarRol: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-[#e8f3ed] px-4">
-      <div className="bg-[#cde3d6] p-8 rounded-md shadow-lg w-full max-w-md">
-        <h2 className="text-2xl font-semibold text-[#1a8a5b] mb-6 text-center">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-[#0f1115] px-4">
+      <div className="bg-[#2b3036] p-8 rounded-md shadow-lg w-full max-w-md border border-[#3a3f45]">
+        <h2 className="text-2xl font-semibold text-[#d5d9de] mb-6 text-center">
           Asignar Rol al Empleado #{idEmpleado}
         </h2>
 
         <div className="mb-6">
           <label
             htmlFor="rol"
-            className="block text-[#1a8a5b] font-medium mb-2"
+            className="block text-[#c7cdd4] font-medium mb-2"
           >
             Selecciona un rol:
           </label>
@@ -120,11 +120,13 @@ export const AsignarRol: React.FC = () => {
             id="rol"
             value={rolSeleccionado}
             onChange={(e) => setRolSeleccionado(e.target.value)}
-            className="w-full p-3 rounded-md border border-[#1a8a5b] focus:outline-none focus:ring-2 focus:ring-green-400"
+            className="w-full p-3 rounded-md border border-[#3a3f45]
+             bg-gradient-to-b from-[#2e3237] to-[#23272b]
+             text-[#d5d9de] outline-none focus:ring-2 focus:ring-[#c0c6cf]"
           >
             <option value="">-- Selecciona --</option>
             {roles.map((rol) => (
-              <option key={rol.id_rol} value={rol.nombre}>
+              <option className="bg-[#1e2328]" key={rol.id_rol} value={rol.nombre}>
                 {rol.nombre} - {rol.descripcion}
               </option>
             ))}
@@ -143,8 +145,8 @@ export const AsignarRol: React.FC = () => {
             disabled={!rolSeleccionado || guardando}
             className={`px-6 py-3 rounded-md font-semibold transition-colors duration-200 ${
               !rolSeleccionado || guardando
-                ? "bg-gray-400 cursor-not-allowed text-gray-700"
-                : "!bg-[#1a8a5b] text-white hover:bg-[#166e47] active:scale-95"
+                ? "!bg-[#0f1115] cursor-not-allowed !text-[#c7ccd2]"
+                : "bg-gradient-to-tr !from-[#c7ccd2] !to-[#a7aeb6] !text-[#0f1115] hover:from-[#d5d9de] hover:to-[#b3bbc3] active:scale-95"
             }`}
           >
             {guardando ? "Guardando..." : "Guardar cambios"}
@@ -152,7 +154,7 @@ export const AsignarRol: React.FC = () => {
 
           <button
             onClick={() => navigate("/rrhh/admin/elegirEmpleado")}
-            className="px-6 py-3 rounded-md font-semibold bg-white text-[#1a8a5b] border border-[#1a8a5b] hover:bg-[#2ecc71] hover:text-black transition duration-200 active:scale-95"
+            className="px-6 py-3 rounded-md font-semibold bg-[#23272b] text-[#d5d9de] border border-[#3a3f45] hover:bg-[#3a3f45] transition duration-200 active:scale-95"
           >
             Cancelar
           </button>
