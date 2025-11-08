@@ -21,6 +21,7 @@ export const ListarEmpleados: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [errorConexion, setErrorConexion] = useState(false);
   const navigate = useNavigate();
+  const [idUsuarioLogueado, setIdUsuarioLogueado] = useState<number | null>(null);
 
   useEffect(() => {
     const obtenerEmpleados = async () => {
@@ -37,8 +38,27 @@ export const ListarEmpleados: React.FC = () => {
     obtenerEmpleados();
   }, []);
 
+  useEffect(() => {
+  if (empleados.length > 0) {
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      try {
+        const payloadBase64 = token.split(".")[1];
+        const decodedPayload = JSON.parse(atob(payloadBase64));
+        setIdUsuarioLogueado(decodedPayload.sub);
+      } catch (error) {
+        console.error("Error al decodificar token:", error);
+      }
+    } else {
+      console.error("Falta token");
+    }
+  }
+}, [empleados]);
+
+
   const manejarAsignarRol = (id: number) => {
-    navigate(`/rrhh/admin/elegirEmpleado/asignarRol/${id}`);
+      navigate(`/rrhh/admin/elegirEmpleado/asignarRol/${id}`);//solo redirige si el id elegido es diferente del propio
   };
 
   if (loading) {
@@ -127,7 +147,12 @@ export const ListarEmpleados: React.FC = () => {
                 <td className="border-b border-[#3a3f45] p-3">
                   <button
                     onClick={() => manejarAsignarRol(emp.id_empleado)}
-                    className="bg-gradient-to-tr from-[#c7ccd2] to-[#a7aeb6] text-[#0f1115] hover:from-[#d5d9de] hover:to-[#b3bbc3] active:scale-95 px-4 py-2 rounded-md font-semibold transition duration-200"
+                     className={`px-4 py-2 rounded-md font-semibold transition duration-200
+                              ${emp.id_empleado === idUsuarioLogueado
+                                ? "!bg-gray-500 !text-gray-300 cursor-not-allowed"
+                                : "bg-gradient-to-tr !from-[#c7ccd2] !to-[#a7aeb6] !text-[#0f1115] hover:!from-[#d5d9de] hover:!to-[#b3bbc3] active:scale-95"
+                              }`}
+                    disabled={emp.id_empleado === idUsuarioLogueado}
                   >
                     Asignar Rol
                   </button>
