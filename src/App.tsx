@@ -1,13 +1,6 @@
 import { Routes, Route } from 'react-router-dom'
 import Home from './views/Home'
-import Venta from './Modulo de Ventas/views'
-import Order from './Modulo de Ventas/views/Order'
-import Client from './Modulo de Ventas/views/Client'
-import Invoice from './Modulo de Ventas/views/Invoice'
-import Report from './Modulo de Ventas/views/Report'
-import Dashboard from './Modulo de Ventas/views/Dashboard'
-import ClientView from './Modulo de Ventas/views/ClientView'
-
+import InventarioPage from './Modulo de Inventario/InventarioPage'
 
 function App() {
   return (
@@ -16,13 +9,10 @@ function App() {
         <Routes>
           <Route path='/cliente' element={<ClientView />}></Route>
           <Route path="/" element={<Home />}></Route>
-          <Route path="/ventas" element={<Venta />}>
-            <Route index element={<Dashboard />}></Route>
-            <Route path='pedidos' element={<Order />}></Route>
-            <Route path='clientes' element={<Client />}></Route>
-            <Route path='facturas' element={<Invoice />}></Route>
-            <Route path='reportes' element={<Report />}></Route>
-          </Route>
+
+          {/* Ruta inventario */}
+          <Route path="/inventario" element={<InventarioPage />} />
+
           {/* Acá añadan sus rutas con el url correspondiente */}
         </Routes>
       </main>

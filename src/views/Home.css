@@ -1,0 +1,63 @@
+.home-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem;
+}
+
+.home-container h1 {
+  /* Usa el tamaño de fuente definido en index.css */
+  font-size: 3.2em;
+}
+
+.module-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 columnas */
+  gap: 1.5rem; /* Espacio entre botones */
+  margin-top: 2rem;
+  max-width: 800px;
+}
+
+.module-button {
+  /* Usamos los estilos de botón que ya definiste en index.css */
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 1.5em 2em; /* Más grandes para un menú */
+  font-size: 1.1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a; /* Color base oscuro */
+  cursor: pointer;
+  transition: all 0.25s;
+}
+
+.module-button:hover {
+  border-color: #646cff; /* Borde de hover */
+}
+
+/* Estilo para los botones deshabilitados (los otros módulos) */
+.module-button.disabled {
+  background-color: #3a3a3a; /* Un gris más apagado */
+  color: #888;
+  cursor: not-allowed;
+  border-color: #3a3a3a;
+}
+
+.module-button.disabled:hover {
+  border-color: #3a3a3a;
+}
+
+/* Ajuste para pantallas más pequeñas */
+@media (max-width: 768px) {
+  .module-grid {
+    grid-template-columns: repeat(2, 1fr); /* 2 columnas */
+  }
+}
+
+@media (max-width: 480px) {
+  .module-grid {
+    grid-template-columns: 1fr; /* 1 columna */
+  }
+}
