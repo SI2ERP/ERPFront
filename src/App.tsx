@@ -7,7 +7,6 @@ function App() {
     <div className="app">
       <main>
         <Routes>
-          <Route path='/cliente' element={<ClientView />}></Route>
           <Route path="/" element={<Home />}></Route>
 
           {/* Ruta inventario */}
