@@ -1,6 +1,3 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import { Routes, Route } from 'react-router-dom'
 import Home from './views/Home'
 import InventarioPage from './Modulo de Inventario/InventarioPage'
@@ -10,6 +7,7 @@ function App() {
     <div className="app">
       <main>
         <Routes>
+          <Route path='/cliente' element={<ClientView />}></Route>
           <Route path="/" element={<Home />}></Route>
 
           {/* Ruta inventario */}
