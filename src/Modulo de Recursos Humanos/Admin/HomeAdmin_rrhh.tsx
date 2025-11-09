@@ -36,7 +36,7 @@ export const HomeAdmin_rrhh = () => {
               disabled={true}
               className="w-full bg-gradient-to-tr from-[#c7ccd2] to-[#a7aeb6] text-[#0f1115] border border-[#3a3f45] py-3 rounded-md font-medium shadow-md cursor-not-allowed opacity-50"
             >
-              🌴 Aceptar o rechazar solicitudes de vacaciones
+              📝 Aceptar o rechazar solicitudes de ausencia
             </button>
           </li>
 
@@ -60,8 +60,7 @@ export const HomeAdmin_rrhh = () => {
           <li>
             <button
               onClick={() => navigate("/rrhh/admin/crearCuentaDeTrabajo")}
-              disabled={true}
-              className="w-full bg-gradient-to-tr from-[#c7ccd2] to-[#a7aeb6] text-[#0f1115] border border-[#3a3f45] py-3 rounded-md font-medium shadow-md cursor-not-allowed opacity-50"
+              className="w-full bg-gradient-to-tr from-[#c7ccd2] to-[#a7aeb6] text-[#0f1115] border border-[#3a3f45] py-3 rounded-md font-medium shadow-md hover:from-[#d5d9de] hover:to-[#b3bbc3] hover:text-black active:scale-95 transition duration-200"
             >
               🧑‍💻 Crear cuenta de trabajo para empleados
             </button>

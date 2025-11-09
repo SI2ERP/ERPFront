@@ -13,6 +13,7 @@ import { AsignarRol } from './Modulo de Recursos Humanos/Admin/AsignarRol'
 import { ListarEmpleados } from './Modulo de Recursos Humanos/Admin/ListarEmpleados'
 import { ProtectedRoute } from './Modulo de Recursos Humanos/ProtectedRoute'
 import Unauthorized from './Modulo de Recursos Humanos/Unauthorized'
+import { ListarEmpleadosSinCuenta } from './Modulo de Recursos Humanos/Admin/ListarEmpleadosSinCuenta'
 
 function App() {
   return (
@@ -53,6 +54,12 @@ function App() {
               <AsignarRol />
             </ProtectedRoute>
             }></Route>
+
+          <Route path="rrhh/admin/crearCuentaDeTrabajo" element={
+            <ProtectedRoute requiredRole='ADMIN'>
+              <ListarEmpleadosSinCuenta />
+            </ProtectedRoute>
+          }></Route>
 
           <Route path='/unauthorized' element={
             <Unauthorized />
