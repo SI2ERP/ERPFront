@@ -1,0 +1,66 @@
+.authContainer {
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    gap: 2em;
+}
+
+.formGroup {
+    display: flex;
+    flex-direction: column;
+    margin: 0.5em 1em;
+    font-size: 1em;
+    
+    input {
+        margin-top: 0.5em;
+        padding: 0.5em;
+        font-size: 1em;
+        background: var(--background-secondary);
+    }
+}
+
+.loginForm {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1em;
+    height: 50%;
+    background: var(--background-primary);
+    color: var(--text-primary);
+    padding: 1em;
+
+    h1 {
+        text-align: center;
+        width: 100%;
+        margin-bottom: 1em;
+    }
+
+    button {
+        text-align: center;
+        margin: 2em 25%;
+    }
+}
+
+.registerForm {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1em;
+    height: 50%;
+    background: var(--background-primary);
+    color: var(--text-primary);
+    padding: 1em;
+
+    h1 {
+        text-align: center;
+        width: 100%;
+    }
+
+    button {
+        text-align: center;
+        margin: 2em 25%;
+    }
+}

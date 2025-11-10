@@ -12,6 +12,14 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  /* Variables para colores uniformes 
+    Todos los modulos pueden acceder haciendo un color: var(--name);
+  */
+
+  --background-primary: #000000;
+  --background-secondary: #b9b9b9da;
+  --text-primary: #ffffff;
 }
 
 a {
