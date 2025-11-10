@@ -28,6 +28,46 @@ export interface Producto {
   precio_proveedor?: number; // Precio específico del proveedor cuando se filtra
 }
 
+export interface ProductoSinStock {
+  id_producto: number;
+  nombre: string;
+  descripcion: string;
+  precio_unitario: string;
+  codigo: string;
+  precio_venta: string;
+  fecha_sin_stock: string;
+  cantidad: number;
+  estado: boolean;
+}
+
+export interface ProductosSinStockResponse {
+  success: boolean;
+  message: string;
+  data: ProductoSinStock[];
+  total: number;
+  timestamp: string;
+}
+
+export interface ProductosSinStockPaginadoResponse {
+  success: boolean;
+  message: string;
+  data: ProductoSinStock[];
+  pagination: {
+    current_page: number;
+    per_page: number;
+    total_items: number;
+    total_pages: number;
+    has_next_page: boolean;
+    has_prev_page: boolean;
+  };
+}
+
+export interface ProductoSinStockIndividualResponse {
+  success: boolean;
+  message: string;
+  data: ProductoSinStock;
+}
+
 export interface DetalleCompra {
   id_detalle_compra?: number;
   id_orden_compra?: number;
@@ -412,6 +452,56 @@ class ComprasService {
       }
     } catch (error) {
       console.error('Error al eliminar producto:', error);
+      throw error;
+    }
+  }
+
+  // Métodos para productos sin stock
+  async obtenerProductosSinStock(): Promise<ProductoSinStock[]> {
+    try {
+      const response = await fetch(`${this.baseURL}/productos-sin-stock`);
+      if (!response.ok) {
+        throw new Error(`Error ${response.status}: ${response.statusText}`);
+      }
+      const result: ProductosSinStockResponse = await response.json();
+      return result.data;
+    } catch (error) {
+      console.error('Error al obtener productos sin stock:', error);
+      throw error;
+    }
+  }
+
+  async obtenerProductosSinStockPaginado(page: number = 1, limit: number = 10): Promise<{ productos: ProductoSinStock[], totalItems: number, totalPages: number, currentPage: number, hasNextPage: boolean, hasPrevPage: boolean }> {
+    try {
+      const response = await fetch(`${this.baseURL}/productos-sin-stock/paginado?page=${page}&limit=${limit}`);
+      if (!response.ok) {
+        throw new Error(`Error ${response.status}: ${response.statusText}`);
+      }
+      const result: ProductosSinStockPaginadoResponse = await response.json();
+      return {
+        productos: result.data,
+        totalItems: result.pagination.total_items,
+        totalPages: result.pagination.total_pages,
+        currentPage: result.pagination.current_page,
+        hasNextPage: result.pagination.has_next_page,
+        hasPrevPage: result.pagination.has_prev_page
+      };
+    } catch (error) {
+      console.error('Error al obtener productos sin stock paginados:', error);
+      throw error;
+    }
+  }
+
+  async obtenerProductoSinStockPorId(id: number): Promise<ProductoSinStock> {
+    try {
+      const response = await fetch(`${this.baseURL}/productos-sin-stock/${id}`);
+      if (!response.ok) {
+        throw new Error(`Error ${response.status}: ${response.statusText}`);
+      }
+      const result: ProductoSinStockIndividualResponse = await response.json();
+      return result.data;
+    } catch (error) {
+      console.error('Error al obtener producto sin stock por ID:', error);
       throw error;
     }
   }

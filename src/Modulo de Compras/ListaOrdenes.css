@@ -90,6 +90,25 @@ html, body {
   transform: translateY(-1px);
 }
 
+.btn-productos-sin-stock {
+  background-color: #ff6b35;
+  color: #fff;
+  border: 1px solid #ff6b35;
+  font-size: 0.9em;
+  padding: 0.6em 1.2em;
+  font-weight: 500;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+  margin-right: 1rem;
+}
+
+.btn-productos-sin-stock:hover {
+  background-color: #e55a2b;
+  border-color: #e55a2b;
+  transform: translateY(-1px);
+}
+
 .btn-actualizar {
   background-color: #3a3a3a;
   color: #f0f0f0;

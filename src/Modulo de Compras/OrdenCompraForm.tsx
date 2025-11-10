@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import './OrdenCompraForm.css';
 import comprasService, { 
   type Proveedor, 
   type Empleado, 
   type Producto, 
-  type OrdenCompra 
+  type OrdenCompra,
+  type ProductoSinStock
 } from './comprasService';
 
 interface ProductoEnOrden {
@@ -37,6 +38,10 @@ interface EstadosCarga {
 const OrdenCompraForm: React.FC = () => {
   // Hook para navegación
   const navigate = useNavigate();
+  const location = useLocation();
+  
+  // Producto preseleccionado desde productos sin stock
+  const productoPreseleccionado = location.state?.productoSinStock as ProductoSinStock | undefined;
 
   // Estados principales
   const [formulario, setFormulario] = useState<EstadoFormulario>({
@@ -80,6 +85,13 @@ const OrdenCompraForm: React.FC = () => {
     cargarDatosIniciales();
   }, []);
 
+  // Manejar producto preseleccionado desde productos sin stock
+  useEffect(() => {
+    if (productoPreseleccionado && productosDisponibles.length > 0) {
+      preseleccionarProducto(productoPreseleccionado);
+    }
+  }, [productoPreseleccionado, productosDisponibles]);
+
   // Función helper para calcular subtotal, IVA (19%) y total
   const calcularTotales = (productos: ProductoEnOrden[]) => {
     const subtotal = productos.reduce((sum, prod) => sum + prod.subtotal, 0);
@@ -105,7 +117,9 @@ const OrdenCompraForm: React.FC = () => {
       // Cargar productos (inicialmente todos)
       setCargando(prev => ({ ...prev, productos: true }));
       const productosData = await comprasService.obtenerProductos();
-      setProductosDisponibles(productosData.filter(p => p.estado)); // Solo productos activos
+      // Permitir ordenar todos los productos, incluso los que no tienen stock
+      // ya que el propósito de crear órdenes de compra es precisamente reabastecer
+      setProductosDisponibles(productosData);
       setCargando(prev => ({ ...prev, productos: false }));
 
     } catch (error) {
@@ -135,6 +149,51 @@ const OrdenCompraForm: React.FC = () => {
     } catch (error) {
       console.error('Error al obtener proveedores del producto:', error);
       return [];
+    }
+  };
+
+  const preseleccionarProducto = async (productoSinStock: ProductoSinStock) => {
+    try {
+      // Buscar el producto en la lista de productos disponibles
+      const productoEncontrado = productosDisponibles.find(p => p.id_producto === productoSinStock.id_producto);
+      
+      if (!productoEncontrado) {
+        console.warn(`Producto ${productoSinStock.nombre} no encontrado en productos disponibles`);
+        setMensaje(`Producto "${productoSinStock.nombre}" no está disponible para ordenar`);
+        return;
+      }
+
+      // Obtener los proveedores del producto
+      const proveedoresProducto = await obtenerProveedoresDeProducto(productoSinStock.id_producto);
+      
+      if (proveedoresProducto.length === 0) {
+        setMensaje(`No hay proveedores disponibles para el producto "${productoSinStock.nombre}"`);
+        return;
+      }
+
+      // Preseleccionar el producto en el formulario
+      const productoPreseleccionado = {
+        id_producto: productoSinStock.id_producto,
+        nombre: productoSinStock.nombre,
+        cantidad: 1, // Cantidad inicial sugerida
+        precio_unitario: parseFloat(productoSinStock.precio_unitario),
+        subtotal: parseFloat(productoSinStock.precio_unitario) * 1,
+        id_proveedor: proveedoresProducto[0].id_proveedor, // Seleccionar el primer proveedor
+        proveedor_nombre: proveedoresProducto[0].nombre,
+        proveedores_disponibles: proveedoresProducto,
+      };
+
+      setNuevoProducto(productoPreseleccionado);
+      setMensaje(`Producto "${productoSinStock.nombre}" preseleccionado. Ajusta la cantidad y proveedor según necesites.`);
+      
+      // Limpiar el mensaje después de 5 segundos
+      setTimeout(() => {
+        setMensaje('');
+      }, 5000);
+
+    } catch (error) {
+      console.error('Error al preseleccionar producto:', error);
+      setMensaje(`Error al preseleccionar el producto "${productoSinStock.nombre}"`);
     }
   };
 
@@ -415,7 +474,8 @@ const OrdenCompraForm: React.FC = () => {
       // Recargar productos disponibles (limpiar filtro de proveedor)
       try {
         const productosData = await comprasService.obtenerProductos();
-        setProductosDisponibles(productosData.filter(p => p.estado));
+        // Permitir ordenar todos los productos para facilitar el reabastecimiento
+        setProductosDisponibles(productosData);
       } catch (productsError) {
         console.error('Error al recargar productos:', productsError);
       }

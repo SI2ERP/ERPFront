@@ -212,6 +212,12 @@ const ListaOrdenes: React.FC = () => {
           >
             + Nueva Orden
           </button>
+          <button 
+            onClick={() => navigate('/compras/productos-sin-stock')}
+            className="btn-productos-sin-stock"
+          >
+             Productos Sin Stock
+          </button>
           {ordenesSeleccionadas.size > 0 && (
             <button 
               onClick={eliminarSeleccionadas}
