@@ -394,6 +394,81 @@ html, body {
   transform: translateY(-1px);
 }
 
+.btn-descargar-factura {
+  background-color: #007bff;
+  color: white;
+  border-color: #007bff;
+  font-size: 0.75em;
+  margin: 0 2px;
+  padding: 0.4em 0.6em;
+  min-width: 90px;
+  height: 32px;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.btn-descargar-factura:hover:not(:disabled) {
+  background-color: #0056b3;
+  border-color: #0056b3;
+  transform: translateY(-1px);
+}
+
+.btn-descargar-factura:disabled {
+  background-color: #6c757d;
+  border-color: #6c757d;
+  cursor: not-allowed;
+  transform: none;
+  opacity: 0.6;
+}
+
+/* Mensajes de notificación */
+.mensaje-notificacion {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 15px 20px;
+  border-radius: 6px;
+  font-weight: 500;
+  z-index: 1000;
+  min-width: 300px;
+  max-width: 400px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  animation: slideInRight 0.3s ease-out;
+  word-wrap: break-word;
+}
+
+.mensaje-notificacion.success {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+  border-left: 4px solid #28a745;
+}
+
+.mensaje-notificacion.error {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+  border-left: 4px solid #dc3545;
+}
+
+.mensaje-notificacion.warning {
+  background-color: #fff3cd;
+  color: #856404;
+  border: 1px solid #ffeeba;
+  border-left: 4px solid #ffc107;
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
 /* Estadísticas */
 .estadisticas {
   display: flex;
@@ -490,6 +565,12 @@ html, body {
     width: 100%;
     margin: 1px 0;
     min-width: auto;
+    font-size: 11px;
+  }
+  
+  .btn-descargar-factura {
+    min-width: auto;
+    white-space: normal;
   }
 }
 
@@ -656,5 +737,14 @@ html, body {
   .btn-eliminar-seleccionadas {
     padding: 8px 12px;
     font-size: 12px;
+  }
+  
+  .mensaje-notificacion {
+    top: 10px;
+    right: 10px;
+    left: 10px;
+    min-width: auto;
+    max-width: none;
+    font-size: 14px;
   }
 }

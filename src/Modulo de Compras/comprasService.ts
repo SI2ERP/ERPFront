@@ -83,7 +83,7 @@ export interface OrdenCompra {
   id_proveedor: number;
   id_empleado: number;
   fecha?: string;
-  estado?: 'PENDIENTE' | 'APROBADA' | 'RECHAZADA' | 'COMPLETADA';
+  estado?: 'pendiente' | 'aprobada' | 'rechazada' | 'completada'; // Estados en minúsculas como espera el backend
   proveedor_nombre?: string;
   empleado_nombre?: string;
   subtotal?: number;
@@ -97,7 +97,7 @@ export interface OrdenCompraResponse {
   id_proveedor: number;
   id_empleado: number;
   fecha: string;
-  estado: 'PENDIENTE' | 'APROBADA' | 'RECHAZADA' | 'COMPLETADA';
+  estado: 'PENDIENTE' | 'APROBADA' | 'RECHAZADA' | 'COMPLETADA'; // Estados en mayúsculas para mostrar en el frontend
   proveedor_nombre?: string;
   empleado_nombre?: string;
   subtotal?: number;
@@ -302,6 +302,43 @@ class ComprasService {
       }
     } catch (error) {
       console.error('Error al eliminar orden:', error);
+      throw error;
+    }
+  }
+
+  // =================== FACTURACIÓN ===================
+  
+  async descargarFactura(idOrden: number): Promise<boolean> {
+    try {
+      const response = await fetch(`${this.baseURL}/purchases/${idOrden}/descargar-factura`, {
+        method: 'GET'
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || `Error ${response.status}: Error al generar factura`);
+      }
+
+      // Obtener el blob del PDF
+      const blob = await response.blob();
+      
+      // Crear URL temporal para descarga
+      const url = window.URL.createObjectURL(blob);
+      
+      // Crear elemento de descarga
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `factura_compra_${idOrden}_${new Date().toISOString().slice(0, 10)}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      
+      // Limpiar
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+
+      return true;
+    } catch (error) {
+      console.error('Error al descargar factura:', error);
       throw error;
     }
   }

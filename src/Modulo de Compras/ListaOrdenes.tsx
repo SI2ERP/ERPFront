@@ -14,6 +14,9 @@ const ListaOrdenes: React.FC = () => {
   const [eliminando, setEliminando] = useState<number | null>(null);
   const [ordenesSeleccionadas, setOrdenesSeleccionadas] = useState<Set<number>>(new Set());
   const [eliminandoSeleccionadas, setEliminandoSeleccionadas] = useState<boolean>(false);
+  const [descargandoFactura, setDescargandoFactura] = useState<number | null>(null);
+  const [mensaje, setMensaje] = useState<string>('');
+  const [tipoMensaje, setTipoMensaje] = useState<'success' | 'error' | 'warning'>('success');
 
   useEffect(() => {
     cargarOrdenes();
@@ -35,19 +38,47 @@ const ListaOrdenes: React.FC = () => {
 
   const cambiarEstadoOrden = async (id: number, nuevoEstado: string) => {
     try {
-      // Convertir el estado a mayúsculas para que coincida con la BD
-      const estadoEnMayusculas = nuevoEstado.toUpperCase();
+      // Enviar el estado en minúsculas como espera el backend
+      const estadoEnMinusculas = nuevoEstado.toLowerCase();
       
-      await comprasService.actualizarOrden(id, { estado: estadoEnMayusculas as any });
+      await comprasService.actualizarOrden(id, { estado: estadoEnMinusculas as any });
       setOrdenes(ordenes.map(orden => 
         orden.id_orden_compra === id 
-          ? { ...orden, estado: estadoEnMayusculas as any }
+          ? { ...orden, estado: estadoEnMinusculas.toUpperCase() as any } // Mantener mayúsculas en el frontend
           : orden
       ));
+      
+      // Mostrar mensaje de éxito
+      const accion = estadoEnMinusculas === 'aprobada' ? 'aprobada' : 'rechazada';
+      const mensajeEstado = `Orden ${accion} correctamente${estadoEnMinusculas === 'aprobada' ? '. Ya puede descargar la factura.' : ''}`;
+      mostrarMensaje(mensajeEstado, 'success');
     } catch (error) {
       console.error('Error al cambiar estado:', error);
-      alert('Error al cambiar el estado de la orden');
+      mostrarMensaje('Error al cambiar el estado de la orden', 'error');
     }
+  };
+
+  const descargarFactura = async (id: number) => {
+    try {
+      setDescargandoFactura(id);
+      await comprasService.descargarFactura(id);
+      mostrarMensaje('Factura descargada correctamente', 'success');
+    } catch (error) {
+      console.error('Error al descargar factura:', error);
+      mostrarMensaje(`Error al descargar factura: ${error instanceof Error ? error.message : 'Error desconocido'}`, 'error');
+    } finally {
+      setDescargandoFactura(null);
+    }
+  };
+
+  const mostrarMensaje = (texto: string, tipo: 'success' | 'error' | 'warning' = 'success') => {
+    setMensaje(texto);
+    setTipoMensaje(tipo);
+    
+    // Auto-ocultar después de 5 segundos
+    setTimeout(() => {
+      setMensaje('');
+    }, 5000);
   };
 
   const eliminarOrden = async (id: number) => {
@@ -252,6 +283,12 @@ const ListaOrdenes: React.FC = () => {
         </div>
       )}
 
+      {mensaje && (
+        <div className={`mensaje-notificacion ${tipoMensaje}`}>
+          {mensaje}
+        </div>
+      )}
+
       {ordenesFiltradas.length === 0 ? (
         <div className="sin-ordenes">
           <p>No hay órdenes de compra {filtroEstado && `con estado "${filtroEstado}"`}</p>
@@ -319,6 +356,16 @@ const ListaOrdenes: React.FC = () => {
                           ✗ Rechazar
                         </button>
                       </>
+                    )}
+                    {orden.estado.toLowerCase() === 'aprobada' && (
+                      <button
+                        onClick={() => descargarFactura(orden.id_orden_compra)}
+                        className="btn-descargar-factura"
+                        title="Descargar factura PDF"
+                        disabled={descargandoFactura === orden.id_orden_compra}
+                      >
+                        {descargandoFactura === orden.id_orden_compra ? '📄 Generando...' : '📄 Descargar Factura'}
+                      </button>
                     )}
                     <button
                       onClick={() => eliminarOrden(orden.id_orden_compra)}
