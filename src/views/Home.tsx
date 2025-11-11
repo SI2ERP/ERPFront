@@ -10,6 +10,10 @@ const Home = () => {
     navigate('/inventario'); 
   };
 
+  const irAVentas = () => {
+    navigate('/ventas');
+  }
+
   return (
     <div className="home-container">
       <h1>Bienvenido al Mini-ERP</h1>
@@ -22,7 +26,7 @@ const Home = () => {
         </button>
 
         {/* 2. Botones de otros módulos (Deshabilitados) */}
-        <button className="module-button disabled" disabled>
+        <button className="module-button" onClick={irAVentas}>
           Ventas
         </button>
 
