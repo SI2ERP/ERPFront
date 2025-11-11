@@ -1,5 +1,6 @@
 import { Routes, Route } from 'react-router-dom'
 import Home from './views/Home'
+import Login from './views/Login'
 import InventarioPage from './Modulo de Inventario/InventarioPage'
 import VentasPage from './Modulo de Ventas'
 
@@ -8,6 +9,7 @@ function App() {
     <div className="app">
       <main>
         <Routes>
+          <Route path="/auth" element={<Login />}></Route>
           <Route path="/" element={<Home />}></Route>
 
           {/* Ruta inventario */}
