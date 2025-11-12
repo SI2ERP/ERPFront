@@ -1,13 +1,19 @@
 import React from "react";
 import './Home.css';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from "../utils/AuthContext";
 
 const Home = () => {
   const navigate = useNavigate();
+  const { logout, user } = useAuth();
 
   // Ir a la página de inventario
   const irAInventario = () => {
     navigate('/inventario'); 
+  };
+
+  const handleLogout = () => {
+    logout();
   };
 
   const irAVentas = () => {
@@ -42,6 +48,10 @@ const Home = () => {
           Logística/Despacho
         </button>
       </div>
+
+      <button className="logout-button" onClick={handleLogout}>
+        Cerrar sesión
+      </button>
     </div>
   );
 };
