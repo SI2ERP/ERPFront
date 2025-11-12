@@ -10,17 +10,15 @@ import VentasPage from './Modulo de Ventas'
 /* Función para ver permisos por rol y si el usuario está logueado */
 function ProtectedRoute({ element, roles }: { element: JSX.Element; roles?: string[] }) {
   const { user, isAuthenticated } = useAuth();
-  const navigate = useNavigate();
+  const token = localStorage.getItem("token");
 
-  if (!isAuthenticated) {
-    navigate("/auth");
-    return null;
+  if (!isAuthenticated || !token) {
+    window.location.replace("/auth");
   }
 
   if (roles && !canAccess(user, roles)) {
     alert("No tienes permiso para acceder a esta sección");
-    navigate("/");
-    return null;
+    window.location.replace("/");
   }
 
   return element;
@@ -28,7 +26,7 @@ function ProtectedRoute({ element, roles }: { element: JSX.Element; roles?: stri
 
 function App() {
   return (
-    <div className="app">
+    <div className="app"> 
       <main>
         <AuthProvider>
           <Routes>
@@ -37,6 +35,7 @@ function App() {
             {/* De momento al home solo pueden acceder usuarios logueados */}
             {/* Solo se pueden registrar usuarios existentes en public.empleado */}
             <Route path="/" element={<ProtectedRoute element={<Home />}/>} />
+            <Route path="*" element={<ProtectedRoute element={<Home />}/>} />
 
             {/* Ejemplo: ruta protegida para Inventario */}
             <Route path="/inventario"
