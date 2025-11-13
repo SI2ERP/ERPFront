@@ -1,6 +1,5 @@
 import '../Venta.css'
 
-
 export type Section = {
     id : string
     title : string
@@ -25,7 +24,7 @@ export default function NavBar({ sections, setSections } : NavBarProps) {
         <div className='venta-header'>
             {sections.map((section) => (
                 <button  
-                    className={`nav-btn ${section.selected ? 'active' : ''}`}
+                    className={`nav-btn ${section.selected ? 'active' : ''} ${section.id === 'ventas' ? 'selected-section' : ''}`}
                     key={section.id}
                     onClick={() => (onClickSection(section.id))} 
                 >
