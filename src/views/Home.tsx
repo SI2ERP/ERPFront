@@ -1,19 +1,24 @@
 
 import './Home.css';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from "../utils/AuthContext";
 
 const Home = () => {
   const navigate = useNavigate();
+  const { logout, user } = useAuth();
 
   // Ir a la página de inventario
   const irAInventario = () => {
     navigate('/inventario'); 
   };
 
-  // Ir a la página de compras
-  const irACompras = () => {
-    navigate('/compras');
+  const handleLogout = () => {
+    logout();
   };
+
+  const irAVentas = () => {
+    navigate('/ventas');
+  }
 
   return (
     <div className="home-container">
@@ -27,7 +32,7 @@ const Home = () => {
         </button>
 
         {/* 2. Botones de otros módulos (Deshabilitados) */}
-        <button className="module-button disabled" disabled>
+        <button className="module-button" onClick={irAVentas}>
           Ventas
         </button>
 
@@ -43,6 +48,10 @@ const Home = () => {
           Logística/Despacho
         </button>
       </div>
+
+      <button className="logout-button" onClick={handleLogout}>
+        Cerrar sesión
+      </button>
     </div>
   );
 };

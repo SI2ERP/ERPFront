@@ -1,5 +1,5 @@
 import axios from 'axios'
-const API_URL = 'http://localhost:3000' 
+const API_URL = import.meta.env.VITE_URL_INVENTORY_BACKEND; 
 
 const apiClient = axios.create({
   baseURL: API_URL,

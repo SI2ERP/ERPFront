@@ -1,4 +1,8 @@
-/* Estilos globales para el ERP */
+@import "tailwindcss";
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
 
 * {
   margin: 0;
@@ -13,8 +17,14 @@ html, body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #0d1117;
-  color: #fff;
+
+  /* Variables para colores uniformes 
+    Todos los modulos pueden acceder haciendo un color: var(--name);
+  */
+
+  --background-primary: #000000;
+  --background-secondary: #b9b9b9da;
+  --text-primary: #ffffff;
 }
 
 #root {
@@ -22,9 +32,15 @@ html, body {
   background-color: #0d1117;
 }
 
-.app {
-  height: 100%;
-  background-color: #0d1117;
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
 }
 
 /* Estilos base para botones */
