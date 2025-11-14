@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./Login.css";
 
-const AUTH_BACKEND_URL = import.meta.env.VITE_URL_AUTH_BACKEND;
+const AUTH_BACKEND_URL = import.meta.env.VITE_URL_BACKEND_AUTH;
 
 const Login = () => {
   const { login } = useAuth();
@@ -17,7 +17,7 @@ const Login = () => {
 
   const onHandleLogin = async () => {
     try {
-      const response = await axios.post(`${AUTH_BACKEND_URL}/login`, {
+      const response = await axios.post(`${AUTH_BACKEND_URL}/auth/login`, {
         email,
         password,
       });

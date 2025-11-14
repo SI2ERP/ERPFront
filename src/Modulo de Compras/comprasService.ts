@@ -146,7 +146,7 @@ export interface OrdenCompraCompleta {
 
 // Servicio para manejar todas las APIs del módulo de compras
 class ComprasService {
-  private baseURL = 'http://localhost:3000/api';
+  private baseURL = `${import.meta.env.VITE_URL_BACKEND_COMPRAS}/api`;
 
   // Manejo de errores genérico
   private async handleResponse<T>(response: Response): Promise<T> {
