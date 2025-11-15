@@ -140,7 +140,7 @@ const VerOrdenCompra: React.FC = () => {
             </div>
             <div className="info-item">
               <label>Total:</label>
-              <span className="total-orden">{formatearMoneda(orden.total_orden)}</span>
+              <span className="total-orden">{formatearMoneda(orden.total ?? orden.total_orden ?? 0)}</span>
             </div>
           </div>
         </div>

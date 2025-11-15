@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useAuth } from '../utils/AuthContext';
 import './OrdenCompraForm.css';
 import comprasService, { 
   type Proveedor, 
@@ -36,9 +37,10 @@ interface EstadosCarga {
 }
 
 const OrdenCompraForm: React.FC = () => {
-  // Hook para navegación
+  // Hook para navegación y autenticación
   const navigate = useNavigate();
   const location = useLocation();
+  const { user } = useAuth();
   
   // Producto preseleccionado desde productos sin stock
   const productoPreseleccionado = location.state?.productoSinStock as ProductoSinStock | undefined;
@@ -102,16 +104,24 @@ const OrdenCompraForm: React.FC = () => {
 
   const cargarDatosIniciales = async () => {
     try {
+      // Asignar el empleado logueado automáticamente desde el contexto
+      if (user?.id_empleado) {
+        setFormulario(prev => ({
+          ...prev,
+          id_empleado: user.id_empleado!
+        }));
+      } else {
+        console.warn('El usuario logueado no tiene id_empleado');
+        setErrores(['No se pudo identificar tu ID de empleado. Por favor, vuelve a iniciar sesión.']);
+      }
+      
       // Cargar proveedores
       setCargando(prev => ({ ...prev, proveedores: true }));
       const proveedoresData = await comprasService.obtenerProveedores();
       setProveedores(proveedoresData);
       setCargando(prev => ({ ...prev, proveedores: false }));
 
-      // Cargar empleados
-      setCargando(prev => ({ ...prev, empleados: true }));
-      const empleadosData = await comprasService.obtenerEmpleados();
-      setEmpleados(empleadosData);
+      // Ya no necesitamos cargar empleados porque usamos el del contexto
       setCargando(prev => ({ ...prev, empleados: false }));
 
       // Cargar productos (inicialmente todos)
@@ -373,7 +383,7 @@ const OrdenCompraForm: React.FC = () => {
     const erroresValidacion: string[] = [];
 
     if (!formulario.id_empleado) {
-      erroresValidacion.push('Debe seleccionar un empleado');
+      erroresValidacion.push('No se pudo asignar el empleado automáticamente. Verifica que tu email esté registrado en el sistema de empleados.');
     }
 
     if (formulario.productos.length === 0) {
@@ -453,7 +463,7 @@ const OrdenCompraForm: React.FC = () => {
       
       // Resetear formulario para permitir crear otra orden
       setFormulario({
-        id_empleado: null,
+        id_empleado: user?.id_empleado || null, // Mantener el empleado logueado
         productos: [],
         subtotal: 0,
         iva: 0,
@@ -556,8 +566,8 @@ const OrdenCompraForm: React.FC = () => {
   return (
     <div className="orden-compra-container">
       <div className="orden-compra-form">
-        {/* Botón de navegación */}
-        <div style={{ marginBottom: '20px', textAlign: 'left', display: 'flex', gap: '10px' }}>
+        {/* Botones de navegación */}
+        <div style={{ marginBottom: '20px', display: 'flex', gap: '10px' }}>
           <button
             type="button"
             onClick={() => navigate('/compras')}
@@ -828,29 +838,16 @@ const OrdenCompraForm: React.FC = () => {
             </div>
           )}
 
-          {/* Información del Empleado */}
-          {formulario.productos.length > 0 && (
+          {/* Información del Empleado - Asignación automática */}
+          {formulario.productos.length > 0 && formulario.id_empleado && (
             <div className="form-section">
-              <h3>Empleado Responsable</h3>
-              <div className="form-group">
-                <label htmlFor="empleado">Empleado *</label>
-                {cargando.empleados ? (
-                  <div className="loading-select">Cargando empleados...</div>
-                ) : (
-                  <select
-                    id="empleado"
-                    value={formulario.id_empleado || ''}
-                    onChange={handleEmpleadoChange}
-                    required
-                  >
-                    <option value="">Seleccione un empleado...</option>
-                    {empleados.map((empleado) => (
-                      <option key={empleado.id_empleado} value={empleado.id_empleado}>
-                        {empleado.nombre} {empleado.apellido} - {empleado.rol}
-                      </option>
-                    ))}
-                  </select>
-                )}
+              <div className="info-empleado-auto">
+                <p>
+                  <strong>Empleado responsable:</strong> {user?.nombre || 'Usuario actual'}
+                  <span style={{ marginLeft: '10px', color: '#4caf50', fontSize: '0.9em' }}>
+                    ✓ Asignado automáticamente
+                  </span>
+                </p>
               </div>
             </div>
           )}

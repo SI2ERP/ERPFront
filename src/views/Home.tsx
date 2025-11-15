@@ -20,6 +20,10 @@ const Home = () => {
     navigate('/ventas');
   }
 
+  const irACompras = () => {
+    navigate('/compras');
+  }
+
   return (
     <div className="home-container">
       <h1>Bienvenido al Mini-ERP</h1>

@@ -4,8 +4,10 @@ import { useNavigate } from "react-router-dom";
 /* Variables del user que manejaremos en el ERPz */
 type User = {
   nombre: string;
+  apellido?: string; // Agregado para guardar el apellido
   rol: string;
   email?: string;
+  id_empleado?: number; // Agregado para guardar el ID del empleado
 };
 
 interface AuthContextType {

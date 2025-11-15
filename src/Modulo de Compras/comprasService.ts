@@ -83,7 +83,7 @@ export interface OrdenCompra {
   id_proveedor: number;
   id_empleado: number;
   fecha?: string;
-  estado?: 'pendiente' | 'aprobada' | 'rechazada' | 'completada'; // Estados en minúsculas como espera el backend
+  estado?: 'PENDIENTE' | 'APROBADA' | 'RECHAZADA' | 'COMPLETADA'; // Estados en mayúsculas como espera el backend
   proveedor_nombre?: string;
   empleado_nombre?: string;
   subtotal?: number;

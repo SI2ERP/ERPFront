@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../utils/AuthContext';
 import comprasService, { type OrdenCompraResponse } from './comprasService';
 import './ListaOrdenes.css';
 
 const ListaOrdenes: React.FC = () => {
-  // Hook para navegación
+  // Hook para navegación y autenticación
   const navigate = useNavigate();
+  const { user, logout } = useAuth();
   
   const [ordenes, setOrdenes] = useState<OrdenCompraResponse[]>([]);
   const [cargando, setCargando] = useState<boolean>(true);
@@ -18,6 +20,19 @@ const ListaOrdenes: React.FC = () => {
   const [mensaje, setMensaje] = useState<string>('');
   const [tipoMensaje, setTipoMensaje] = useState<'success' | 'error' | 'warning'>('success');
 
+  // Verificar si el usuario es Jefe de Compras (tiene permisos para aprobar/rechazar/eliminar)
+  const esJefeCompras = user?.rol === 'JEFE_COMPRAS' || user?.rol === 'ADMIN' || user?.rol === 'GERENTE' || user?.rol === 'TESTING';
+
+  // Función para manejar el cierre de sesión
+  const handleLogout = () => {
+    // Limpiar localStorage
+    localStorage.removeItem('user');
+    localStorage.removeItem('token');
+    
+    // Llamar al logout del contexto
+    logout();
+  };
+
   useEffect(() => {
     cargarOrdenes();
   }, []);
@@ -28,9 +43,17 @@ const ListaOrdenes: React.FC = () => {
       const ordenesData = await comprasService.obtenerOrdenes();
       setOrdenes(ordenesData);
       setError('');
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error al cargar órdenes:', error);
-      setError('Error al cargar las órdenes. Por favor, intenta nuevamente.');
+      console.error('Detalles del error:', error.response?.data);
+      console.error('Status:', error.response?.status);
+      
+      const mensajeError = error.response?.data?.error || 
+                          error.response?.data?.message || 
+                          error.message ||
+                          'Error al cargar las órdenes. Por favor, intenta nuevamente.';
+      
+      setError(`Error ${error.response?.status || ''}: ${mensajeError}`);
     } finally {
       setCargando(false);
     }
@@ -38,19 +61,19 @@ const ListaOrdenes: React.FC = () => {
 
   const cambiarEstadoOrden = async (id: number, nuevoEstado: string) => {
     try {
-      // Enviar el estado en minúsculas como espera el backend
-      const estadoEnMinusculas = nuevoEstado.toLowerCase();
+      // Enviar el estado en mayúsculas como espera el backend
+      const estadoEnMayusculas = nuevoEstado.toUpperCase();
       
-      await comprasService.actualizarOrden(id, { estado: estadoEnMinusculas as any });
+      await comprasService.actualizarOrden(id, { estado: estadoEnMayusculas as any });
       setOrdenes(ordenes.map(orden => 
         orden.id_orden_compra === id 
-          ? { ...orden, estado: estadoEnMinusculas.toUpperCase() as any } // Mantener mayúsculas en el frontend
+          ? { ...orden, estado: estadoEnMayusculas as any }
           : orden
       ));
       
       // Mostrar mensaje de éxito
-      const accion = estadoEnMinusculas === 'aprobada' ? 'aprobada' : 'rechazada';
-      const mensajeEstado = `Orden ${accion} correctamente${estadoEnMinusculas === 'aprobada' ? '. Ya puede descargar la factura.' : ''}`;
+      const accion = estadoEnMayusculas === 'APROBADA' ? 'aprobada' : 'rechazada';
+      const mensajeEstado = `Orden ${accion} correctamente${estadoEnMayusculas === 'APROBADA' ? '. Ya puede descargar la factura.' : ''}`;
       mostrarMensaje(mensajeEstado, 'success');
     } catch (error) {
       console.error('Error al cambiar estado:', error);
@@ -208,8 +231,8 @@ const ListaOrdenes: React.FC = () => {
 
   return (
     <div className="lista-ordenes-container">
-      {/* Botón de navegación */}
-      <div style={{ marginBottom: '20px', textAlign: 'left' }}>
+      {/* Header con navegación y cerrar sesión */}
+      <div style={{ marginBottom: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <button
           type="button"
           onClick={() => navigate('/')}
@@ -232,6 +255,30 @@ const ListaOrdenes: React.FC = () => {
         >
           ← Volver al Menú Principal
         </button>
+        
+        <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+          <span style={{ color: '#ffffff', fontSize: '14px', fontWeight: '500' }}>
+            {user?.nombre} {user?.apellido || ''}
+          </span>
+          <button
+            onClick={handleLogout}
+            style={{
+              padding: '8px 16px',
+              backgroundColor: '#e74c3c',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontSize: '14px',
+              fontWeight: '500',
+              transition: 'background-color 0.3s'
+            }}
+            onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#c0392b'}
+            onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#e74c3c'}
+          >
+            Cerrar Sesión
+          </button>
+        </div>
       </div>
       
       <div className="lista-ordenes-header">
@@ -243,13 +290,15 @@ const ListaOrdenes: React.FC = () => {
           >
             + Nueva Orden
           </button>
-          <button 
+          <button
             onClick={() => navigate('/compras/productos-sin-stock')}
             className="btn-productos-sin-stock"
           >
              Productos Sin Stock
           </button>
-          {ordenesSeleccionadas.size > 0 && (
+          
+          {/* Solo JEFE_COMPRAS puede eliminar múltiples órdenes */}
+          {esJefeCompras && ordenesSeleccionadas.size > 0 && (
             <button 
               onClick={eliminarSeleccionadas}
               className="btn-eliminar-seleccionadas"
@@ -258,6 +307,7 @@ const ListaOrdenes: React.FC = () => {
               {eliminandoSeleccionadas ? 'Eliminando...' : `🗑 Eliminar ${ordenesSeleccionadas.size} seleccionada(s)`}
             </button>
           )}
+          
           <select
             value={filtroEstado}
             onChange={(e) => setFiltroEstado(e.target.value)}
@@ -298,14 +348,17 @@ const ListaOrdenes: React.FC = () => {
           <table className="tabla-ordenes">
             <thead>
               <tr>
-                <th className="checkbox-columna">
-                  <input
-                    type="checkbox"
-                    checked={ordenesSeleccionadas.size === ordenesFiltradas.length && ordenesFiltradas.length > 0}
-                    onChange={toggleSeleccionarTodas}
-                    title="Seleccionar/Deseleccionar todas"
-                  />
-                </th>
+                {/* Solo mostrar checkbox si es JEFE_COMPRAS */}
+                {esJefeCompras && (
+                  <th className="checkbox-columna">
+                    <input
+                      type="checkbox"
+                      checked={ordenesSeleccionadas.size === ordenesFiltradas.length && ordenesFiltradas.length > 0}
+                      onChange={toggleSeleccionarTodas}
+                      title="Seleccionar/Deseleccionar todas"
+                    />
+                  </th>
+                )}
                 <th>Proveedor</th>
                 <th>Empleado</th>
                 <th>Fecha</th>
@@ -316,13 +369,16 @@ const ListaOrdenes: React.FC = () => {
             <tbody>
               {ordenesFiltradas.map((orden) => (
                 <tr key={orden.id_orden_compra} className={ordenesSeleccionadas.has(orden.id_orden_compra) ? 'fila-seleccionada' : ''}>
-                  <td className="checkbox-columna">
-                    <input
-                      type="checkbox"
-                      checked={ordenesSeleccionadas.has(orden.id_orden_compra)}
-                      onChange={() => toggleSeleccionOrden(orden.id_orden_compra)}
-                    />
-                  </td>
+                  {/* Solo mostrar checkbox si es JEFE_COMPRAS */}
+                  {esJefeCompras && (
+                    <td className="checkbox-columna">
+                      <input
+                        type="checkbox"
+                        checked={ordenesSeleccionadas.has(orden.id_orden_compra)}
+                        onChange={() => toggleSeleccionOrden(orden.id_orden_compra)}
+                      />
+                    </td>
+                  )}
                   <td>{orden.proveedor_nombre || 'N/A'}</td>
                   <td>{orden.empleado_nombre || 'N/A'}</td>
                   <td>{formatearFecha(orden.fecha)}</td>
@@ -339,7 +395,9 @@ const ListaOrdenes: React.FC = () => {
                     >
                       👁 Ver
                     </button>
-                    {orden.estado.toLowerCase() === 'pendiente' && (
+                    
+                    {/* Solo JEFE_COMPRAS, ADMIN, GERENTE pueden aprobar/rechazar */}
+                    {esJefeCompras && orden.estado.toLowerCase() === 'pendiente' && (
                       <>
                         <button
                           onClick={() => cambiarEstadoOrden(orden.id_orden_compra, 'aprobada')}
@@ -357,6 +415,8 @@ const ListaOrdenes: React.FC = () => {
                         </button>
                       </>
                     )}
+                    
+                    {/* Todos pueden descargar la factura si está aprobada */}
                     {orden.estado.toLowerCase() === 'aprobada' && (
                       <button
                         onClick={() => descargarFactura(orden.id_orden_compra)}
@@ -367,14 +427,18 @@ const ListaOrdenes: React.FC = () => {
                         {descargandoFactura === orden.id_orden_compra ? '📄 Generando...' : '📄 Descargar Factura'}
                       </button>
                     )}
-                    <button
-                      onClick={() => eliminarOrden(orden.id_orden_compra)}
-                      className="btn-eliminar"
-                      title="Eliminar orden"
-                      disabled={eliminando === orden.id_orden_compra}
-                    >
-                      {eliminando === orden.id_orden_compra ? 'Eliminando...' : ' Eliminar'}
-                    </button>
+                    
+                    {/* Solo JEFE_COMPRAS, ADMIN, GERENTE pueden eliminar */}
+                    {esJefeCompras && (
+                      <button
+                        onClick={() => eliminarOrden(orden.id_orden_compra)}
+                        className="btn-eliminar"
+                        title="Eliminar orden"
+                        disabled={eliminando === orden.id_orden_compra}
+                      >
+                        {eliminando === orden.id_orden_compra ? 'Eliminando...' : '🗑 Eliminar'}
+                      </button>
+                    )}
                   </td>
                 </tr>
               ))}

@@ -28,8 +28,10 @@ const Login = () => {
       login(
         {
           nombre: user.nombre,
+          apellido: user.apellido,
           rol: user.rol || "EMPLEADO",
           email: user.email,
+          id_empleado: user.id, // El backend devuelve 'id' no 'id_empleado'
         },
         token
       );
@@ -41,11 +43,16 @@ const Login = () => {
 
   const onHandleRegister = async () => {
     try {
-      const response = await axios.post(`${AUTH_BACKEND_URL}/register`, {
+      console.log("Datos enviados:", { rut, email, password });
+      console.log("URL:", `${AUTH_BACKEND_URL}/auth/register`);
+      
+      const response = await axios.post(`${AUTH_BACKEND_URL}/auth/register`, {
         rut,
         email,
         password,
       });
+
+      console.log("Respuesta del servidor:", response.data);
 
       if (response.data?.message) {
         alert(response.data.message);
@@ -54,9 +61,16 @@ const Login = () => {
         setPassword("");
         setRut("");
       }
-    } catch (err) {
-      console.error("Error al registrarse:", err);
-      alert("Error en el registro, intente nuevamente");
+    } catch (err: any) {
+      console.error("Error completo:", err);
+      console.error("Respuesta del servidor:", err.response?.data);
+      console.error("Status:", err.response?.status);
+      console.error("Headers:", err.response?.headers);
+      
+      const errorMessage = err.response?.data?.message || 
+                          err.response?.data?.error || 
+                          "Error en el registro, intente nuevamente";
+      alert(errorMessage);
     }
   };
 

@@ -6,6 +6,7 @@ import Home from "./views/Home";
 import Login from "./views/Login";
 import InventarioPage from "./Modulo de Inventario/InventarioPage";
 import VentasPage from './Modulo de Ventas'
+import ComprasPage from './Modulo de Compras/ComprasPage'
 
 /* Función para ver permisos por rol y si el usuario está logueado */
 function ProtectedRoute({ element, roles }: { element: JSX.Element; roles?: string[] }) {
@@ -14,11 +15,13 @@ function ProtectedRoute({ element, roles }: { element: JSX.Element; roles?: stri
 
   if (!isAuthenticated || !token) {
     window.location.replace("/auth");
+    return null;
   }
 
   if (roles && !canAccess(user, roles)) {
     alert("No tienes permiso para acceder a esta sección");
     window.location.replace("/");
+    return null;
   }
 
   return element;
@@ -52,6 +55,14 @@ function App() {
                 <ProtectedRoute
                   element={<VentasPage />}
                   roles={[ROLES.ADMIN, ROLES.GERENTE, ROLES.EMPLEADO, ROLES.TESTING]}
+                />
+              }
+            />
+            <Route path="/compras/*"
+              element={
+                <ProtectedRoute
+                  element={<ComprasPage />}
+                  roles={[ROLES.ADMIN, ROLES.GERENTE, ROLES.EMPLEADO, ROLES.TESTING, ROLES.EMPLEADO_COMPRAS, ROLES.JEFE_COMPRAS]}
                 />
               }
             />

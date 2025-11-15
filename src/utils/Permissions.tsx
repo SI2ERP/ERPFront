@@ -2,6 +2,8 @@
 export const ROLES = {
   ADMIN: "ADMIN",
   SUPERVISOR_RRHH: "SUPERVISOR_RRHH",
+  EMPLEADO_COMPRAS: "EMPLEADO_COMPRAS",
+  JEFE_COMPRAS: "JEFE_COMPRAS",
   EMPLEADO: "EMPLEADO",
   JEFE_DEPARTAMENTO: "JEFE_DEPARTAMENTO",
   GERENTE: "GERENTE",
@@ -112,6 +114,22 @@ export const PERMISSIONS = {
     puedeVerCompras: false,
     puedeVerInventario: true,
     puedeVerLogistica: true,
+    puedeVerRRHH: false,
+    puedeVerVentas: false,
+  },
+
+  [ROLES.EMPLEADO_COMPRAS]: {
+    puedeVerCompras: true,
+    puedeVerInventario: false,
+    puedeVerLogistica: false,
+    puedeVerRRHH: false,
+    puedeVerVentas: false,
+  },
+
+  [ROLES.JEFE_COMPRAS]: {
+    puedeVerCompras: true,
+    puedeVerInventario: true,
+    puedeVerLogistica: false,
     puedeVerRRHH: false,
     puedeVerVentas: false,
   },

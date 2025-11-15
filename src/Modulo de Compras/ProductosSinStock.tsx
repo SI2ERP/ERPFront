@@ -60,7 +60,7 @@ const ProductosSinStock: React.FC = () => {
   return (
     <div className="productos-sin-stock-container">
       <div className="productos-sin-stock-header">
-        <h2>Productos Sin Stock</h2>
+        <h2 style={{ margin: 0, marginBottom: '15px' }}>Productos Sin Stock</h2>
         <div className="productos-sin-stock-actions">
           <button 
             onClick={() => navigate('/compras')} 
