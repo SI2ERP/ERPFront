@@ -220,18 +220,22 @@ html, body {
   vertical-align: middle;
 }
 
-.tabla-productos th:first-child,
+.tabla-productos th:first-child {
+  text-align: center;
+  padding-left: 2rem;
+}
+
 .tabla-productos th:nth-child(2) {
-  text-align: left;
+  text-align: center;
+  padding-left: 1.5rem;
 }
 
 .tabla-productos td {
   padding: 0.75rem 1rem;
   border-bottom: 1px solid #444;
-  vertical-align: middle;
+  vertical-align: top;
   color: #fff;
   text-align: center;
-  height: 50px;
   box-sizing: border-box;
 }
 
@@ -245,6 +249,7 @@ html, body {
   color: #fff;
   text-align: left;
   width: 25%;
+  vertical-align: top;
 }
 
 .producto-descripcion {
@@ -253,6 +258,8 @@ html, body {
   text-align: left;
   word-wrap: break-word;
   width: 30%;
+  vertical-align: top;
+  line-height: 1.5;
 }
 
 .cantidad {

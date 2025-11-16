@@ -17,6 +17,8 @@ const GestionPagosProveedores: React.FC = () => {
   const [descargandoFactura, setDescargandoFactura] = useState<number | null>(null);
   const [mensaje, setMensaje] = useState<string>('');
   const [tipoMensaje, setTipoMensaje] = useState<'success' | 'error' | 'warning'>('success');
+  const [mostrarDialogoConfirmacion, setMostrarDialogoConfirmacion] = useState<boolean>(false);
+  const [ordenAConfirmar, setOrdenAConfirmar] = useState<number | null>(null);
 
   // Verificar si el usuario es Jefe de Compras
   const esJefeCompras = user?.rol === 'JEFE_COMPRAS' || user?.rol === 'ADMIN' || user?.rol === 'GERENTE' || user?.rol === 'TESTING';
@@ -49,13 +51,17 @@ const GestionPagosProveedores: React.FC = () => {
   };
 
   const pagarOrden = async (idOcProveedor: number) => {
-    if (!confirm('¿Confirma que desea marcar esta orden como pagada?')) {
-      return;
-    }
+    setOrdenAConfirmar(idOcProveedor);
+    setMostrarDialogoConfirmacion(true);
+  };
+
+  const confirmarPago = async () => {
+    if (!ordenAConfirmar) return;
 
     try {
-      setPagando(idOcProveedor);
-      const resultado = await comprasService.pagarOrden(idOcProveedor);
+      setPagando(ordenAConfirmar);
+      setMostrarDialogoConfirmacion(false);
+      const resultado = await comprasService.pagarOrden(ordenAConfirmar);
       
       mostrarMensaje(resultado.mensaje, 'success');
       
@@ -67,7 +73,13 @@ const GestionPagosProveedores: React.FC = () => {
       mostrarMensaje(mensajeError, 'error');
     } finally {
       setPagando(null);
+      setOrdenAConfirmar(null);
     }
+  };
+
+  const cancelarPago = () => {
+    setMostrarDialogoConfirmacion(false);
+    setOrdenAConfirmar(null);
   };
 
   const descargarFactura = async (idOrdenCompra: number) => {
@@ -310,6 +322,29 @@ const GestionPagosProveedores: React.FC = () => {
           <p className="info-valor">{ordenes.filter(o => o.pago_realizado).length}</p>
         </div>
       </div>
+
+      {/* Diálogo de confirmación de pago */}
+      {mostrarDialogoConfirmacion && (
+        <div className="modal-overlay" onClick={cancelarPago}>
+          <div className="modal-dialog" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3>Confirmar Pago</h3>
+            </div>
+            <div className="modal-body">
+              <p>¿Está seguro que desea marcar esta orden como pagada?</p>
+              <p className="modal-advertencia">Esta acción no se puede deshacer.</p>
+            </div>
+            <div className="modal-footer">
+              <button onClick={cancelarPago} className="btn-modal-cancelar">
+                Cancelar
+              </button>
+              <button onClick={confirmarPago} className="btn-modal-confirmar">
+                Confirmar Pago
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
