@@ -144,6 +144,29 @@ export interface OrdenCompraCompleta {
   detalle: DetalleCompletoCompra[];
 }
 
+// Interfaces para el sistema de pagos a proveedores
+export interface OrdenProveedor {
+  id_oc_proveedor: number;
+  id_orden_compra: number;
+  id_proveedor: number;
+  id_empleado: number;
+  fecha: string;
+  estado_proveedor: 'PENDIENTE' | 'ACEPTADA' | 'RECHAZADA';
+  pago_realizado: boolean;
+  subtotal: string;
+  iva: string;
+  total: string;
+  proveedor_nombre?: string;
+  empleado_nombre?: string;
+  created_at: string;
+}
+
+export interface PagarOrdenResponse {
+  mensaje: string;
+  orden: OrdenProveedor;
+  puede_generar_factura: boolean;
+}
+
 // Servicio para manejar todas las APIs del módulo de compras
 class ComprasService {
   private baseURL = `${import.meta.env.VITE_URL_BACKEND_COMPRAS}/api`;
@@ -339,6 +362,37 @@ class ComprasService {
       return true;
     } catch (error) {
       console.error('Error al descargar factura:', error);
+      throw error;
+    }
+  }
+
+  // =================== GESTIÓN DE PAGOS A PROVEEDORES ===================
+
+  async obtenerOrdenesProveedores(): Promise<OrdenProveedor[]> {
+    try {
+      const response = await fetch(`${this.baseURL}/provider-orders`);
+      return this.handleResponse<OrdenProveedor[]>(response);
+    } catch (error) {
+      console.error('Error al obtener órdenes de proveedores:', error);
+      throw error;
+    }
+  }
+
+  async pagarOrden(idOcProveedor: number): Promise<PagarOrdenResponse> {
+    try {
+      const response = await fetch(`${this.baseURL}/provider-orders/${idOcProveedor}/pagar`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' }
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || `Error ${response.status}: Error al marcar como pagada`);
+      }
+
+      return this.handleResponse<PagarOrdenResponse>(response);
+    } catch (error) {
+      console.error('Error al pagar orden:', error);
       throw error;
     }
   }

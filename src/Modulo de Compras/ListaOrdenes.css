@@ -109,6 +109,25 @@ html, body {
   transform: translateY(-1px);
 }
 
+.btn-pagos-proveedores {
+  background-color: #28a745;
+  color: #fff;
+  border: 1px solid #28a745;
+  font-size: 0.9em;
+  padding: 0.6em 1.2em;
+  font-weight: 500;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+  margin-right: 1rem;
+}
+
+.btn-pagos-proveedores:hover {
+  background-color: #218838;
+  border-color: #218838;
+  transform: translateY(-1px);
+}
+
 .btn-actualizar {
   background-color: #3a3a3a;
   color: #f0f0f0;

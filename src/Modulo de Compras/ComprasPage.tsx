@@ -4,6 +4,7 @@ import ListaOrdenes from './ListaOrdenes';
 import OrdenCompraForm from './OrdenCompraForm';
 import VerOrdenCompra from './VerOrdenCompra';
 import ProductosSinStock from './ProductosSinStock';
+import GestionPagosProveedores from './GestionPagosProveedores';
 
 const ComprasPage: React.FC = () => {
   return (
@@ -22,6 +23,9 @@ const ComprasPage: React.FC = () => {
       
       {/* Ruta para ver productos sin stock */}
       <Route path="/productos-sin-stock" element={<ProductosSinStock />} />
+      
+      {/* Ruta para gestión de pagos a proveedores */}
+      <Route path="/pagos-proveedores" element={<GestionPagosProveedores />} />
     </Routes>
   );
 };

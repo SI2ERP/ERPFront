@@ -16,7 +16,6 @@ const ListaOrdenes: React.FC = () => {
   const [eliminando, setEliminando] = useState<number | null>(null);
   const [ordenesSeleccionadas, setOrdenesSeleccionadas] = useState<Set<number>>(new Set());
   const [eliminandoSeleccionadas, setEliminandoSeleccionadas] = useState<boolean>(false);
-  const [descargandoFactura, setDescargandoFactura] = useState<number | null>(null);
   const [mensaje, setMensaje] = useState<string>('');
   const [tipoMensaje, setTipoMensaje] = useState<'success' | 'error' | 'warning'>('success');
 
@@ -73,24 +72,11 @@ const ListaOrdenes: React.FC = () => {
       
       // Mostrar mensaje de éxito
       const accion = estadoEnMayusculas === 'APROBADA' ? 'aprobada' : 'rechazada';
-      const mensajeEstado = `Orden ${accion} correctamente${estadoEnMayusculas === 'APROBADA' ? '. Ya puede descargar la factura.' : ''}`;
+      const mensajeEstado = `Orden ${accion} correctamente${estadoEnMayusculas === 'APROBADA' ? '. Ahora debe gestionar el pago en Gestión de Pagos.' : ''}`;
       mostrarMensaje(mensajeEstado, 'success');
     } catch (error) {
       console.error('Error al cambiar estado:', error);
       mostrarMensaje('Error al cambiar el estado de la orden', 'error');
-    }
-  };
-
-  const descargarFactura = async (id: number) => {
-    try {
-      setDescargandoFactura(id);
-      await comprasService.descargarFactura(id);
-      mostrarMensaje('Factura descargada correctamente', 'success');
-    } catch (error) {
-      console.error('Error al descargar factura:', error);
-      mostrarMensaje(`Error al descargar factura: ${error instanceof Error ? error.message : 'Error desconocido'}`, 'error');
-    } finally {
-      setDescargandoFactura(null);
     }
   };
 
@@ -297,6 +283,16 @@ const ListaOrdenes: React.FC = () => {
              Productos Sin Stock
           </button>
           
+          {/* Botón para acceder a Gestión de Pagos - Solo JEFE_COMPRAS */}
+          {esJefeCompras && (
+            <button
+              onClick={() => navigate('/compras/pagos-proveedores')}
+              className="btn-pagos-proveedores"
+            >
+              Gestion de Pagos
+            </button>
+          )}
+          
           {/* Solo JEFE_COMPRAS puede eliminar múltiples órdenes */}
           {esJefeCompras && ordenesSeleccionadas.size > 0 && (
             <button 
@@ -414,18 +410,6 @@ const ListaOrdenes: React.FC = () => {
                           ✗ Rechazar
                         </button>
                       </>
-                    )}
-                    
-                    {/* Todos pueden descargar la factura si está aprobada */}
-                    {orden.estado.toLowerCase() === 'aprobada' && (
-                      <button
-                        onClick={() => descargarFactura(orden.id_orden_compra)}
-                        className="btn-descargar-factura"
-                        title="Descargar factura PDF"
-                        disabled={descargandoFactura === orden.id_orden_compra}
-                      >
-                        {descargandoFactura === orden.id_orden_compra ? '📄 Generando...' : '📄 Descargar Factura'}
-                      </button>
                     )}
                     
                     {/* Solo JEFE_COMPRAS, ADMIN, GERENTE pueden eliminar */}
