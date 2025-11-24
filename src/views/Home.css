@@ -10,14 +10,22 @@
 .home-container h1 {
   /* Usa el tamaño de fuente definido en index.css */
   font-size: 3.2em;
+  color: #ffffff;
+}
+
+.home-container p {
+  color: #ffffff;
+  font-size: 1.2em;
+  margin-top: 0.5rem;
 }
 
 .module-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 3 columnas */
-  gap: 1.5rem; /* Espacio entre botones */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem; /* Espacio entre botones */
   margin-top: 2rem;
-  max-width: 800px;
+  flex-wrap: wrap;
 }
 
 .module-button {
@@ -29,8 +37,10 @@
   font-weight: 500;
   font-family: inherit;
   background-color: #1a1a1a; /* Color base oscuro */
+  color: #ffffff; /* Texto blanco */
   cursor: pointer;
   transition: all 0.25s;
+  min-width: 200px;
 }
 
 .module-button:hover {
@@ -49,15 +59,31 @@
   border-color: #3a3a3a;
 }
 
+.logout-button {
+  margin-top: 3rem;
+  padding: 0.8em 2em;
+  font-size: 1em;
+  font-weight: 500;
+  background-color: #e74c3c;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.25s;
+}
+
+.logout-button:hover {
+  background-color: #c0392b;
+}
+
 /* Ajuste para pantallas más pequeñas */
 @media (max-width: 768px) {
   .module-grid {
-    grid-template-columns: repeat(2, 1fr); /* 2 columnas */
+    flex-direction: column;
+    gap: 1.5rem;
   }
-}
-
-@media (max-width: 480px) {
-  .module-grid {
-    grid-template-columns: 1fr; /* 1 columna */
+  
+  .module-button {
+    min-width: 250px;
   }
 }

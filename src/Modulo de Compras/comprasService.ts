@@ -596,6 +596,20 @@ class ComprasService {
       throw error;
     }
   }
+
+  async obtenerContadorProductosSinStock(): Promise<number> {
+    try {
+      const response = await fetch(`${this.baseURL}/productos-sin-stock`);
+      if (!response.ok) {
+        throw new Error(`Error ${response.status}: ${response.statusText}`);
+      }
+      const result: ProductosSinStockResponse = await response.json();
+      return result.total;
+    } catch (error) {
+      console.error('Error al obtener contador de productos sin stock:', error);
+      return 0; // Retornar 0 en caso de error
+    }
+  }
 }
 
 // Instancia única del servicio

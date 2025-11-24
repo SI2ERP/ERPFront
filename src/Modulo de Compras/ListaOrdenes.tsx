@@ -18,6 +18,7 @@ const ListaOrdenes: React.FC = () => {
   const [eliminandoSeleccionadas, setEliminandoSeleccionadas] = useState<boolean>(false);
   const [mensaje, setMensaje] = useState<string>('');
   const [tipoMensaje, setTipoMensaje] = useState<'success' | 'error' | 'warning'>('success');
+  const [contadorSinStock, setContadorSinStock] = useState<number>(0);
 
   // Verificar si el usuario es Jefe de Compras (tiene permisos para aprobar/rechazar/eliminar)
   const esJefeCompras = user?.rol === 'JEFE_COMPRAS' || user?.rol === 'ADMIN' || user?.rol === 'GERENTE' || user?.rol === 'TESTING';
@@ -34,6 +35,7 @@ const ListaOrdenes: React.FC = () => {
 
   useEffect(() => {
     cargarOrdenes();
+    cargarContadorSinStock();
   }, []);
 
   const cargarOrdenes = async () => {
@@ -55,6 +57,16 @@ const ListaOrdenes: React.FC = () => {
       setError(`Error ${error.response?.status || ''}: ${mensajeError}`);
     } finally {
       setCargando(false);
+    }
+  };
+
+  const cargarContadorSinStock = async () => {
+    try {
+      const contador = await comprasService.obtenerContadorProductosSinStock();
+      setContadorSinStock(contador);
+    } catch (error) {
+      console.error('Error al cargar contador de productos sin stock:', error);
+      setContadorSinStock(0);
     }
   };
 
@@ -281,6 +293,9 @@ const ListaOrdenes: React.FC = () => {
             className="btn-productos-sin-stock"
           >
              Productos Sin Stock
+             {contadorSinStock > 0 && (
+               <span className="badge-contador">{contadorSinStock}</span>
+             )}
           </button>
           
           {/* Botón para acceder a Gestión de Pagos - Solo JEFE_COMPRAS */}

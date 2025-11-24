@@ -101,12 +101,42 @@ html, body {
   cursor: pointer;
   transition: all 0.3s;
   margin-right: 1rem;
+  position: relative;
 }
 
 .btn-productos-sin-stock:hover {
   background-color: #e55a2b;
   border-color: #e55a2b;
   transform: translateY(-1px);
+}
+
+.badge-contador {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background-color: #dc3545;
+  color: white;
+  border-radius: 50%;
+  padding: 4px 8px;
+  font-size: 0.75em;
+  font-weight: bold;
+  min-width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #0d1117;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  animation: pulse-badge 2s ease-in-out infinite;
+}
+
+@keyframes pulse-badge {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
 }
 
 .btn-pagos-proveedores {
