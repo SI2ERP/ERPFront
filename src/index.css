@@ -20,7 +20,7 @@ html, body {
   -moz-osx-font-smoothing: grayscale;
 
   /* Variables para colores uniformes - Paleta consistente */
-  --background-primary: #0d1117;
+  --background-primary: #21262d;
   --background-secondary: #1a1a1a;
   --background-tertiary: #242424;
   --background-hover: #2a2a2a;
@@ -51,7 +51,7 @@ html, body {
 
 #root {
   height: 100%;
-  background-color: #0d1117;
+  background-color: #21262d;
 }
 
 body {
