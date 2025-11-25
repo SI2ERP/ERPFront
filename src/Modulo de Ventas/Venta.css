@@ -166,8 +166,8 @@
   background-color: #3a3a3a; 
   padding: 0.75rem 1rem;
   font-weight: 600;
-  z-index: 1;
   border-bottom: 1px solid #444;
+  z-index: 1;
 }
 
 .tabla-wrapper td {
@@ -271,6 +271,17 @@
   font-size: 1.5rem;
   cursor: pointer;
 }
+
+.archivo-btn-cerrar {
+  background: none;
+  border: none;
+  color: #aaa;
+  padding: 0;
+  height: auto;
+  padding-left: 8px;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
 .modal-header .btn-cerrar:hover {
   color: white;
 }
@@ -353,3 +364,318 @@ input[type=number] {
   -moz-appearance: textfield;
   appearance: textfield;
 }
+
+
+
+
+.tooltip-base {
+  background-color: #2a2a2a;
+  color: rgba(255, 255, 255, 0.87);
+  padding: 0.6rem 1rem;
+  border-radius: 6px;
+  border: 1px solid #555;
+  white-space: nowrap;
+  font-size: 0.8rem;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+}
+
+.tooltip-arrow {
+  content: "";
+  position: absolute;
+  border-width: 6px;
+  border-style: solid;
+  border-color: #2a2a2a transparent transparent transparent;
+}
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.tooltip:hover {
+  transform: translateY(-1px);
+}
+
+
+.tooltip button,
+.tooltip {
+  transition: all 0.2s ease;
+}
+
+
+.tooltip .tooltip-text {
+  visibility: hidden;
+  opacity: 0;
+  width: max-content;
+  max-width: 220px;
+
+  background-color: #2a2a2a;
+  color: rgba(255, 255, 255, 0.87);
+  text-align: center;
+  font-size: 0.8rem;
+  padding: 0.5rem 0.8rem;
+  border-radius: 6px;
+  border: 1px solid #555;
+
+  position: absolute;
+  z-index: 2;
+  bottom: 130%;        
+  left: 50%;
+  transform: translateX(-50%);
+
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+  pointer-events: none;
+
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+}
+
+.tooltip .tooltip-text::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 6px;
+  border-style: solid;
+  border-color: #2a2a2a transparent transparent transparent;
+}
+
+
+.tooltip:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+  transition-delay: 0.3s;
+}
+
+.tooltip:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+.tooltip:focus-visible .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
+
+.tooltip button,
+.tooltip.tooltip-button {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  text-align: inherit;
+  outline: none;
+}
+
+.tooltip button:hover,
+.tooltip.tooltip-button:hover {
+  color: #3b82f6;
+  text-decoration: underline;
+}
+
+
+.tooltip-fila {
+  position: relative;
+  cursor: pointer;
+}
+
+
+.tooltip-fila::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  left: 50%;
+  bottom: 105%;
+  transform: translateX(-50%);
+  padding: 0.5rem 0.8rem;
+  background-color: #2a2a2a;
+  color: rgba(255,255,255,0.87);
+  border: 1px solid #555;
+  font-size: 0.8rem;
+  white-space: nowrap;
+  border-radius: 6px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  z-index: 10;
+}
+
+
+.tooltip-fila::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 100%;
+  transform: translateX(-50%);
+  border-width: 6px;
+  border-style: solid;
+  border-color: #2a2a2a transparent transparent transparent;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  z-index: 10;
+}
+
+
+.tooltip-fila:hover::after,
+.tooltip-fila:hover::before {
+  opacity: 1;
+}
+
+
+.tooltip-fila .tooltip-button:hover ~ .tooltip-fila::after {
+  opacity: 0 !important;
+}
+
+@keyframes borderFlash {
+  0% { border-color: #555; }
+  20% { border-color: #646cff; }
+  100% { border-color: #555; }
+}
+
+.highlight-selection {
+  animation: borderFlash 2s normal;
+  border: 1px solid transparent;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #eee;
+  border-radius: 12px;
+  border: 1px solid #555;
+  background-color: #2f2f2f;
+  width: max-content; 
+  user-select: none;
+  animation: chipFadeIn 0.25s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+  white-space: nowrap;
+}
+
+.chip.success {
+  border-color: #3fa96a;
+  background-color: rgba(63, 169, 106, 0.15);
+  color: #7affb2;
+}
+
+.chip.danger {
+  border-color: #a94442;
+  background-color: rgba(169, 68, 66, 0.18);
+  color: #ffb3ae;
+}
+
+.chip.prospecto {
+  border-color: #9b87f5;
+  background-color: rgba(155, 135, 245, 0.15);
+  color: #c4b5fd;
+}
+
+.chip.interesado {
+  border-color: #f59e0b;
+  background-color: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
+}
+
+.chip.cliente-nuevo {
+  border-color: #3b82f6;
+  background-color: rgba(59, 130, 246, 0.15);
+  color: #93c5fd;
+}
+
+.chip.cliente-activo {
+  border-color: #3fa96a;
+  background-color: rgba(63, 169, 106, 0.15);
+  color: #7affb2;
+}
+
+.chip.perdido {
+  border-color: #a94442;
+  background-color: rgba(169, 68, 66, 0.18);
+  color: #ffb3ae;
+}
+
+@keyframes chipFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-2px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.btn-adjuntar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+
+  color: rgba(255, 255, 255, 0.88);
+
+  padding: 7px 14px;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+}
+
+.btn-adjuntar:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.btn-adjuntar:active {
+  transform: scale(0.96);
+  background: rgba(255, 255, 255, 0.10);
+}
+
+
+.adjuntar-archivos {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 10px;
+  max-height: 140px;
+  overflow-y: auto;
+  padding-right: 4px; 
+}
+
+
+.label-archivo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 14px;
+  padding: 6px 12px;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+
+.archivo-btn-cerrar {
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 0 4px;
+}
+
+.archivo-btn-cerrar:hover {
+  color: rgba(255, 255, 255, 1);
+}
+
