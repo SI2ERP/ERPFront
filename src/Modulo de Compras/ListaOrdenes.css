@@ -7,6 +7,7 @@
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  background-color: var(--background-primary);
   color: #fff;
   margin: 0;
   position: relative;
@@ -514,6 +515,10 @@
   text-align: center;
   min-width: 120px;
   flex-shrink: 0;
+  background-color: #1a1a1a;
+  border-radius: 8px;
+  border: 1px solid #333;
+  transition: all 0.3s ease;
 }
 
 .estadistica .numero {
@@ -660,7 +665,9 @@
 
 .estadistica:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  background-color: #2a2a2a;
+  border-color: #555;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 /* Estilos para selección múltiple */

@@ -125,6 +125,7 @@ select:disabled {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  background-color: var(--background-primary);
   color: #fff;
 }
 

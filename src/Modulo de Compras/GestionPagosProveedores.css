@@ -3,6 +3,7 @@
   max-width: 1600px;
   margin: 0 auto;
   min-height: 100vh;
+  background-color: var(--background-primary);
 }
 
 .header-section {
