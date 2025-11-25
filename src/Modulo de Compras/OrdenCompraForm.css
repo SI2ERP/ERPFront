@@ -1,6 +1,6 @@
 /* Mensajes de error y éxito */
 .mensaje-error {
-  background-color: #2a1a1a;
+  background-color: #1a1a1a;
   border: 1px solid #444;
   border-radius: 8px;
   padding: 15px;
@@ -20,7 +20,7 @@
 }
 
 .mensaje-exito {
-  background-color: #1a2a1a;
+  background-color: #1a1a1a;
   border: 1px solid #444;
   border-radius: 8px;
   padding: 15px;
@@ -33,8 +33,8 @@
 .loading-select,
 .loading-products {
   padding: 12px;
-  background-color: #1a1a1a;
-  border: 1px solid #444;
+  background-color: #242424;
+  border: 1px solid #555;
   border-radius: 8px;
   color: #ccc;
   font-style: italic;
@@ -49,8 +49,8 @@
 .info-box {
   padding: 12px 15px;
   border-radius: 8px;
-  background-color: #1a2a3a;
-  border: 1px solid #444;
+  background-color: #242424;
+  border: 1px solid #555;
   color: #79b8ff;
   display: flex;
   align-items: flex-start;
@@ -60,8 +60,8 @@
 }
 
 .info-box.warning {
-  background-color: #2a2a1a;
-  border: 1px solid #666;
+  background-color: #242424;
+  border: 1px solid #555;
   color: #ffcc02;
 }
 
@@ -95,8 +95,8 @@
 
 /* Mensaje informativo para campos bloqueados */
 .campo-bloqueado-info {
-  background-color: #2a2a1a;
-  border: 1px solid #666;
+  background-color: #242424;
+  border: 1px solid #555;
   border-radius: 8px;
   padding: 8px 12px;
   margin-top: 5px;
@@ -110,15 +110,15 @@
 
 /* Campos select deshabilitados */
 select:disabled {
-  background-color: #1a1a1a;
+  background-color: #242424;
   color: #666;
-  border-color: #444;
+  border-color: #555;
   cursor: not-allowed;
   opacity: 0.8;
 }
 
 .btn-primary:disabled {
-  background-color: #4a4a4a;
+  background-color: #3a3a3a;
   border-color: #555;
 }
 
@@ -187,7 +187,7 @@ select:disabled {
   font-size: 1em;
   border-radius: 8px;
   border: 1px solid #555;
-  background-color: #2a2a2a;
+  background-color: #242424;
   color: #fff;
   font-family: inherit;
   box-sizing: border-box;

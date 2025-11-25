@@ -19,13 +19,34 @@ html, body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  /* Variables para colores uniformes 
-    Todos los modulos pueden acceder haciendo un color: var(--name);
-  */
-
-  --background-primary: #000000;
-  --background-secondary: #b9b9b9da;
+  /* Variables para colores uniformes - Paleta consistente */
+  --background-primary: #0d1117;
+  --background-secondary: #1a1a1a;
+  --background-tertiary: #242424;
+  --background-hover: #2a2a2a;
+  --background-header: #3a3a3a;
+  
+  --border-primary: #444;
+  --border-secondary: #555;
+  --border-focus: #646cff;
+  
   --text-primary: #ffffff;
+  --text-secondary: #ccc;
+  --text-disabled: #888;
+  
+  --button-primary: #646cff;
+  --button-primary-hover: #535bf2;
+  --button-secondary: #3a3a3a;
+  --button-secondary-hover: #4a4a4a;
+  --button-danger: #a94442;
+  --button-danger-hover: #8c3836;
+  --button-success: #28a745;
+  --button-success-hover: #218838;
+  
+  --color-error: #ff6b6b;
+  --color-success: #4caf50;
+  --color-warning: #ffcc02;
+  --color-info: #79b8ff;
 }
 
 #root {
