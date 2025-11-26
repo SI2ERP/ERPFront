@@ -1,13 +1,11 @@
 /* Roles en BD, si agregan más agreguenlos acá */
 export const ROLES = {
   ADMIN: "ADMIN",
+  ADMIN_TI: "ADMIN_TI",
   SUPERVISOR_RRHH: "SUPERVISOR_RRHH",
-  EMPLEADO_COMPRAS: "EMPLEADO_COMPRAS",
-  JEFE_COMPRAS: "JEFE_COMPRAS",
   EMPLEADO: "EMPLEADO",
   JEFE_DEPARTAMENTO: "JEFE_DEPARTAMENTO",
   GERENTE: "GERENTE",
-  ADMIN_TI: "ADMIN_TI",
   JEFE_RRHH: "JEFE_RRHH",
   ANALISTA_SELECCION: "ANALISTA_SELECCION",
   ANALISTA_NOMINA: "ANALISTA_NOMINA",
@@ -15,13 +13,33 @@ export const ROLES = {
   EMPLEADO_GENERAL: "EMPLEADO_GENERAL",
   TRANSPORTISTA: "TRANSPORTISTA",
   TESTING: "TESTING",
+
+  JEFE_COMPRAS: "JEFE_COMPRAS",
+  JEFE_LOGISTICA: "JEFE_LOGISTICA",
+  JEFE_VENTAS: "JEFE_VENTAS",
+  JEFE_INVENTARIO: "JEFE_INVENTARIO",
+
+  EMPLEADO_COMPRAS: "EMPLEADO_COMPRAS",
+  EMPLEADO_LOGISTICA: "EMPLEADO_LOGISTICA",
+  EMPLEADO_VENTAS: "EMPLEADO_VENTAS",
+  EMPLEADO_INVENTARIO: "EMPLEADO_INVENTARIO",
+  EMPLEADO_AREA: "EMPLEADO_AREA",
+
 } as const;
+
+export type PermissionKey =
+  | "puedeVerCompras"
+  | "puedeVerInventario"
+  | "puedeVerLogistica"
+  | "puedeVerRRHH"
+  | "puedeVerVentas";
 
 export type Role = typeof ROLES[keyof typeof ROLES];
 
 /* Acá se agregan permisos a cada rol */
 /* Modificar cada vez que se creen, dejar los que no ocupan como false por defecto */
 export const PERMISSIONS = {
+  //uso extra de admin, al logear en rrhh pasa directo a la vista admin
   [ROLES.ADMIN]: {
     puedeVerCompras: true,
     puedeVerInventario: true,
@@ -34,7 +52,7 @@ export const PERMISSIONS = {
     puedeVerCompras: false,
     puedeVerInventario: false,
     puedeVerLogistica: true,
-    puedeVerRRHH: false,
+    puedeVerRRHH: true,
     puedeVerVentas: false,
   },
 
@@ -45,7 +63,7 @@ export const PERMISSIONS = {
     puedeVerRRHH: true,
     puedeVerVentas: true,
   },
-
+  //uso extra de 
   [ROLES.JEFE_DEPARTAMENTO]: {
     puedeVerCompras: true,
     puedeVerInventario: true,
@@ -58,7 +76,7 @@ export const PERMISSIONS = {
     puedeVerCompras: true,
     puedeVerInventario: true,
     puedeVerLogistica: false,
-    puedeVerRRHH: false,
+    puedeVerRRHH: true,
     puedeVerVentas: true,
   },
 
@@ -98,7 +116,7 @@ export const PERMISSIONS = {
     puedeVerCompras: false,
     puedeVerInventario: false,
     puedeVerLogistica: false,
-    puedeVerRRHH: false,
+    puedeVerRRHH: true,
     puedeVerVentas: true,
   },
 
@@ -106,7 +124,7 @@ export const PERMISSIONS = {
     puedeVerCompras: false,
     puedeVerInventario: true,
     puedeVerLogistica: false,
-    puedeVerRRHH: false,
+    puedeVerRRHH: true,
     puedeVerVentas: true,
   },
 
@@ -114,23 +132,7 @@ export const PERMISSIONS = {
     puedeVerCompras: false,
     puedeVerInventario: true,
     puedeVerLogistica: true,
-    puedeVerRRHH: false,
-    puedeVerVentas: false,
-  },
-
-  [ROLES.EMPLEADO_COMPRAS]: {
-    puedeVerCompras: true,
-    puedeVerInventario: false,
-    puedeVerLogistica: false,
-    puedeVerRRHH: false,
-    puedeVerVentas: false,
-  },
-
-  [ROLES.JEFE_COMPRAS]: {
-    puedeVerCompras: true,
-    puedeVerInventario: true,
-    puedeVerLogistica: false,
-    puedeVerRRHH: false,
+    puedeVerRRHH: true,
     puedeVerVentas: false,
   },
 
@@ -141,10 +143,85 @@ export const PERMISSIONS = {
     puedeVerRRHH: true,
     puedeVerVentas: true,
   },
+
+  [ROLES.JEFE_COMPRAS]: {
+    puedeVerCompras: true,
+    puedeVerInventario: false,
+    puedeVerLogistica: false,
+    puedeVerRRHH: true,
+    puedeVerVentas: true,
+  },
+
+  [ROLES.JEFE_LOGISTICA]: {
+    puedeVerCompras: false,
+    puedeVerInventario: true,
+    puedeVerLogistica: true,
+    puedeVerRRHH: true,
+    puedeVerVentas: false,
+  },
+
+  [ROLES.JEFE_VENTAS]: {
+    puedeVerCompras: false,
+    puedeVerInventario: false,
+    puedeVerLogistica: false,
+    puedeVerRRHH: true,
+    puedeVerVentas: true,
+  },
+
+  [ROLES.JEFE_INVENTARIO]: {
+    puedeVerCompras: false,
+    puedeVerInventario: true,
+    puedeVerLogistica: false,
+    puedeVerRRHH: true,
+    puedeVerVentas: false,
+  },
+
+  [ROLES.EMPLEADO_COMPRAS]: {
+    puedeVerCompras: true,
+    puedeVerInventario: false,
+    puedeVerLogistica: false,
+    puedeVerRRHH: true,
+    puedeVerVentas: false,
+  },
+
+  [ROLES.EMPLEADO_LOGISTICA]: {
+    puedeVerCompras: false,
+    puedeVerInventario: false,
+    puedeVerLogistica: true,
+    puedeVerRRHH: true,
+    puedeVerVentas: false,
+  },
+
+  [ROLES.EMPLEADO_VENTAS]: {
+    puedeVerCompras: false,
+    puedeVerInventario: false,
+    puedeVerLogistica: false,
+    puedeVerRRHH: true,
+    puedeVerVentas: true,
+  },
+
+  [ROLES.EMPLEADO_INVENTARIO]: {
+    puedeVerCompras: false,
+    puedeVerInventario: true,
+    puedeVerLogistica: false,
+    puedeVerRRHH: true,
+    puedeVerVentas: false,
+  },
+
+  [ROLES.EMPLEADO_AREA]: {
+    puedeVerCompras: false,
+    puedeVerInventario: true,
+    puedeVerLogistica: false,
+    puedeVerRRHH: true,
+    puedeVerVentas: true,
+  },
+
+
+
 };
 
 /* Función para ver permisos */
-export const hasPermission = (userRole: Role | undefined, permissionKey: string): boolean => {
+export const hasPermission = (userRole: Role | undefined, permissionKey: PermissionKey): boolean => {
   if (!userRole || !PERMISSIONS[userRole]) return false;
   return !!PERMISSIONS[userRole][permissionKey];
 };
