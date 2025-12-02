@@ -1,0 +1,726 @@
+/* Mensajes de error y éxito */
+.mensaje-error {
+  padding: 15px;
+  margin-bottom: 20px;
+  color: #ff6b6b;
+  font-weight: 600;
+}
+
+.mensaje-error h4 {
+  margin: 0 0 10px 0;
+  color: #ff6b6b;
+}
+
+.mensaje-error ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.mensaje-exito {
+  padding: 15px;
+  margin-bottom: 20px;
+  color: #4caf50;
+  font-weight: 500;
+}
+
+/* Estados de carga */
+.loading-select,
+.loading-products {
+  padding: 12px;
+  background-color: #242424;
+  border: 1px solid #555;
+  border-radius: 8px;
+  color: #ccc;
+  font-style: italic;
+  text-align: center;
+}
+
+/* Mensajes informativos sobre proveedores */
+.info-proveedor {
+  margin-bottom: 20px;
+}
+
+.info-box {
+  padding: 12px 15px;
+  border-radius: 8px;
+  background-color: #242424;
+  border: 1px solid #555;
+  color: #79b8ff;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.info-box.warning {
+  background-color: #242424;
+  border: 1px solid #555;
+  color: #ffcc02;
+}
+
+.info-box i {
+  font-style: normal;
+  font-size: 16px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+/* Estilo para productos con descuento en el select */
+.form-group select option {
+  padding: 8px;
+}
+
+/* Productos deshabilitados cuando no hay proveedor */
+.form-group select:disabled {
+  background-color: #1a1a1a;
+  color: #666;
+  cursor: not-allowed;
+  border-color: #444;
+}
+
+/* Botones deshabilitados */
+.btn-agregar:disabled,
+.btn-primary:disabled,
+.btn-secondary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Mensaje informativo para campos bloqueados */
+.campo-bloqueado-info {
+  background-color: #242424;
+  border: 1px solid #555;
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin-top: 5px;
+  color: #ffcc02;
+}
+
+.campo-bloqueado-info small {
+  font-size: 12px;
+  display: block;
+}
+
+/* Campos select deshabilitados */
+select:disabled {
+  background-color: #242424;
+  color: #666;
+  border-color: #555;
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+
+.btn-primary:disabled {
+  background-color: #3a3a3a;
+  border-color: #555;
+}
+
+/* Estilos para el formulario de Orden de Compra */
+
+.orden-compra-container {
+  padding: 2.5rem;
+  width: 100%;
+  box-sizing: border-box; 
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--background-primary);
+  color: #fff;
+}
+
+.orden-compra-form {
+  padding: 0;
+  flex-grow: 1;
+}
+
+.orden-compra-form h2 {
+  color: #fff;
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 2.2em;
+  font-weight: 600;
+}
+
+.form-section {
+  margin-bottom: 30px;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #444;
+}
+
+.form-section h3 {
+  color: #fff;
+  margin-bottom: 20px;
+  font-size: 1.3rem;
+  font-weight: 500;
+  border-bottom: 2px solid #646cff;
+  padding-bottom: 8px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #ccc;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 0.8em 1.2em;
+  font-size: 1em;
+  border-radius: 8px;
+  border: 1px solid #555;
+  background-color: #242424;
+  color: #fff;
+  font-family: inherit;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #646cff;
+  box-shadow: 0 0 0 2px rgba(100, 108, 255, 0.2);
+}
+
+.form-group input.readonly {
+  background-color: #1a1a1a;
+  color: #888;
+  cursor: not-allowed;
+}
+
+/* Estilos para la sección de productos */
+.producto-form {
+  background-color: #2a2a2a;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #444;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr auto;
+  gap: 15px;
+  align-items: end;
+}
+
+@media (max-width: 768px) {
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .form-row .form-group {
+    margin-bottom: 15px;
+  }
+}
+
+/* Botones */
+.btn-agregar,
+.btn-eliminar,
+.btn-primary,
+.btn-secondary {
+  padding: 0.6em 1.2em;
+  border: 1px solid #555;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+  font-family: inherit;
+}
+
+.btn-agregar {
+  background-color: #27ae60;
+  color: white;
+  border-color: #27ae60;
+  height: 42px;
+  margin-top: 25px;
+}
+
+.btn-agregar:hover {
+  background-color: #219a52;
+  border-color: #219a52;
+  transform: translateY(-1px);
+}
+
+.btn-eliminar {
+  background-color: #a94442;
+  color: white;
+  border-color: #a94442;
+  padding: 0.4em 0.8em;
+  font-size: 0.9em;
+}
+
+.btn-eliminar:hover {
+  background-color: #8c3836;
+  border-color: #8c3836;
+}
+
+.btn-primary {
+  background-color: #646cff;
+  color: white;
+  border-color: #646cff;
+  padding: 15px 30px;
+  font-size: 16px;
+}
+
+.btn-primary:hover {
+  background-color: #535bf2;
+  border-color: #535bf2;
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background-color: #4a4a4a;
+  color: #f0f0f0;
+  border-color: #555;
+  padding: 15px 30px;
+  font-size: 16px;
+  margin-left: 15px;
+}
+
+.btn-secondary:hover {
+  background-color: #5a5a5a;
+  border-color: #666;
+}
+
+/* Tabla de productos */
+.productos-lista {
+  margin-top: 20px;
+}
+
+.productos-lista table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #2a2a2a;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #444;
+}
+
+.productos-lista table th,
+.productos-lista table td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid #444;
+}
+
+.productos-lista table td {
+  color: #fff;
+  font-weight: 500;
+}
+
+.productos-lista table th {
+  background-color: #3a3a3a;
+  color: #fff;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+}
+
+.productos-lista table tbody tr:hover {
+  background-color: #2a2a2a;
+}
+
+.productos-lista table tbody tr {
+  background-color: transparent;
+}
+
+.productos-lista table td {
+  background-color: transparent;
+}
+
+.productos-lista table tbody tr:hover td {
+  color: #fff;
+}
+
+.productos-lista table td:last-child {
+  text-align: center;
+}
+
+.total-section {
+  margin-top: 20px;
+  padding: 20px 0;
+  text-align: right;
+}
+
+.total-row {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 8px 0;
+  gap: 20px;
+}
+
+.total-row .total-label {
+  color: #ccc;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.total-row .total-value {
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 600;
+  min-width: 150px;
+}
+
+.total-row.total-final {
+  border-top: 2px solid #444;
+  margin-top: 10px;
+  padding-top: 15px;
+}
+
+.total-row.total-final .total-label {
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.total-row.total-final .total-value {
+  color: #4caf50;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+/* Acciones del formulario */
+.form-actions {
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid #444;
+  text-align: center;
+}
+
+/* Responsive design */
+@media (max-width: 992px) {
+  .orden-compra-container {
+    padding: 15px;
+  }
+  
+  .orden-compra-form {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .orden-compra-container {
+    padding: 10px;
+  }
+  
+  .form-actions {
+    text-align: center;
+  }
+  
+  .form-actions .btn-secondary {
+    margin-left: 0;
+    margin-top: 10px;
+    display: block;
+    width: 100%;
+  }
+  
+  .btn-primary {
+    width: 100%;
+  }
+  
+  .productos-lista table {
+    font-size: 14px;
+  }
+  
+  .productos-lista table th,
+  .productos-lista table td {
+    padding: 8px 4px;
+  }
+}
+
+@media (max-width: 576px) {
+  .orden-compra-container {
+    padding: 5px;
+  }
+  
+  .orden-compra-form h2 {
+    font-size: 1.5rem;
+  }
+  
+  .form-section {
+    padding: 15px;
+  }
+  
+  .form-section h3 {
+    font-size: 1.1rem;
+  }
+  
+  /* Hacer la tabla scrolleable en móviles */
+  .productos-lista {
+    overflow-x: auto;
+  }
+  
+  .productos-lista table {
+    min-width: 600px;
+  }
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.form-section {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Estados de validación */
+.form-group input:invalid,
+.form-group select:invalid {
+  border-color: #a94442;
+}
+
+.form-group input:valid,
+.form-group select:valid {
+  border-color: #27ae60;
+}
+
+/* Filtros de entrada adicionales */
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #646cff;
+}
+
+/* Inputs tipo número sin controles de spinner */
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+input[type=number] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+/* Mejoras de accesibilidad */
+.form-group label::after {
+  content: "";
+}
+
+.form-group label[for="proveedor"]::after,
+.form-group label[for="fechaEntrega"]::after {
+  content: " *";
+  color: #e74c3c;
+  font-weight: bold;
+}
+
+/* Loading states (para futuro uso con API) */
+.loading {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.loading::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px;
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Estilos para mensajes de error (futuro uso) */
+.error-message {
+  color: #e74c3c;
+  font-size: 14px;
+  margin-top: 5px;
+  display: block;
+}
+
+.success-message {
+  color: #27ae60;
+  font-size: 14px;
+  margin-top: 5px;
+  display: block;
+}
+
+/* Estilos para la columna de proveedor en la tabla */
+.proveedor-select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #444;
+  border-radius: 4px;
+  background-color: #242424; /* Matched Inventario Input */
+  color: #fff;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.proveedor-select:focus {
+  outline: none;
+  border-color: #646cff;
+  box-shadow: 0 0 0 2px rgba(100, 108, 255, 0.2);
+}
+
+.proveedor-select option {
+  background-color: #242424; /* Matched Inventario Input */
+  color: #fff;
+  padding: 8px;
+}
+
+.proveedor-seleccionado {
+  margin-top: 4px;
+  font-size: 11px;
+  color: #4ade80;
+  font-weight: 500;
+}
+
+.proveedor-seleccionado small {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Ajustes para la tabla con la nueva columna */
+.productos-lista table {
+  table-layout: fixed;
+  width: 100%;
+}
+
+.productos-lista th:nth-child(1) { width: 25%; } /* Producto */
+.productos-lista th:nth-child(2) { width: 10%; } /* Cantidad */
+.productos-lista th:nth-child(3) { width: 25%; } /* Proveedor */
+.productos-lista th:nth-child(4) { width: 15%; } /* Precio Unit */
+.productos-lista th:nth-child(5) { width: 15%; } /* Subtotal */
+.productos-lista th:nth-child(6) { width: 10%; } /* Acciones */
+
+/* Responsivo para dispositivos móviles */
+@media (max-width: 768px) {
+  .proveedor-select {
+    font-size: 12px;
+    padding: 6px;
+  }
+  
+  .proveedor-seleccionado {
+    font-size: 10px;
+  }
+  
+  .productos-lista th:nth-child(3) { width: 30%; } /* Más espacio para proveedor en móvil */
+  .productos-lista th:nth-child(1) { width: 20%; } /* Menos espacio para producto */
+}
+
+/* Estilos para el resumen de órdenes */
+.resumen-ordenes {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.resumen-orden {
+  /* background-color: #1a1a1a; REMOVED */
+  border: 1px solid #444;
+  border-radius: 8px;
+  padding: 15px;
+  transition: all 0.3s ease;
+}
+
+.resumen-orden:hover {
+  border-color: #646cff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.resumen-orden h4 {
+  margin: 0 0 10px 0;
+  color: #646cff;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.resumen-detalles {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+
+.resumen-total {
+  color: #4ade80;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.resumen-productos {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.resumen-productos small {
+  color: #b0b0b0;
+  font-size: 13px;
+  padding-left: 10px;
+}
+
+/* Animación para el resumen */
+.resumen-ordenes {
+  animation: slideInUp 0.3s ease-out;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive para el resumen */
+@media (max-width: 768px) {
+  .resumen-orden {
+    padding: 12px;
+  }
+  
+  .resumen-orden h4 {
+    font-size: 14px;
+  }
+  
+  .resumen-total {
+    font-size: 16px;
+  }
+  
+  .resumen-productos small {
+    font-size: 12px;
+  }
+}

@@ -1,0 +1,351 @@
+/* Estilos para el componente ProductosSinStock - Tema oscuro consistente */
+
+.productos-sin-stock-container {
+  padding: 1.5rem;
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--background-primary);
+  color: #fff;
+  margin: 0;
+  position: relative;
+}
+
+.productos-sin-stock-container * {
+  color: inherit;
+}
+
+.productos-sin-stock-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #444;
+  flex-shrink: 0;
+}
+
+.productos-sin-stock-header h2 {
+  font-size: 2.2em;
+  margin: 0;
+  color: #fff;
+}
+
+.productos-sin-stock-actions {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* Información */
+.productos-sin-stock-info {
+  margin-bottom: 20px;
+  padding: 15px 0;
+}
+
+.productos-sin-stock-info p {
+  margin: 0;
+  color: #fff;
+  font-weight: 600;
+  font-size: 1.1em;
+}
+
+/* Estado de carga */
+.cargando {
+  text-align: center;
+  padding: 60px 20px;
+  color: #fff;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #333;
+  border-top: 4px solid #646cff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 20px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Estado sin productos */
+.no-productos {
+  text-align: center;
+  padding: 60px 20px;
+  color: #ccc;
+}
+
+.no-productos h3 {
+  color: #27ae60;
+  margin-bottom: 15px;
+  font-size: 1.8em;
+  font-weight: 700;
+}
+
+.no-productos p {
+  color: #ccc;
+  font-size: 1.2em;
+  margin: 0;
+  font-weight: 500;
+}
+
+/* Tabla */
+.productos-sin-stock-table {
+  flex-grow: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  border: 1px solid #444;
+  border-radius: 8px;
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.productos-sin-stock-table table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  table-layout: fixed;
+  min-width: 100%;
+}
+
+.productos-sin-stock-table th {
+  position: sticky;
+  top: 0;
+  background-color: #3a3a3a;
+  color: #fff;
+  padding: 0.6rem 1rem;
+  font-weight: 600;
+  z-index: 1;
+  border-bottom: 1px solid #444;
+  text-transform: uppercase;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  text-align: center;
+  vertical-align: middle;
+}
+
+/* Anchos específicos para las 4 columnas */
+.productos-sin-stock-table th:nth-child(1), /* Nombre */
+.productos-sin-stock-table td:nth-child(1) {
+  width: 40%;
+  text-align: left;
+}
+
+.productos-sin-stock-table th:nth-child(2), /* Stock Actual */
+.productos-sin-stock-table td:nth-child(2) {
+  width: 15%;
+  text-align: center;
+}
+
+.productos-sin-stock-table th:nth-child(3), /* Precio */
+.productos-sin-stock-table td:nth-child(3) {
+  width: 20%;
+  text-align: right;
+}
+
+.productos-sin-stock-table th:nth-child(4), /* Acciones */
+.productos-sin-stock-table td:nth-child(4) {
+  width: 25%;
+  text-align: center;
+}
+
+.productos-sin-stock-table tbody tr {
+  background-color: transparent;
+}
+
+.productos-sin-stock-table td {
+  padding: 0.6rem 1rem;
+  border-bottom: 1px solid #333;
+  vertical-align: middle;
+  background-color: transparent;
+  color: #fff;
+}
+
+.productos-sin-stock-table tbody tr:hover {
+  background-color: #2a2a2a !important; /* Matched Inventario hover color */
+}
+
+.productos-sin-stock-table tbody tr:hover td {
+  background-color: transparent !important; /* Allow row color to show */
+}
+
+/* Estilos específicos de columnas */
+.producto-nombre {
+  font-weight: 700;
+  color: #646cff;
+  line-height: 1.4;
+  text-align: left;
+}
+
+.producto-stock {
+  text-align: center;
+}
+
+.stock-cero {
+  background-color: #e74c3c;
+  color: white;
+  padding: 6px 14px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.producto-precio {
+  font-weight: 700;
+  color: #27ae60;
+  text-align: right;
+  white-space: nowrap;
+  font-size: 0.95em;
+}
+
+.producto-fecha {
+  font-size: 0.85em;
+  color: #ccc;
+  white-space: nowrap;
+  text-align: center;
+  font-family: 'Consolas', 'Monaco', monospace;
+}
+
+/* Estados */
+.estado {
+  padding: 6px 14px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  color: white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.estado.activo {
+  background-color: #27ae60;
+  border: 1px solid #229954;
+}
+
+.estado.inactivo {
+  background-color: #e74c3c;
+  border: 1px solid #c0392b;
+}
+
+/* Botones */
+.btn {
+  background-color: #646cff;
+  color: #fff;
+  border: 1px solid #646cff;
+  font-size: 0.9em;
+  padding: 0.6em 1.2em;
+  font-weight: 500;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+}
+
+.btn:hover {
+  background-color: #535bf2;
+  border-color: #535bf2;
+  transform: translateY(-1px);
+}
+
+.btn-primary {
+  background-color: #646cff;
+  color: #fff;
+  border: 1px solid #646cff;
+}
+
+.btn-primary:hover {
+  background-color: #535bf2;
+  border-color: #535bf2;
+}
+
+.btn-secondary {
+  background-color: #3a3a3a;
+  color: #f0f0f0;
+  border: 1px solid #555;
+}
+
+.btn-secondary:hover {
+  background-color: #4a4a4a;
+  border-color: #666;
+}
+
+.btn-sm {
+  padding: 0.4em 0.8em;
+  font-size: 0.8em;
+}
+
+/* Alertas */
+.alert {
+  padding: 16px 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  border: 1px solid;
+  font-weight: 500;
+}
+
+.alert-error {
+  background-color: #2d1b1b;
+  color: #f8d7da;
+  border-color: #721c24;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .productos-sin-stock-container {
+    padding: 1.5rem;
+  }
+
+  .productos-sin-stock-header {
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+  }
+
+  .productos-sin-stock-actions {
+    align-self: stretch;
+    flex-direction: column;
+  }
+
+  .productos-sin-stock-table {
+    overflow-x: auto;
+  }
+
+  .productos-sin-stock-table table {
+    min-width: 1100px;
+  }
+
+  .productos-sin-stock-table th,
+  .productos-sin-stock-table td {
+    padding: 12px 8px;
+    font-size: 0.85em;
+  }
+}
+
+@media (max-width: 480px) {
+  .productos-sin-stock-header h2 {
+    font-size: 1.8em;
+  }
+
+  .btn {
+    padding: 10px 12px;
+    width: 100%;
+  }
+
+  .productos-sin-stock-table table {
+    min-width: 1200px;
+  }
+}

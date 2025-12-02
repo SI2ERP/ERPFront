@@ -3,7 +3,6 @@ export const ROLES = {
   ADMIN: "ADMIN",
   ADMIN_TI: "ADMIN_TI",
   SUPERVISOR_RRHH: "SUPERVISOR_RRHH",
-
   EMPLEADO: "EMPLEADO",
   JEFE_DEPARTAMENTO: "JEFE_DEPARTAMENTO",
   GERENTE: "GERENTE",
@@ -24,7 +23,7 @@ export const ROLES = {
   EMPLEADO_LOGISTICA: "EMPLEADO_LOGISTICA",
   EMPLEADO_VENTAS: "EMPLEADO_VENTAS",
   EMPLEADO_INVENTARIO: "EMPLEADO_INVENTARIO",
-  EMPLEADO_AREA:"EMPLEADO_AREA",
+  EMPLEADO_AREA: "EMPLEADO_AREA",
 
 } as const;
 
@@ -146,76 +145,76 @@ export const PERMISSIONS = {
   },
 
   [ROLES.JEFE_COMPRAS]: {
-  puedeVerCompras: true,
-  puedeVerInventario: false,
-  puedeVerLogistica: false,
-  puedeVerRRHH: true,
-  puedeVerVentas: true,
-},
+    puedeVerCompras: true,
+    puedeVerInventario: false,
+    puedeVerLogistica: false,
+    puedeVerRRHH: true,
+    puedeVerVentas: true,
+  },
 
-[ROLES.JEFE_LOGISTICA]: {
-  puedeVerCompras: false,
-  puedeVerInventario: true,
-  puedeVerLogistica: true,
-  puedeVerRRHH: true,
-  puedeVerVentas: false,
-},
+  [ROLES.JEFE_LOGISTICA]: {
+    puedeVerCompras: false,
+    puedeVerInventario: true,
+    puedeVerLogistica: true,
+    puedeVerRRHH: true,
+    puedeVerVentas: false,
+  },
 
-[ROLES.JEFE_VENTAS]: {
-  puedeVerCompras: false,
-  puedeVerInventario: false,
-  puedeVerLogistica: false,
-  puedeVerRRHH: true,
-  puedeVerVentas: true,
-},
+  [ROLES.JEFE_VENTAS]: {
+    puedeVerCompras: false,
+    puedeVerInventario: false,
+    puedeVerLogistica: false,
+    puedeVerRRHH: true,
+    puedeVerVentas: true,
+  },
 
-[ROLES.JEFE_INVENTARIO]: {
-  puedeVerCompras: false,
-  puedeVerInventario: true,
-  puedeVerLogistica: false,
-  puedeVerRRHH: true,
-  puedeVerVentas: false,
-},
+  [ROLES.JEFE_INVENTARIO]: {
+    puedeVerCompras: false,
+    puedeVerInventario: true,
+    puedeVerLogistica: false,
+    puedeVerRRHH: true,
+    puedeVerVentas: false,
+  },
 
-[ROLES.EMPLEADO_COMPRAS]: {
-  puedeVerCompras: true,
-  puedeVerInventario: false,
-  puedeVerLogistica: false,
-  puedeVerRRHH: true,
-  puedeVerVentas: false,
-},
+  [ROLES.EMPLEADO_COMPRAS]: {
+    puedeVerCompras: true,
+    puedeVerInventario: false,
+    puedeVerLogistica: false,
+    puedeVerRRHH: true,
+    puedeVerVentas: false,
+  },
 
-[ROLES.EMPLEADO_LOGISTICA]: {
-  puedeVerCompras: false,
-  puedeVerInventario: false,
-  puedeVerLogistica: true,
-  puedeVerRRHH: true,
-  puedeVerVentas: false,
-},
+  [ROLES.EMPLEADO_LOGISTICA]: {
+    puedeVerCompras: false,
+    puedeVerInventario: false,
+    puedeVerLogistica: true,
+    puedeVerRRHH: true,
+    puedeVerVentas: false,
+  },
 
-[ROLES.EMPLEADO_VENTAS]: {
-  puedeVerCompras: false,
-  puedeVerInventario: false,
-  puedeVerLogistica: false,
-  puedeVerRRHH: true,
-  puedeVerVentas: true,
-},
+  [ROLES.EMPLEADO_VENTAS]: {
+    puedeVerCompras: false,
+    puedeVerInventario: false,
+    puedeVerLogistica: false,
+    puedeVerRRHH: true,
+    puedeVerVentas: true,
+  },
 
-[ROLES.EMPLEADO_INVENTARIO]: {
-  puedeVerCompras: false,
-  puedeVerInventario: true,
-  puedeVerLogistica: false,
-  puedeVerRRHH: true,
-  puedeVerVentas: false,
-},
+  [ROLES.EMPLEADO_INVENTARIO]: {
+    puedeVerCompras: false,
+    puedeVerInventario: true,
+    puedeVerLogistica: false,
+    puedeVerRRHH: true,
+    puedeVerVentas: false,
+  },
 
-[ROLES.EMPLEADO_AREA]: {
-  puedeVerCompras: false,
-  puedeVerInventario: true,
-  puedeVerLogistica: false,
-  puedeVerRRHH: true,
-  puedeVerVentas: true,
-},
+  [ROLES.EMPLEADO_AREA]: {
+    puedeVerCompras: false,
+    puedeVerInventario: true,
+    puedeVerLogistica: false,
+    puedeVerRRHH: true,
+    puedeVerVentas: true,
+  },
 
 
 

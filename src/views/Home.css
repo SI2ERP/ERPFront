@@ -4,60 +4,104 @@
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 2rem;
+  padding: 2.5rem;
+  min-height: 100vh;
+  background-color: #161b22;
 }
 
 .home-container h1 {
-  /* Usa el tamaño de fuente definido en index.css */
   font-size: 3.2em;
+  color: #ffffff;
+  margin-bottom: 0.5rem;
+}
+
+.home-container p {
+  color: #ccc;
+  font-size: 1.2em;
+  margin-top: 0.5rem;
+  margin-bottom: 2rem;
 }
 
 .module-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 3 columnas */
-  gap: 1.5rem; /* Espacio entre botones */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
   margin-top: 2rem;
-  max-width: 800px;
+  flex-wrap: wrap;
 }
 
 .module-button {
-  /* Usamos los estilos de botón que ya definiste en index.css */
   border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 1.5em 2em; /* Más grandes para un menú */
+  border: 1px solid #555;
+  padding: 1.5em 2em;
   font-size: 1.1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a; /* Color base oscuro */
+  background-color: #242424;
+  color: #ffffff;
   cursor: pointer;
-  transition: all 0.25s;
+  transition: all 0.3s;
+  min-width: 200px;
 }
 
 .module-button:hover {
-  border-color: #646cff; /* Borde de hover */
+  background-color: #3a3a3a;
+  border-color: #646cff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
 /* Estilo para los botones deshabilitados (los otros módulos) */
 .module-button.disabled {
-  background-color: #3a3a3a; /* Un gris más apagado */
+  background-color: #1a1a1a;
   color: #888;
   cursor: not-allowed;
-  border-color: #3a3a3a;
+  border-color: #333;
 }
 
 .module-button.disabled:hover {
-  border-color: #3a3a3a;
+  background-color: #1a1a1a;
+  border-color: #333;
+  transform: none;
+  box-shadow: none;
+}
+
+.logout-button {
+  margin-top: 3rem;
+  padding: 0.8em 2em;
+  font-size: 1em;
+  font-weight: 500;
+  background-color: #a94442;
+  color: #ffffff;
+  border: 1px solid #a94442;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.logout-button:hover {
+  background-color: #8c3836;
+  border-color: #8c3836;
+  transform: translateY(-1px);
 }
 
 /* Ajuste para pantallas más pequeñas */
 @media (max-width: 768px) {
   .module-grid {
-    grid-template-columns: repeat(2, 1fr); /* 2 columnas */
+    flex-direction: column;
+    gap: 1.5rem;
   }
-}
-
-@media (max-width: 480px) {
-  .module-grid {
-    grid-template-columns: 1fr; /* 1 columna */
+  
+  .module-button {
+    min-width: 250px;
+  }
+  
+  .home-container h1 {
+    font-size: 2.5em;
+  }
+  
+  .home-container p {
+    font-size: 1em;
   }
 }

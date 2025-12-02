@@ -7,6 +7,7 @@ import Home from "./views/Home";
 import Login from "./views/Login";
 import InventarioPage from "./Modulo de Inventario/InventarioPage";
 import VentasPage from "./Modulo de Ventas";
+import ComprasPage from './Modulo de Compras/ComprasPage'
 
 // ==== RRHH ====  
 import { HomeAdmin_rrhh } from "./Modulo de Recursos Humanos/Admin/HomeAdmin_rrhh";
@@ -84,6 +85,14 @@ export default function App() {
               <ProtectedRoute 
                 element={<VentasPage />}
                 roles={[ROLES.ADMIN, ROLES.GERENTE, ROLES.EMPLEADO, ROLES.TESTING]}
+              />
+            }/>
+
+            {/* ================== COMPRAS ================== */}
+            <Route path="/compras/*" element={
+              <ProtectedRoute
+                element={<ComprasPage />}
+                roles={[ROLES.ADMIN, ROLES.GERENTE, ROLES.EMPLEADO, ROLES.TESTING, ROLES.EMPLEADO_COMPRAS, ROLES.JEFE_COMPRAS]}
               />
             }/>
 
@@ -190,8 +199,8 @@ export default function App() {
               <ProtectedRoute 
                 element={<JefeMisEmpleados_rrhh />}
                 roles={[
-                    ROLES.JEFE_DEPARTAMENTO,//este tmb por si acaso xd
-                    ROLES.JEFE_AREA,//x2
+                    ROLES.JEFE_DEPARTAMENTO,
+                    ROLES.JEFE_AREA,
                     ROLES.JEFE_COMPRAS,
                     ROLES.JEFE_LOGISTICA,
                     ROLES.JEFE_VENTAS,
@@ -205,14 +214,13 @@ export default function App() {
               <ProtectedRoute 
                 element={<JefeSolicitarBaja_rrhh />}
                 roles={[
-                    ROLES.JEFE_DEPARTAMENTO,//este tmb por si acaso xd
-                    ROLES.JEFE_AREA,//x2
+                    ROLES.JEFE_DEPARTAMENTO,
+                    ROLES.JEFE_AREA,
                     ROLES.JEFE_COMPRAS,
                     ROLES.JEFE_LOGISTICA,
                     ROLES.JEFE_VENTAS,
                     ROLES.JEFE_INVENTARIO,
                     ROLES.JEFE_RRHH
-
                 ]}
               />
             }/>

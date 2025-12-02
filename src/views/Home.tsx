@@ -45,9 +45,14 @@ const Home = () => {
     navigate("/ventas");
   };
 
+  const irACompras = () => {
+    navigate('/compras');
+  };
+
   const handleLogout = () => {
     logout();
   };
+
 
   return (
     <div className="home-container">
@@ -67,8 +72,7 @@ const Home = () => {
           RRHH
         </button>
 
-
-        <button className="module-button disabled" disabled>
+        <button className="module-button" onClick={irACompras}>
           Compras
         </button>
 

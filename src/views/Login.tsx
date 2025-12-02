@@ -58,6 +58,7 @@ export default function Login() {
     }
   };
 
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#0f1115] ">
       <div className="px-6 bg-linear-to-tr from-[#2b3036] to-[#1e2328] w-full max-w-sm py-16 rounded-md shadow-2xl">
