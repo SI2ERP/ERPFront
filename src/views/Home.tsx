@@ -1,6 +1,7 @@
 import "./Home.css";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../utils/AuthContext";
+import { hasPermission, type Role } from "../utils/Permissions";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -60,25 +61,35 @@ const Home = () => {
       <p>Selecciona el módulo al que deseas ingresar:</p>
 
       <div className="module-grid">
-        <button className="module-button" onClick={irAInventario}>
-          Inventario
-        </button>
+        {hasPermission(user.rol as Role, "puedeVerInventario") && (
+          <button className="module-button" onClick={irAInventario}>
+            Inventario
+          </button>
+        )}
 
-        <button className="module-button" onClick={irAVentas}>
-          Ventas
-        </button>
+        {hasPermission(user.rol as Role, "puedeVerVentas") && (
+          <button className="module-button" onClick={irAVentas}>
+            Ventas
+          </button>
+        )}
 
-        <button className="module-button" onClick={irARRHH}>
-          RRHH
-        </button>
+        {hasPermission(user.rol as Role, "puedeVerRRHH") && (
+          <button className="module-button" onClick={irARRHH}>
+            RRHH
+          </button>
+        )}
 
-        <button className="module-button" onClick={irACompras}>
-          Compras
-        </button>
+        {hasPermission(user.rol as Role, "puedeVerCompras") && (
+          <button className="module-button" onClick={irACompras}>
+            Compras
+          </button>
+        )}
 
-        <button className="module-button disabled" disabled>
-          Logística/Despacho
-        </button>
+        {hasPermission(user.rol as Role, "puedeVerLogistica") && (
+          <button className="module-button disabled" disabled>
+            Logística/Despacho
+          </button>
+        )}
       </div>
 
       <button className="logout-button" onClick={handleLogout}>

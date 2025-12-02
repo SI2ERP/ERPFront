@@ -149,12 +149,12 @@ export const PERMISSIONS = {
     puedeVerInventario: false,
     puedeVerLogistica: false,
     puedeVerRRHH: true,
-    puedeVerVentas: true,
+    puedeVerVentas: false,
   },
 
   [ROLES.JEFE_LOGISTICA]: {
     puedeVerCompras: false,
-    puedeVerInventario: true,
+    puedeVerInventario: false,
     puedeVerLogistica: true,
     puedeVerRRHH: true,
     puedeVerVentas: false,
