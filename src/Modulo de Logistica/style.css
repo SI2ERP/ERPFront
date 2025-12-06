@@ -1,0 +1,475 @@
+.logistica-root * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.logistica-root {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: #1a1a1a;
+  /* Dark base color */
+  min-height: 100vh;
+  color: #000000;
+  /* Black text for white backgrounds */
+}
+
+.logistica-root .app {
+  min-height: 100vh;
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Navegación - Ahora ocupa todo el ancho */
+.logistica-root nav {
+  background: #ffffff;
+  /* White background */
+  border-bottom: 3px solid #000000;
+  /* Adjusted border color */
+  width: 100%;
+  padding: 0 20px;
+}
+
+.logistica-root nav h1 {
+  color: #000000;
+  /* Black text */
+  font-weight: 700;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.logistica-root nav a {
+  background: #333333;
+  /* Dark gray background */
+  color: #ffffff;
+  /* White text */
+  font-weight: 600;
+  transition: all 0.3s ease;
+  border: none !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.logistica-root nav a:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Contenido principal centrado */
+.logistica-root .main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  width: 100%;
+  background: #1a1a1a;
+  /* Dark background */
+  color: #f5f5f5;
+  /* Light text */
+}
+
+/* Contenedores de formularios - Centrados */
+.logistica-root .form-container {
+  background: #ffffff;
+  /* White background */
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  max-width: 850px;
+  width: 100%;
+  margin: 20px auto;
+  color: #000000;
+  /* Black text for white backgrounds */
+}
+
+/* Títulos */
+.logistica-root h1,
+.logistica-root h2,
+.logistica-root h3,
+.logistica-root h4,
+.logistica-root h5,
+.logistica-root h6 {
+  color: #2d3748;
+  font-weight: 700;
+}
+
+.logistica-root h1 {
+  font-size: 28px;
+  margin-bottom: 24px;
+  color: #000000;
+  border-bottom: 3px solid #000000;
+  padding-bottom: 12px;
+}
+
+/* Labels */
+.logistica-root label {
+  color: #4a5568;
+  font-weight: 600;
+  font-size: 14px;
+  display: block;
+  margin-bottom: 8px;
+}
+
+/* Inputs y selects */
+.logistica-root input,
+.logistica-root select,
+.logistica-root textarea {
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 15px;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  background: #f7fafc;
+  color: #2d3748;
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+.logistica-root input:focus,
+.logistica-root select:focus,
+.logistica-root textarea:focus {
+  outline: none;
+  border-color: #000000;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.logistica-root input::placeholder,
+.logistica-root textarea::placeholder {
+  color: #a0aec0;
+}
+
+/* Botones */
+.logistica-root button {
+  background: #000000;
+  /* Black for primary buttons */
+  color: #ffffff;
+  /* White text */
+  border: none;
+  padding: 14px 28px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  width: 100%;
+}
+
+.logistica-root button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+.logistica-root button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.logistica-root button:disabled {
+  background: #808080;
+  /* Gray for disabled buttons */
+  color: #d3d3d3;
+  /* Light gray text */
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Mensajes de éxito/error */
+.logistica-root .message-success {
+  background: #48bb78;
+  /* Green success */
+  color: #ffffff;
+  /* White text */
+  padding: 16px 20px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(72, 187, 120, 0.3);
+  border-left: 4px solid #22543d;
+}
+
+.logistica-root .message-error {
+  background: #ff0000;
+  /* Red background */
+  color: #ffffff;
+  /* White text */
+  padding: 16px 20px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(245, 101, 101, 0.3);
+  border-left: 4px solid #742a2a;
+}
+
+/* Cajas de ayuda */
+.logistica-root .help-box {
+  background: #ecefff;
+  /* Dark gray */
+  color: #f5f5f5;
+  /* Light text */
+  padding: 20px;
+  border-radius: 12px;
+  margin-top: 24px;
+  border-left: 4px solid #3182ce;
+  box-shadow: 0 4px 12px rgba(49, 130, 206, 0.2);
+}
+
+.logistica-root .help-box h3 {
+  color: #2c5282;
+  margin-top: 0;
+  margin-bottom: 12px;
+  font-size: 18px;
+}
+
+.logistica-root .help-box ul {
+  color: #2c5282;
+  font-size: 14px;
+  line-height: 1.8;
+  margin-left: 20px;
+}
+
+.logistica-root .help-box li {
+  margin-bottom: 8px;
+}
+
+/* Tablas */
+.logistica-root table {
+  width: 100%;
+  background: #ffffff;
+  /* White background */
+  color: #1a1a1a;
+  /* Dark text */
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+.logistica-root table thead {
+  background: #1a1a1a;
+  /* Dark header */
+  color: #f5f5f5;
+  /* Light text */
+}
+
+.logistica-root table th {
+  color: white;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+  padding: 16px 12px;
+}
+
+.logistica-root table td {
+  padding: 14px 12px;
+  border-bottom: 1px solid #e2e8f0;
+  font-size: 14px;
+}
+
+.logistica-root table tbody tr {
+  transition: background 0.2s ease;
+}
+
+.logistica-root table tbody tr:hover {
+  background: #f7fafc;
+}
+
+.logistica-root table tbody tr:nth-child(even) {
+  background: #fafbfc;
+}
+
+.logistica-root table tbody tr:nth-child(even):hover {
+  background: #f1f5f9;
+}
+
+/* Badges de estado */
+.logistica-root .badge {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: inline-block;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.logistica-root .badge-pendiente {
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+  color: #78350f;
+}
+
+.logistica-root .badge-proceso {
+  background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+  color: white;
+}
+
+.logistica-root .badge-completada {
+  background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+  color: white;
+}
+
+.logistica-root .badge-cancelada {
+  background: linear-gradient(135deg, #f87171 0%, #ef4444 100%);
+  color: white;
+}
+
+/* Contenedor de lista - Centrado */
+.logistica-root .list-container {
+  background: white;
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  max-width: 1200px;
+  width: 100%;
+  margin: 20px auto;
+}
+
+/* Header de lista */
+.logistica-root .list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 3px solid #000000;
+}
+
+.logistica-root .list-header h1 {
+  margin: 0;
+  border: none;
+  padding: 0;
+}
+
+/* Botón de actualizar */
+.logistica-root .btn-refresh {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  padding: 10px 20px;
+  font-size: 14px;
+  width: auto;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+}
+
+.logistica-root .btn-refresh:hover {
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.6);
+}
+
+/* Info box */
+.logistica-root .info-box {
+  background: #ecefff;
+  /* Dark gray */
+  color: #000000;
+  /* Light text */
+  padding: 20px;
+  border-radius: 12px;
+  margin-top: 24px;
+  border-left: 4px solid #3182ce;
+  box-shadow: 0 4px 12px rgba(49, 130, 206, 0.2);
+}
+
+.logistica-root .info-box strong {
+  color: #000000;
+  font-size: 15px;
+}
+
+/* Estado vacío */
+.logistica-root .empty-state {
+  text-align: center;
+  padding: 60px 40px;
+  background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+  border-radius: 16px;
+  border: 2px dashed #9ca3af;
+}
+
+.logistica-root .empty-state h3 {
+  color: #6b7280;
+  font-size: 20px;
+  margin-bottom: 8px;
+}
+
+.logistica-root .empty-state p {
+  color: #9ca3af;
+  font-size: 15px;
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.logistica-root .form-container,
+.logistica-root .list-container {
+  animation: fadeIn 0.5s ease;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+
+  .logistica-root .form-container,
+  .logistica-root .list-container {
+    padding: 20px;
+    margin: 16px;
+  }
+
+  .logistica-root nav {
+    padding: 0 16px;
+  }
+
+  .logistica-root nav>div {
+    flex-direction: column;
+    gap: 10px !important;
+  }
+
+  .logistica-root .list-header {
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  .logistica-root .btn-refresh {
+    width: 100%;
+  }
+
+  .logistica-root table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .logistica-root h1 {
+    font-size: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .logistica-root .main-content {
+    padding: 10px;
+  }
+
+  .logistica-root .form-container,
+  .logistica-root .list-container {
+    padding: 16px;
+    margin: 10px;
+  }
+
+  .logistica-root h1 {
+    font-size: 22px;
+  }
+
+  .logistica-root table th,
+  .logistica-root table td {
+    padding: 10px 8px;
+    font-size: 12px;
+  }
+}

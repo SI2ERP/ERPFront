@@ -10,7 +10,7 @@ const Home = () => {
 
   const irARRHH = () => {
     if (!user) return;
-    console.log("a ver: ",user.rol);
+    console.log("a ver: ", user.rol);
     // 1. ADMIN → admin RRHH
     if (user.rol === "ADMIN") {
       console.log("entra a admin");
@@ -49,6 +49,10 @@ const Home = () => {
     logout();
   };
 
+  const irLogistica = () => {
+    navigate("/logistica");
+  };
+
   return (
     <div className="home-container">
       <h1>Bienvenido al Mini-ERP</h1>
@@ -67,12 +71,11 @@ const Home = () => {
           RRHH
         </button>
 
-
         <button className="module-button disabled" disabled>
           Compras
         </button>
 
-        <button className="module-button disabled" disabled>
+        <button className="module-button" onClick={irLogistica}>
           Logística/Despacho
         </button>
       </div>
