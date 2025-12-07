@@ -18,6 +18,12 @@ export interface Producto {
   fechaActualizacion: Date
 }
 
+export interface User {
+  nombre: string;
+  rol: string;
+  email?: string;
+}
+
 export interface CreateProductoDto {
   nombre: string
   codigo: string
@@ -25,6 +31,7 @@ export interface CreateProductoDto {
   precio_unitario: number
   precio_venta: number
   cantidad?: number
+  user: User | null
 }
 
 export interface RestarStockDto {
@@ -60,14 +67,16 @@ export const getProductos = async (): Promise<Producto[]> => {
 
 //Ingreso de nuevo producto
 export const createProducto = async (data: CreateProductoDto): Promise<Producto> => {
+  console.log(data);
   const response = await apiClient.post('/productos', data)
   return response.data
 }
 
 //Egreso/retiro de stock
-export const restarStockProducto = async (id: number, cantidadARestar: number) => {
+export const restarStockProducto = async (id: number, cantidadARestar: number, user: JSON) => {
   const dto: RestarStockDto = {
     stock: cantidadARestar,
+    user: user,
   }
   const response = await apiClient.patch(`/productos/${id}/stock`, dto)
   return response.data 

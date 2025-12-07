@@ -13,6 +13,10 @@ export const ROLES = {
   EMPLEADO_GENERAL: "EMPLEADO_GENERAL",
   TRANSPORTISTA: "TRANSPORTISTA",
   TESTING: "TESTING",
+
+  EMPLEADO_INVENTARIO: "EMPLEADO_INVENTARIO",
+  JEFE_INVENTARIO: "JEFE_INVENTARIO",
+  ADMIN_INVENTARIO: "ADMIN_INVENTARIO",
 } as const;
 
 export type Role = typeof ROLES[keyof typeof ROLES];
@@ -22,6 +26,7 @@ export type Role = typeof ROLES[keyof typeof ROLES];
 export const PERMISSIONS = {
   [ROLES.ADMIN]: {
     puedeVerCompras: true,
+    puedeModificarInventario: true,
     puedeVerInventario: true,
     puedeVerLogistica: true,
     puedeVerRRHH: true,
@@ -30,6 +35,7 @@ export const PERMISSIONS = {
 
   [ROLES.ADMIN_TI]: {
     puedeVerCompras: false,
+    puedeModificarInventario: false,
     puedeVerInventario: false,
     puedeVerLogistica: true,
     puedeVerRRHH: false,
@@ -38,6 +44,7 @@ export const PERMISSIONS = {
 
   [ROLES.GERENTE]: {
     puedeVerCompras: true,
+    puedeModificarInventario: false,
     puedeVerInventario: true,
     puedeVerLogistica: true,
     puedeVerRRHH: true,
@@ -46,6 +53,7 @@ export const PERMISSIONS = {
 
   [ROLES.JEFE_DEPARTAMENTO]: {
     puedeVerCompras: true,
+    puedeModificarInventario: false,
     puedeVerInventario: true,
     puedeVerLogistica: false,
     puedeVerRRHH: true,
@@ -54,6 +62,7 @@ export const PERMISSIONS = {
 
   [ROLES.JEFE_AREA]: {
     puedeVerCompras: true,
+    puedeModificarInventario: false,
     puedeVerInventario: true,
     puedeVerLogistica: false,
     puedeVerRRHH: false,
@@ -62,6 +71,7 @@ export const PERMISSIONS = {
 
   [ROLES.JEFE_RRHH]: {
     puedeVerCompras: false,
+    puedeModificarInventario: false,
     puedeVerInventario: false,
     puedeVerLogistica: false,
     puedeVerRRHH: true,
@@ -70,6 +80,7 @@ export const PERMISSIONS = {
 
   [ROLES.SUPERVISOR_RRHH]: {
     puedeVerCompras: false,
+    puedeModificarInventario: false,
     puedeVerInventario: false,
     puedeVerLogistica: false,
     puedeVerRRHH: true,
@@ -78,6 +89,7 @@ export const PERMISSIONS = {
 
   [ROLES.ANALISTA_SELECCION]: {
     puedeVerCompras: false,
+    puedeModificarInventario: false,
     puedeVerInventario: false,
     puedeVerLogistica: false,
     puedeVerRRHH: true,
@@ -86,6 +98,7 @@ export const PERMISSIONS = {
 
   [ROLES.ANALISTA_NOMINA]: {
     puedeVerCompras: false,
+    puedeModificarInventario: false,
     puedeVerInventario: false,
     puedeVerLogistica: false,
     puedeVerRRHH: true,
@@ -94,6 +107,7 @@ export const PERMISSIONS = {
 
   [ROLES.EMPLEADO]: {
     puedeVerCompras: false,
+    puedeModificarInventario: false,
     puedeVerInventario: false,
     puedeVerLogistica: false,
     puedeVerRRHH: false,
@@ -102,7 +116,8 @@ export const PERMISSIONS = {
 
   [ROLES.EMPLEADO_GENERAL]: {
     puedeVerCompras: false,
-    puedeVerInventario: true,
+    puedeModificarInventario: false,
+    puedeVerInventario: false,
     puedeVerLogistica: false,
     puedeVerRRHH: false,
     puedeVerVentas: true,
@@ -110,7 +125,8 @@ export const PERMISSIONS = {
 
   [ROLES.TRANSPORTISTA]: {
     puedeVerCompras: false,
-    puedeVerInventario: true,
+    puedeModificarInventario: false,
+    puedeVerInventario: false,
     puedeVerLogistica: true,
     puedeVerRRHH: false,
     puedeVerVentas: false,
@@ -118,10 +134,38 @@ export const PERMISSIONS = {
 
   [ROLES.TESTING]: {
     puedeVerCompras: true,
+    puedeModificarInventario: true,
     puedeVerInventario: true,
     puedeVerLogistica: true,
     puedeVerRRHH: true,
     puedeVerVentas: true,
+  },
+
+  [ROLES.EMPLEADO_INVENTARIO]: {
+    puedeVerCompras: false,
+    puedeModificarInventario: true,
+    puedeVerInventario: true,
+    puedeVerLogistica: false,
+    puedeVerRRHH: false,
+    puedeVerVentas: false,
+  },
+
+  [ROLES.JEFE_INVENTARIO]: {
+    puedeVerCompras: false,
+    puedeModificarInventario: true,
+    puedeVerInventario: true,
+    puedeVerLogistica: false,
+    puedeVerRRHH: false,
+    puedeVerVentas: false,
+  },
+
+  [ROLES.ADMIN_INVENTARIO]: {
+    puedeVerCompras: false,
+    puedeModificarInventario: true,
+    puedeVerInventario: true,
+    puedeVerLogistica: false,
+    puedeVerRRHH: false,
+    puedeVerVentas: false,
   },
 };
 

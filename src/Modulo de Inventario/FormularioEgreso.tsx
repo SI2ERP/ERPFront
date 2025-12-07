@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import axios from 'axios'
 import './Inventario.css'
 import { type Producto, restarStockProducto } from './inventario.service'
+import { useAuth } from "../utils/AuthContext";
 
 interface FormularioEgresoProps {
   isOpen: boolean;
@@ -12,7 +13,7 @@ interface FormularioEgresoProps {
 
 const FormularioEgreso = ({ isOpen, onClose, onSuccess, producto }: FormularioEgresoProps) => {
   if (!isOpen || !producto) return null
-
+  const { user } = useAuth();
   const [cantidadStr, setCantidadStr] = useState("1")
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -46,7 +47,7 @@ const FormularioEgreso = ({ isOpen, onClose, onSuccess, producto }: FormularioEg
     }
 
     try {
-      const response = await restarStockProducto(producto.id, cantidad)
+      const response = await restarStockProducto(producto.id, cantidad, user);
       
       if (response.error) {
         setError(response.error)

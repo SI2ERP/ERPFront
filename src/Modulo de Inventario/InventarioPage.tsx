@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useState, useEffect, useMemo, use } from 'react'
 import './Inventario.css'
 import { getProductos, type Producto } from './inventario.service'
 import FormularioIngreso from './FormularioIngreso'
@@ -6,8 +6,18 @@ import FormularioEgreso from './FormularioEgreso'
 import VistaReservas from './VistaReservas'
 import VistaPedidos from './VistaPedidos'
 import VistaMovimientos from './VistaMovimientos'
+import { useAuth } from "../utils/AuthContext";
+import { hasPermission } from '../utils/Permissions';
 
 const InventarioPage = () => {
+  const {user} = useAuth();
+  const tienePermisoModificar = hasPermission(user?.rol, 'puedeModificarInventario');
+  const tienePermisoVer = hasPermission(user?.rol, 'puedeVerInventario');
+
+  if (!tienePermisoVer || !user) {
+    window.location.href = '/';
+  }
+
   const [productos, setProductos] = useState<Producto[]>([])
   const [filtro, setFiltro] = useState('')
   const [error, setError] = useState<string | null>(null)
@@ -44,6 +54,7 @@ const InventarioPage = () => {
   }, [productos, filtro])
 
   const handleOpenEgreso = (producto: Producto) => {
+    if (!tienePermisoModificar) return;
     setSelectedProducto(producto)
     setIsEgresoOpen(true)
   }
@@ -81,7 +92,7 @@ const InventarioPage = () => {
             <table className="tabla-productos">
               <thead>
                 <tr>
-                  <th>Código</th><th>Nombre</th><th>Stock</th><th>Precio Unitario</th><th>Precio Venta</th><th>Acciones</th>
+                  <th>Código</th><th>Nombre</th><th>Stock</th><th>Precio Unitario</th><th>Precio Venta</th>{tienePermisoModificar && <th>Acciones</th>}
                 </tr>
               </thead>
               <tbody>
@@ -97,17 +108,21 @@ const InventarioPage = () => {
                       <td className={producto.stock <= 10 ? 'stock-bajo' : ''}>{producto.stock}</td>
                       <td>${Number(producto.precio_unitario).toLocaleString('es-CL')}</td>
                       <td>${Number(producto.precio_venta).toLocaleString('es-CL')}</td>
-                      <td><button className="btn-retirar" onClick={() => handleOpenEgreso(producto)}>Actualizar Stock</button></td>
+                      {tienePermisoModificar && (
+                        <td><button className="btn-retirar" onClick={() => handleOpenEgreso(producto)}>Actualizar Stock</button></td>
+                      )}
                     </tr>
                   ))
                 )}
               </tbody>
             </table>
           </div>
-
-          <div className="footer-acciones">
-            <button className="btn-nuevo-producto" onClick={() => setIsIngresoOpen(true)}>+ Nuevo Producto</button>
-          </div>
+          
+          {tienePermisoModificar && (
+            <div className="footer-acciones">
+              <button className="btn-nuevo-producto" onClick={() => setIsIngresoOpen(true)}>+ Nuevo Producto</button>
+            </div>
+          )}
 
           <FormularioIngreso isOpen={isIngresoOpen} onClose={handleCloseModals} onSuccess={handleSuccess} />
           <FormularioEgreso isOpen={isEgresoOpen} onClose={handleCloseModals} onSuccess={handleSuccess} producto={selectedProducto} />

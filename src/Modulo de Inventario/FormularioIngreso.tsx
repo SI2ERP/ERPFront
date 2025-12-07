@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import axios from 'axios'
 import './Inventario.css'
 import { type CreateProductoDto, createProducto } from './inventario.service'
+import { useAuth } from "../utils/AuthContext";
 
 interface IngresoFormState {
   nombre: string;
@@ -29,7 +30,7 @@ interface FormularioIngresoProps {
 
 const FormularioIngreso = ({ isOpen, onClose, onSuccess }: FormularioIngresoProps) => {
   if (!isOpen) return null
-
+  const { user } = useAuth();
   const [formData, setFormData] = useState<IngresoFormState>(initialFormData)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -55,6 +56,7 @@ const FormularioIngreso = ({ isOpen, onClose, onSuccess }: FormularioIngresoProp
         precio_unitario: parseFloat(formData.precio_unitario) || 0,
         precio_venta: parseFloat(formData.precio_venta) || 0,
         stock: parseInt(formData.cantidad) || 0,
+        user: user,
     }
 
     // 2. Hacemos la validación con los números convertidos
