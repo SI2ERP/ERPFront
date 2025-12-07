@@ -22,7 +22,7 @@ export interface Producto {
   id_producto: number;
   nombre: string;
   descripcion: string;
-  precio_unitario: number;
+  precio_unitario?: number; // Opcional, ya que se eliminará de la BD
   cantidad: number;
   estado: boolean;
   precio_proveedor?: number; // Precio específico del proveedor cuando se filtra
@@ -66,6 +66,27 @@ export interface ProductoSinStockIndividualResponse {
   success: boolean;
   message: string;
   data: ProductoSinStock;
+}
+
+export interface SolicitudProducto {
+  id_solicitud: number;
+  nombre: string;
+  descripcion: string;
+  estado_solicitud: boolean;
+  fecha_solicitud: string;
+}
+
+export interface ProcesarSolicitudPayload {
+  solicitud_id: number;
+  producto: {
+    nombre: string;
+    descripcion: string;
+    precio_venta: number;
+  };
+  vinculacion_proveedor: {
+    id_proveedor: number;
+    precio_costo: number;
+  };
 }
 
 export interface DetalleCompra {
@@ -593,6 +614,32 @@ class ComprasService {
       return result.data;
     } catch (error) {
       console.error('Error al obtener producto sin stock por ID:', error);
+      throw error;
+    }
+  }
+
+  // =================== SOLICITUDES DE NUEVOS PRODUCTOS ===================
+
+  async obtenerSolicitudesPendientes(): Promise<SolicitudProducto[]> {
+    try {
+      const response = await fetch(`${this.baseURL}/product-requests/pending`);
+      return this.handleResponse<SolicitudProducto[]>(response);
+    } catch (error) {
+      console.error('Error al obtener solicitudes pendientes:', error);
+      throw error;
+    }
+  }
+
+  async procesarSolicitud(payload: ProcesarSolicitudPayload): Promise<any> {
+    try {
+      const response = await fetch(`${this.baseURL}/products/create-from-request`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      return this.handleResponse<any>(response);
+    } catch (error) {
+      console.error('Error al procesar solicitud:', error);
       throw error;
     }
   }

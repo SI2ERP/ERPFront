@@ -38,14 +38,6 @@ const ProductosSinStock: React.FC = () => {
     });
   };
 
-  const formatearPrecio = (precio: string) => {
-    const precioNumerico = parseFloat(precio);
-    return new Intl.NumberFormat('es-CL', {
-      style: 'currency',
-      currency: 'CLP'
-    }).format(precioNumerico);
-  };
-
   if (cargando) {
     return (
       <div className="productos-sin-stock-container">
@@ -95,7 +87,6 @@ const ProductosSinStock: React.FC = () => {
               <tr>
                 <th>Nombre</th>
                 <th>Stock Actual</th>
-                <th>Precio</th>
                 <th>Acciones</th>
               </tr>
             </thead>
@@ -105,9 +96,6 @@ const ProductosSinStock: React.FC = () => {
                   <td className="producto-nombre">{producto.nombre}</td>
                   <td className="producto-stock">
                     <span className="stock-cero">{producto.cantidad}</span>
-                  </td>
-                  <td className="producto-precio">
-                    {formatearPrecio(producto.precio_unitario)}
                   </td>
                   <td>
                     <button

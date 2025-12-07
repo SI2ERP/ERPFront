@@ -297,6 +297,16 @@ const ListaOrdenes: React.FC = () => {
                <span className="badge-contador">{contadorSinStock}</span>
              )}
           </button>
+
+          {/* Botón para Solicitudes de Nuevos Productos - Solo JEFE_COMPRAS */}
+          {esJefeCompras && (
+            <button
+              onClick={() => navigate('/compras/solicitudes-nuevos-productos')}
+              className="btn-solicitudes-nuevos"
+            >
+              Solicitudes Nuevos Productos
+            </button>
+          )}
           
           {/* Botón para acceder a Gestión de Pagos - Solo JEFE_COMPRAS */}
           {esJefeCompras && (

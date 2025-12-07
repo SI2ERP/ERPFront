@@ -138,24 +138,46 @@ const OrdenCompraForm: React.FC = () => {
     }
   };
 
+  // Cache para almacenar productos por proveedor y evitar múltiples llamadas
+  const [cacheProductosProveedor, setCacheProductosProveedor] = useState<Record<number, Producto[]>>({});
+
   const obtenerProveedoresDeProducto = async (idProducto: number): Promise<Proveedor[]> => {
     try {
-      const proveedoresDelProducto: Proveedor[] = [];
+      // Identificar proveedores que no están en caché
+      const proveedoresSinCache = proveedores.filter(p => !cacheProductosProveedor[p.id_proveedor]);
       
-      for (const proveedor of proveedores) {
-        try {
-          const productosProveedor = await comprasService.obtenerProductosPorProveedor(proveedor.id_proveedor);
-          const tieneProducto = productosProveedor.some(p => p.id_producto === idProducto);
-          
-          if (tieneProducto) {
-            proveedoresDelProducto.push(proveedor);
+      // Si hay proveedores sin caché, cargarlos en paralelo
+      if (proveedoresSinCache.length > 0) {
+        const nuevosDatos: Record<number, Producto[]> = {};
+        
+        await Promise.all(proveedoresSinCache.map(async (proveedor) => {
+          try {
+            // Usamos el endpoint que sabemos que funciona y trae precios
+            const data = await comprasService.obtenerProductosDeProveedor(proveedor.id_proveedor);
+            nuevosDatos[proveedor.id_proveedor] = data.productos;
+          } catch (error) {
+            console.error(`Error al cargar productos del proveedor ${proveedor.id_proveedor}:`, error);
+            nuevosDatos[proveedor.id_proveedor] = []; 
           }
-        } catch (error) {
-          console.error(`Error al verificar producto ${idProducto} del proveedor ${proveedor.id_proveedor}:`, error);
-        }
+        }));
+
+        // Actualizar caché con los nuevos datos
+        setCacheProductosProveedor(prev => ({ ...prev, ...nuevosDatos }));
+        
+        // Combinar caché existente con nuevos datos para esta ejecución
+        const cacheCompleto = { ...cacheProductosProveedor, ...nuevosDatos };
+        
+        return proveedores.filter(proveedor => {
+          const productos = cacheCompleto[proveedor.id_proveedor] || [];
+          return productos.some(p => p.id_producto === idProducto);
+        });
+      } else {
+        // Si todo está en caché, filtrar directamente
+        return proveedores.filter(proveedor => {
+          const productos = cacheProductosProveedor[proveedor.id_proveedor] || [];
+          return productos.some(p => p.id_producto === idProducto);
+        });
       }
-      
-      return proveedoresDelProducto;
     } catch (error) {
       console.error('Error al obtener proveedores del producto:', error);
       return [];
@@ -186,10 +208,10 @@ const OrdenCompraForm: React.FC = () => {
         id_producto: productoSinStock.id_producto,
         nombre: productoSinStock.nombre,
         cantidad: 1, // Cantidad inicial sugerida
-        precio_unitario: parseFloat(productoSinStock.precio_unitario),
-        subtotal: parseFloat(productoSinStock.precio_unitario) * 1,
-        id_proveedor: proveedoresProducto[0].id_proveedor, // Seleccionar el primer proveedor
-        proveedor_nombre: proveedoresProducto[0].nombre,
+        precio_unitario: 0, // Se definirá al confirmar proveedor
+        subtotal: 0,
+        id_proveedor: null, // No seleccionar proveedor automáticamente
+        proveedor_nombre: undefined,
         proveedores_disponibles: proveedoresProducto,
       };
 
@@ -250,11 +272,17 @@ const OrdenCompraForm: React.FC = () => {
       const producto = productosActualizados[indexProducto];
       
       // Obtener precio específico del proveedor
-      const productosProveedor = await comprasService.obtenerProductosPorProveedor(idProveedor);
-      const productoConPrecio = productosProveedor.find(p => p.id_producto === producto.id_producto);
+      // Usamos el endpoint específico de proveedor que trae los detalles de la relación (precio)
+      const dataProveedor = await comprasService.obtenerProductosDeProveedor(idProveedor);
+      console.log('Datos del proveedor:', dataProveedor);
+      
+      const productoConPrecio = dataProveedor.productos.find(p => p.id_producto === producto.id_producto);
+      console.log('Producto encontrado con precio:', productoConPrecio);
       
       if (productoConPrecio) {
-        const nuevoPrecio = productoConPrecio.precio_proveedor || productoConPrecio.precio_unitario;
+        // Usar precio del proveedor, o 0 si no está definido
+        // Aseguramos que sea un número (por si viene como string)
+        const nuevoPrecio = Number(productoConPrecio.precio_proveedor) || 0;
         const nuevoSubtotal = producto.cantidad * nuevoPrecio;
         
         // Obtener nombre del proveedor
@@ -733,11 +761,18 @@ const OrdenCompraForm: React.FC = () => {
                             className="proveedor-select"
                           >
                             <option value="">Seleccionar proveedor...</option>
-                            {(producto.proveedores_disponibles || []).map((proveedor) => (
-                              <option key={proveedor.id_proveedor} value={proveedor.id_proveedor}>
-                                {proveedor.nombre}
-                              </option>
-                            ))}
+                            {(producto.proveedores_disponibles || []).map((proveedor) => {
+                              // Buscar el precio de este producto para este proveedor en el caché
+                              const productosDelProveedor = cacheProductosProveedor[proveedor.id_proveedor] || [];
+                              const productoEspecifico = productosDelProveedor.find(p => p.id_producto === producto.id_producto);
+                              const precio = productoEspecifico?.precio_proveedor || 0;
+                              
+                              return (
+                                <option key={proveedor.id_proveedor} value={proveedor.id_proveedor}>
+                                  {proveedor.nombre} - {formatearPrecio(Number(precio))}
+                                </option>
+                              );
+                            })}
                           </select>
                           {producto.proveedor_nombre && (
                             <div className="proveedor-seleccionado">
