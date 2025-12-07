@@ -54,7 +54,7 @@ const FormularioIngreso = ({ isOpen, onClose, onSuccess }: FormularioIngresoProp
         descripcion: formData.descripcion,
         precio_unitario: parseFloat(formData.precio_unitario) || 0,
         precio_venta: parseFloat(formData.precio_venta) || 0,
-        cantidad: parseInt(formData.cantidad) || 0,
+        stock: parseInt(formData.cantidad) || 0,
     }
 
     // 2. Hacemos la validación con los números convertidos
@@ -66,9 +66,13 @@ const FormularioIngreso = ({ isOpen, onClose, onSuccess }: FormularioIngresoProp
 
     try {
         // 3. Enviamos los datos numéricos (datosAPI) al backend
-        await createProducto(datosAPI)
-        onSuccess('Producto creado exitosamente.')
+        const res = await createProducto(datosAPI)
         setFormData(initialFormData) // Resetea el formulario a strings vacíos
+        if (res.error) {
+          alert(`${res.error}, Código ya existe.`)
+        } else {
+          onSuccess('Producto creado exitosamente.')
+        }
     } catch (err) {
         console.error(err)
         if (axios.isAxiosError(err)) {
