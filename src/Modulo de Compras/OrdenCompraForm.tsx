@@ -105,13 +105,13 @@ const OrdenCompraForm: React.FC = () => {
   const cargarDatosIniciales = async () => {
     try {
       // Asignar el empleado logueado automáticamente desde el contexto
-      if (user?.id_empleado) {
+      if (user?.id) {
         setFormulario(prev => ({
           ...prev,
-          id_empleado: user.id_empleado!
+          id_empleado: user.id
         }));
       } else {
-        console.warn('El usuario logueado no tiene id_empleado');
+        console.warn('El usuario logueado no tiene id (id_empleado)');
         setErrores(['No se pudo identificar tu ID de empleado. Por favor, vuelve a iniciar sesión.']);
       }
       
@@ -224,8 +224,8 @@ const OrdenCompraForm: React.FC = () => {
           ...nuevoProductoActualizado,
           id_producto: productoSeleccionado.id_producto,
           nombre: productoSeleccionado.nombre,
-          precio_unitario: productoSeleccionado.precio_unitario, // precio base inicialmente
-          subtotal: (nuevoProductoActualizado.cantidad || 0) * productoSeleccionado.precio_unitario,
+          precio_unitario: 0, // Se define al seleccionar proveedor
+          subtotal: 0, // Se calcula al seleccionar proveedor
           id_proveedor: null, // resetear proveedor
           proveedores_disponibles: proveedoresDelProducto,
         };
@@ -236,7 +236,7 @@ const OrdenCompraForm: React.FC = () => {
     if (campo === 'cantidad') {
       const cantidad = typeof valor === 'string' && valor === '' ? 0 : (valor as number);
       nuevoProductoActualizado.cantidad = cantidad;
-      nuevoProductoActualizado.subtotal = cantidad * nuevoProductoActualizado.precio_unitario;
+      nuevoProductoActualizado.subtotal = 0; // El precio aún no está definido
     }
 
     setNuevoProducto(nuevoProductoActualizado);
@@ -643,10 +643,8 @@ const OrdenCompraForm: React.FC = () => {
             {/* Mensaje informativo sobre flujo de trabajo */}
             <div className="info-proveedor">
               <div className="info-box">
-                <i>ℹ️</i>
                 <span>
-                  Seleccione los productos que necesita. Los precios mostrados son los precios base.
-                  Después podrá elegir el proveedor específico para cada producto en la tabla.
+                  Seleccione los productos y la cantidad. El precio se determinará al seleccionar el proveedor en la tabla.
                 </span>
               </div>
             </div>
@@ -665,12 +663,9 @@ const OrdenCompraForm: React.FC = () => {
                     >
                       <option value="">Seleccione un producto...</option>
                       {productosDisponibles.map((producto) => {
-                        // Mostrar precio base inicialmente
-                        const precioMostrar = producto.precio_unitario;
-                        
                         return (
                           <option key={producto.id_producto} value={producto.id_producto}>
-                            {producto.nombre} - {formatearPrecio(precioMostrar)}
+                            {producto.nombre}
                           </option>
                         );
                       })}
@@ -692,28 +687,6 @@ const OrdenCompraForm: React.FC = () => {
                           handleProductoChange('cantidad', parseInt(valor) || 1);
                         }
                       }}
-                    />
-                  </div>
-                  
-                  <div className="form-group">
-                    <label htmlFor="precio">Precio Unitario</label>
-                    <input
-                      type="text"
-                      id="precio"
-                      value={formatearPrecio(nuevoProducto.precio_unitario)}
-                      readOnly
-                      className="readonly"
-                      placeholder="Se asigna automáticamente al seleccionar producto"
-                    />
-                  </div>
-                  
-                  <div className="form-group">
-                    <label>Subtotal</label>
-                    <input
-                      type="text"
-                      value={formatearPrecio(nuevoProducto.subtotal)}
-                      readOnly
-                      className="readonly"
                     />
                   </div>
                   
@@ -808,10 +781,9 @@ const OrdenCompraForm: React.FC = () => {
           {/* Resumen de Órdenes a Crear */}
           {formulario.productos.length > 0 && obtenerResumenOrdenes() && obtenerResumenOrdenes()!.length > 1 && (
             <div className="form-section">
-              <h3>📋 Resumen de Órdenes</h3>
+              <h3> Resumen de Órdenes</h3>
               <div className="info-proveedor">
                 <div className="info-box warning">
-                  <i>⚠️</i>
                   <span>
                     Tiene productos de diferentes proveedores. Se crearán <strong>{obtenerResumenOrdenes()!.length} órdenes separadas</strong>, una por cada proveedor:
                   </span>
@@ -820,7 +792,7 @@ const OrdenCompraForm: React.FC = () => {
               <div className="resumen-ordenes">
                 {obtenerResumenOrdenes()!.map((resumen, index) => (
                   <div key={index} className="resumen-orden">
-                    <h4>🏪 {resumen.proveedor}</h4>
+                    <h4> {resumen.proveedor}</h4>
                     <div className="resumen-detalles">
                       <span>{resumen.productos} producto(s)</span>
                       <span className="resumen-total">{formatearPrecio(resumen.total)}</span>
