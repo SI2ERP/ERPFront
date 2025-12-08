@@ -22,6 +22,9 @@ const ListaOrdenes: React.FC = () => {
 
   // Verificar si el usuario es Jefe de Compras (tiene permisos para aprobar/rechazar/eliminar)
   const esJefeCompras = user?.rol === 'JEFE_COMPRAS' || user?.rol === 'ADMIN' || user?.rol === 'GERENTE' || user?.rol === 'TESTING';
+  
+  // Verificar si el usuario puede crear productos (Jefes + Empleados de Compras)
+  const puedeCrearProductos = esJefeCompras || user?.rol === 'EMPLEADO_COMPRAS';
 
   // Función para manejar el cierre de sesión
   const handleLogout = () => {
@@ -298,8 +301,8 @@ const ListaOrdenes: React.FC = () => {
              )}
           </button>
 
-          {/* Botón para Solicitudes de Nuevos Productos - Solo JEFE_COMPRAS */}
-          {esJefeCompras && (
+          {/* Botón para Solicitudes de Nuevos Productos - Jefes y Empleados de Compras */}
+          {puedeCrearProductos && (
             <button
               onClick={() => navigate('/compras/solicitudes-nuevos-productos')}
               className="btn-solicitudes-nuevos"

@@ -1,6 +1,8 @@
 import "./Home.css";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../utils/AuthContext";
+import { hasPermission } from "../utils/Permissions";
+import type { Role } from "../utils/Permissions";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -53,6 +55,10 @@ const Home = () => {
     logout();
   };
 
+  // Helper para verificar permisos
+  const puedeVer = (permiso: "puedeVerInventario" | "puedeVerVentas" | "puedeVerRRHH" | "puedeVerCompras" | "puedeVerLogistica") => {
+    return hasPermission(user.rol as Role, permiso);
+  };
 
   return (
     <div className="home-container">
@@ -60,25 +66,35 @@ const Home = () => {
       <p>Selecciona el módulo al que deseas ingresar:</p>
 
       <div className="module-grid">
-        <button className="module-button" onClick={irAInventario}>
-          Inventario
-        </button>
+        {puedeVer("puedeVerInventario") && (
+          <button className="module-button" onClick={irAInventario}>
+            Inventario
+          </button>
+        )}
 
-        <button className="module-button" onClick={irAVentas}>
-          Ventas
-        </button>
+        {puedeVer("puedeVerVentas") && (
+          <button className="module-button" onClick={irAVentas}>
+            Ventas
+          </button>
+        )}
 
-        <button className="module-button" onClick={irARRHH}>
-          RRHH
-        </button>
+        {puedeVer("puedeVerRRHH") && (
+          <button className="module-button" onClick={irARRHH}>
+            RRHH
+          </button>
+        )}
 
-        <button className="module-button" onClick={irACompras}>
-          Compras
-        </button>
+        {puedeVer("puedeVerCompras") && (
+          <button className="module-button" onClick={irACompras}>
+            Compras
+          </button>
+        )}
 
-        <button className="module-button disabled" disabled>
-          Logística/Despacho
-        </button>
+        {puedeVer("puedeVerLogistica") && (
+          <button className="module-button disabled" disabled>
+            Logística/Despacho
+          </button>
+        )}
       </div>
 
       <button className="logout-button" onClick={handleLogout}>

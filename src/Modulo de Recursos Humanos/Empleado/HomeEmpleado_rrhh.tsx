@@ -19,7 +19,7 @@ export const HomeEmpleado_rrhh = () =>{
             onClick={() => navigate("/rrhh/empleado/solicitarAusencia")}
             className="w-full bg-linear-to-tr from-[#c7ccd2] to-[#a7aeb6] text-[#0f1115] border border-[#3a3f45] py-3 rounded-md font-medium shadow-md hover:from-[#d5d9de] hover:to-[#b3bbc3] hover:text-black active:scale-95 transition duration-200"
           >
-            👥 Solicitar ausencia
+             Solicitar ausencia
           </button>
         </li>
 
@@ -28,17 +28,24 @@ export const HomeEmpleado_rrhh = () =>{
             onClick={() => navigate("/rrhh/empleado/estadoSolicitud")}
             className="w-full bg-linear-to-tr from-[#c7ccd2] to-[#a7aeb6] text-[#0f1115] border border-[#3a3f45] py-3 rounded-md font-medium shadow-md hover:from-[#d5d9de] hover:to-[#b3bbc3] hover:text-black active:scale-95 transition duration-200"
           >
-            📝 Ver estado de tus solicitudes de ausencia
+             Ver estado de tus solicitudes de ausencia
           </button>
         </li>
       </ul>
 
-      <div className="text-center mt-10">
+      <div className="text-center mt-10 flex flex-col items-center gap-3">
+        <button
+          onClick={() => navigate("/")}
+          className="px-6 py-3 w-full max-w-xs bg-linear-to-tr from-[#9ca3af] to-[#6b7280] text-black font-semibold rounded-md shadow-md hover:from-[#6b7280] hover:to-[#4b5563] active:scale-95 transition duration-200"
+        >
+           Volver al Menú Principal
+        </button>
+
         <button
           onClick={handleLogout}
           className="px-6 py-3 bg-linear-to-tr from-[#f87171] to-[#ef4444] text-black font-semibold rounded-md shadow-md hover:from-[#ef4444] hover:to-[#dc2626] active:scale-95 transition duration-200"
         >
-          🔒 Cerrar sesión
+           Cerrar sesión
         </button>
       </div>
     </div>
