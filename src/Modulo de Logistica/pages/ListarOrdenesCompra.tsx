@@ -3,7 +3,6 @@ import integracionService from "../services/integracionService";
 import LoadingSpinner from "../components/common/LoadingSpinner";
 import EmptyState from "../components/common/EmptyState";
 import AlertMessage from "../components/common/AlertMessage";
-import Badge from "../components/common/Badge";
 import PageHeader from "../components/common/PageHeader";
 import Button from "../components/common/Button";
 import SearchBar from "../components/common/SearchBar";
@@ -17,6 +16,7 @@ export default function ListarOrdenesCompra() {
   const [ordenes, setOrdenes] = useState<OrdenCompra[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [receiving, setReceiving] = useState<Record<number, boolean>>({});
   const [busqueda, setBusqueda] = useState("");
   const [filtroEstado, setFiltroEstado] = useState("TODOS");
   const [ordenamiento, setOrdenamiento] = useState<
@@ -29,19 +29,28 @@ export default function ListarOrdenesCompra() {
     cargarOrdenes();
   }, []);
 
+  const [editingEstadoId, setEditingEstadoId] = useState<number | null>(null);
+  const [tempEstado, setTempEstado] = useState<string>("");
+
   const cargarOrdenes = async () => {
     try {
       setLoading(true);
       setError(null);
       const response = await integracionService.listarOrdenesCompra();
-      if (response?.success && response.data)
-        setOrdenes(
-          response.data.map((o: any) => ({
-            ...o,
-            estado: o.estado ? String(o.estado).toUpperCase().trim() : o.estado,
-          }))
-        );
-      else setError("No se pudieron cargar las órdenes de compra");
+      if (response?.success && response.data) {
+        const mapped = response.data.map((o: any) => ({
+          id: o.id_recepcion,
+          numero_orden:
+            o.id_orden_compra || o.id_oc_proveedor || `OC-${o.id_recepcion}`,
+          proveedor: o.proveedor || "-",
+          fecha_orden: o.fecha_oc || o.fecha_registro_logistica,
+          estado: o.estado ? String(o.estado).toUpperCase().trim() : o.estado,
+          fecha_recepcion: o.fecha_recepcion_finalizada || null,
+          total_compra: o.total_compra ?? null,
+          empleado_logistica_nombre: o.empleado_logistica_nombre || null,
+        }));
+        setOrdenes(mapped as OrdenCompra[]);
+      } else setError("No se pudieron cargar las órdenes de compra");
     } catch (err: any) {
       setError(
         err.response?.data?.message ||
@@ -53,29 +62,110 @@ export default function ListarOrdenesCompra() {
     }
   };
 
+  const canMarkReceived = (userRol?: string) => {
+    if (!userRol) return false;
+    const r = String(userRol).toUpperCase();
+    return r === "JEFE_LOGISTICA" || r === "EMPLEADO_LOGISTICA";
+  };
+
+  const getEstadoColor = (estado?: string) => {
+    if (!estado) return "#64748b";
+    const e = String(estado).toUpperCase();
+    if (e === "PENDIENTE") return "#f59e0b";
+    if (e === "RECEPCIONADA" || e === "RECIBIDA") return "#10b981";
+    return "#64748b";
+  };
+
+  const openEditEstado = (id: number, currentEstado?: string) => {
+    if (
+      String(currentEstado || "").toUpperCase() === "RECEPCIONADA" ||
+      String(currentEstado || "").toUpperCase() === "RECIBIDA"
+    )
+      return;
+    setEditingEstadoId(id);
+    setTempEstado((currentEstado || "PENDIENTE").toUpperCase());
+  };
+
+  const cancelEditEstado = () => {
+    setEditingEstadoId(null);
+    setTempEstado("");
+  };
+
+  const marcarRecepcion = async (id_recepcion: number) => {
+    try {
+      setReceiving((s) => ({ ...s, [id_recepcion]: true }));
+      await integracionService.recibirRecepcion(id_recepcion);
+      await cargarOrdenes();
+    } catch (err: any) {
+      console.error("Error marcando recepción:", err);
+      setError(err?.response?.data?.message || err.message || "Error");
+    } finally {
+      setReceiving((s) => ({ ...s, [id_recepcion]: false }));
+    }
+  };
+
+  const confirmEditEstado = async (orden: any) => {
+    try {
+      if (!editingEstadoId) return cancelEditEstado();
+      if (
+        (orden.estado || "").toUpperCase() === (tempEstado || "").toUpperCase()
+      ) {
+        return cancelEditEstado();
+      }
+
+      if (
+        (tempEstado || "").toUpperCase() === "RECEPCIONADA" ||
+        (tempEstado || "").toUpperCase() === "RECIBIDA"
+      ) {
+        await marcarRecepcion(orden.id);
+        cancelEditEstado();
+        return;
+      }
+
+      setError(
+        "No es posible revertir manualmente el estado a PENDIENTE desde esta pantalla."
+      );
+      cancelEditEstado();
+    } catch (err: any) {
+      setError(
+        err?.response?.data?.message ||
+          err.message ||
+          "Error al actualizar estado"
+      );
+      cancelEditEstado();
+    }
+  };
+
   const contarPorEstado = (estado: string) =>
     ordenes.filter((o) => o.estado === estado).length;
 
   const ordenesFiltradas = React.useMemo(() => {
     let resultado = [...ordenes];
 
-    // // Show only OC pendientes (esperan recepcion) for EMPLEADO_LOGISTICA and JEFE_LOGISTICA
-    // if (
-    //   user &&
-    //   (user.rol === ROLES.EMPLEADO_LOGISTICA ||
-    //     user.rol === ROLES.JEFE_LOGISTICA)
-    // ) {
-    //   resultado = resultado.filter((o) => o.estado === "PENDIENTE");
-    // }
-
     if (busqueda.trim()) {
-      const lower = busqueda.toLowerCase();
-      resultado = resultado.filter(
-        (o) =>
-          o.numero_orden.toLowerCase().includes(lower) ||
-          o.proveedor.toLowerCase().includes(lower) ||
-          o.observaciones?.toLowerCase().includes(lower)
-      );
+      const normalize = (s?: any) =>
+        String(s ?? "")
+          .toLowerCase()
+          .normalize("NFD")
+          .replace(/\p{Diacritic}/gu, "");
+
+      const terms = busqueda
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/\p{Diacritic}/gu, "")
+        .split(/\s+/)
+        .filter(Boolean);
+
+      resultado = resultado.filter((o) => {
+        const target = [
+          o.numero_orden || "",
+          o.proveedor || "",
+          o.empleado_logistica_nombre || "",
+        ]
+          .map(normalize)
+          .join(" ");
+        return terms.every((t) => target.includes(t));
+      });
     }
 
     if (filtroEstado !== "TODOS")
@@ -202,7 +292,7 @@ export default function ListarOrdenesCompra() {
           <SearchBar
             value={busqueda}
             onChange={setBusqueda}
-            placeholder="N° orden, proveedor, observaciones..."
+            placeholder="N° orden, proveedor, empleado..."
           />
           <SelectField
             label=""
@@ -337,7 +427,17 @@ export default function ListarOrdenesCompra() {
                       color: "#000000ff",
                     }}
                   >
-                    Observaciones
+                    Empleado
+                  </th>
+                  <th
+                    style={{
+                      padding: "16px",
+                      textAlign: "left",
+                      fontWeight: "700",
+                      color: "#000000ff",
+                    }}
+                  >
+                    Total
                   </th>
                 </tr>
               </thead>
@@ -372,12 +472,107 @@ export default function ListarOrdenesCompra() {
                       {orden.proveedor}
                     </td>
                     <td style={{ padding: "16px", color: "#334155" }}>
-                      {new Date(orden.fecha_orden).toLocaleDateString("es-CL")}
+                      {orden.fecha_orden
+                        ? new Date(orden.fecha_orden).toLocaleDateString(
+                            "es-CL"
+                          )
+                        : "-"}
                     </td>
                     <td style={{ padding: "16px", textAlign: "center" }}>
-                      <Badge variant={getEstadoVariant(orden.estado)}>
-                        {orden.estado}
-                      </Badge>
+                      {editingEstadoId === orden.id &&
+                      canMarkReceived(user?.rol) &&
+                      String(orden.estado || "").toUpperCase() !==
+                        "RECEPCIONADA" ? (
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 8,
+                          }}
+                        >
+                          <select
+                            aria-label={`Editar estado OC #${orden.id}`}
+                            value={tempEstado}
+                            onChange={(e) => setTempEstado(e.target.value)}
+                            style={{
+                              padding: "6px 8px",
+                              borderRadius: 8,
+                              border: `2px solid ${getEstadoColor(tempEstado)}`,
+                              background: getEstadoColor(tempEstado),
+                              color: "white",
+                              minWidth: 140,
+                            }}
+                          >
+                            <option value="PENDIENTE">PENDIENTE</option>
+                            <option value="RECEPCIONADA">RECIBIDA</option>
+                          </select>
+                          <div style={{ display: "inline-flex", gap: 6 }}>
+                            <Button
+                              onClick={() => confirmEditEstado(orden)}
+                              size="small"
+                              variant="primary"
+                              disabled={!!receiving[orden.id]}
+                            >
+                              {receiving[orden.id] ? "..." : "✓"}
+                            </Button>
+                            <Button
+                              onClick={cancelEditEstado}
+                              size="small"
+                              variant="ghost"
+                            >
+                              ✕
+                            </Button>
+                          </div>
+                        </div>
+                      ) : (
+                        <div
+                          role={
+                            canMarkReceived(user?.rol) ? "button" : undefined
+                          }
+                          tabIndex={canMarkReceived(user?.rol) ? 0 : undefined}
+                          onClick={() =>
+                            canMarkReceived(user?.rol) &&
+                            String(orden.estado || "").toUpperCase() !==
+                              "RECEPCIONADA"
+                              ? openEditEstado(orden.id, orden.estado)
+                              : null
+                          }
+                          onKeyDown={(e) => {
+                            if (!canMarkReceived(user?.rol)) return;
+                            if (e.key === "Enter" || e.key === " ")
+                              String(orden.estado || "").toUpperCase() !==
+                                "RECEPCIONADA" &&
+                                openEditEstado(orden.id, orden.estado);
+                          }}
+                          style={{
+                            display: "inline-flex",
+                            alignItems: "center",
+                            gap: 6,
+                            cursor: canMarkReceived(user?.rol)
+                              ? "pointer"
+                              : "default",
+                          }}
+                          title={
+                            canMarkReceived(user?.rol)
+                              ? "Clic para editar estado"
+                              : undefined
+                          }
+                        >
+                          <div
+                            style={{
+                              padding: "8px 12px",
+                              borderRadius: 8,
+                              background: getEstadoColor(orden.estado),
+                              color: "white",
+                              fontWeight: 600,
+                              minWidth: 120,
+                              textAlign: "center",
+                            }}
+                          >
+                            {orden.estado || "-"}
+                          </div>
+                        </div>
+                      )}
                     </td>
                     <td
                       style={{
@@ -386,9 +581,20 @@ export default function ListarOrdenesCompra() {
                         fontSize: "13px",
                       }}
                     >
-                      {new Date(orden.fecha_recepcion).toLocaleDateString(
-                        "es-CL"
-                      )}
+                      {orden.fecha_recepcion
+                        ? new Date(orden.fecha_recepcion).toLocaleDateString(
+                            "es-CL"
+                          )
+                        : "-"}
+                    </td>
+                    <td
+                      style={{
+                        padding: "16px",
+                        color: "#334155",
+                        fontWeight: "500",
+                      }}
+                    >
+                      {orden.empleado_logistica_nombre || "-"}
                     </td>
                     <td
                       style={{
@@ -405,7 +611,9 @@ export default function ListarOrdenesCompra() {
                           textOverflow: "ellipsis",
                         }}
                       >
-                        {orden.observaciones || "-"}
+                        {orden.total_compra != null
+                          ? `\$ ${Number(orden.total_compra).toFixed(2)}`
+                          : "-"}
                       </div>
                     </td>
                   </tr>

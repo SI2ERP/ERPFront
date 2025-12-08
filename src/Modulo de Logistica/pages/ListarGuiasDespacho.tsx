@@ -25,12 +25,19 @@ const ListarGuiasDespacho: React.FC = () => {
     "fecha_desc" | "fecha_asc" | "id_desc" | "id_asc"
   >("id_desc");
 
-  // Editing state
   const [editMode, setEditMode] = useState(false);
   const [rowChanges, setRowChanges] = useState<
     Record<number, Partial<GuiaDespacho>>
   >({});
   const [saving, setSaving] = useState(false);
+  const [quickEditRow, setQuickEditRow] = useState<number | null>(null);
+  const [quickEditValue, setQuickEditValue] = useState<
+    GuiaDespacho["estado"] | ""
+  >("");
+  const [quickSaving, setQuickSaving] = useState<Record<number, boolean>>({});
+  const [tempEstados, setTempEstados] = useState<
+    Record<number, GuiaDespacho["estado"] | "">
+  >({});
   const [empresasList, setEmpresasList] = useState<
     { id?: number; nombre: string }[]
   >([]);
@@ -85,24 +92,25 @@ const ListarGuiasDespacho: React.FC = () => {
       }
       if (response && response.success && response.data) {
         const normalized = (response.data as any[]).map((g) => {
-          const parsedTransportista = Number(g.transportista);
-          const transportistaVal = Number.isFinite(parsedTransportista)
-            ? parsedTransportista
-            : g.transportista;
+          const id_transportista = g.id_transportista
+            ? Number(g.id_transportista)
+            : undefined;
+          const transportista_nombre = g.transportista_nombre ?? null;
           return {
             ...g,
             estado: (g.estado || "").toString().toUpperCase().trim(),
             id_guia: Number(g.id_guia),
             id_ot: Number(g.id_ot),
-            transportista: transportistaVal,
+            id_transportista,
+            transportista_nombre,
             id_encargado: g.id_encargado ? Number(g.id_encargado) : undefined,
             encargado_name: g.encargado_name || null,
           };
         });
         setGuias(normalized as GuiaDespacho[]);
-      } else setError("No se pudieron cargar las guías");
+      } else showError("No se pudieron cargar las guías");
     } catch (err: any) {
-      setError(err.message || "Error al conectar con el servidor");
+      showError(getApiErrorMessage(err) || "Error al conectar con el servidor");
     } finally {
       setLoading(false);
     }
@@ -111,6 +119,22 @@ const ListarGuiasDespacho: React.FC = () => {
   const getGuiaEstado = (g: GuiaDespacho) =>
     (g.estado || "").toString().toUpperCase().trim();
 
+  const getTransportistaDisplay = (
+    guiaOrName?: Partial<GuiaDespacho> | string | null
+  ): string => {
+    if (typeof guiaOrName === "string") return guiaOrName || "(Sin empresa)";
+
+    const guia = guiaOrName as Partial<GuiaDespacho> | undefined;
+    if (guia?.transportista_nombre) return guia.transportista_nombre;
+    const id = (guia as any)?.id_transportista as number | undefined;
+    if (id !== undefined && id !== null) {
+      const found = empresasList.find((e) => Number(e.id) === Number(id));
+      if (found) return found.nombre;
+      return String(id);
+    }
+    return "(Sin empresa)";
+  };
+
   const contarPorEstado = (estado: string) =>
     guias.filter((g) => getGuiaEstado(g) === estado).length;
 
@@ -118,23 +142,59 @@ const ListarGuiasDespacho: React.FC = () => {
     let resultado = [...guias];
 
     if (user && user.rol === ROLES.TRANSPORTISTA) {
-      const name = `${user.nombre}`.toLowerCase();
-      const email = (user.email || "").toLowerCase();
+      const userId = (user as any).id ?? (user as any).id_empleado ?? undefined;
       resultado = resultado.filter((g) => {
-        const t = (g.transportista || "").toString().toLowerCase();
-        return t.includes(name) || t.includes(email) || t === name;
+        if (userId !== undefined) {
+          return Number((g as any).id_transportista) === Number(userId);
+        }
+        return false;
       });
     }
 
     if (busqueda.trim()) {
       const lower = busqueda.toLowerCase();
-      resultado = resultado.filter(
-        (g) =>
+      resultado = resultado.filter((g) => {
+        const tDisplay = (
+          (g as any).transportista_nombre ??
+          (g as any).id_transportista ??
+          ""
+        )
+          .toString()
+          .toLowerCase();
+
+        // try to get encargado display name from the guia or from pending rowChanges / encargados list
+        const changes = rowChanges[g.id_guia] || {};
+        const encId = (changes as any).id_encargado ?? (g as any).id_encargado;
+        let encargadoName = (g as any).encargado_name ?? "";
+        if (
+          !encargadoName &&
+          encId !== undefined &&
+          encId !== null &&
+          encId !== ""
+        ) {
+          const allEnc = Object.values(encargadosPorEmpresa).flat();
+          const found = allEnc.find((emp: any) => {
+            const empId =
+              (emp as any)?.id_empleado_transportista ??
+              (emp as any)?.id_empleado ??
+              (emp as any)?.id;
+            return empId !== undefined && String(empId) === String(encId);
+          });
+          if (found)
+            encargadoName = `${found.nombre || ""} ${
+              found.apellido || ""
+            }`.trim();
+          else encargadoName = String(encId || "");
+        }
+
+        return (
           g.id_guia.toString().includes(lower) ||
           g.id_ot.toString().includes(lower) ||
-          (g.transportista || "").toString().toLowerCase().includes(lower) ||
+          tDisplay.includes(lower) ||
+          (encargadoName || "").toString().toLowerCase().includes(lower) ||
           g.direccion_entrega?.toLowerCase().includes(lower)
-      );
+        );
+      });
     }
 
     if (filtroEstado !== "TODOS")
@@ -163,6 +223,7 @@ const ListarGuiasDespacho: React.FC = () => {
   ): "pendiente" | "proceso" | "completado" | "cancelado" | "enviado" => {
     if (!estado) return "pendiente";
     if (estado === "EN PICKING") return "pendiente";
+    if (estado === "POR ASIGNAR") return "pendiente";
     if (estado === "ASIGNADA") return "proceso";
     if (estado === "EN CAMINO") return "enviado";
     if (estado === "ENTREGADA") return "completado";
@@ -190,7 +251,7 @@ const ListarGuiasDespacho: React.FC = () => {
       link.parentNode?.removeChild(link);
       window.URL.revokeObjectURL(url);
     } catch (err) {
-      setError("Error al descargar PDF");
+      showError("Error al descargar PDF");
     }
   };
 
@@ -203,21 +264,25 @@ const ListarGuiasDespacho: React.FC = () => {
 
   const onEmpresaChangeForRow = (
     id_guia: number,
-    empresaKey: string | number
+    empresaKey: string | number | undefined
   ) => {
+    const parsed =
+      empresaKey === undefined || empresaKey === ""
+        ? undefined
+        : Number(empresaKey);
     onRowChange(id_guia, {
-      transportista: empresaKey as any,
+      id_transportista: parsed as any,
       id_encargado: undefined,
     } as any);
   };
 
   const encargadosForRow = (guia: GuiaDespacho) => {
     const changes = rowChanges[guia.id_guia] || {};
-    const empresaKey = (changes as any).transportista ?? guia.transportista;
+    const empresaKey =
+      (changes as any).id_transportista ?? (guia as any).id_transportista;
 
     if (user && user.rol === ROLES.TRANSPORTISTA) {
-      const uEmpresa =
-        (user as any).id_empresa ?? (user as any).empresa ?? undefined;
+      const uEmpresa = (user as any).id;
       if (uEmpresa !== undefined) {
         const list = encargadosPorEmpresa[uEmpresa] || [];
         return list;
@@ -233,16 +298,51 @@ const ListarGuiasDespacho: React.FC = () => {
     return allEncargados;
   };
 
-  // Allowed fields by role
   const allowedByRole: Record<string, string[]> = {
     JEFE_LOGISTICA: ["fecha", "transportista", "id_encargado", "estado"],
-    TRANSPORTISTA: ["fecha", "id_encargado", "estado"],
+    TRANSPORTISTA: ["estado", "id_encargado"],
+  };
+
+  const errorTimeoutRef = React.useRef<number | null>(null);
+  const showError = (msg: string | null) => {
+    setError(msg);
+    if (errorTimeoutRef.current) {
+      window.clearTimeout(errorTimeoutRef.current);
+      errorTimeoutRef.current = null;
+    }
+    if (msg) {
+      errorTimeoutRef.current = window.setTimeout(() => {
+        setError(null);
+        errorTimeoutRef.current = null;
+      }, 3000) as unknown as number;
+    }
+  };
+
+  React.useEffect(() => {
+    return () => {
+      if (errorTimeoutRef.current) window.clearTimeout(errorTimeoutRef.current);
+    };
+  }, []);
+
+  const getApiErrorMessage = (err: any): string | null => {
+    if (!err) return null;
+    const resp = err.response;
+    if (resp && resp.data) {
+      if (typeof resp.data === "string") return resp.data;
+      if (typeof resp.data.message === "string") return resp.data.message;
+      if (resp.data.message) return String(resp.data.message);
+      try {
+        return JSON.stringify(resp.data);
+      } catch (e) {}
+    }
+    if (err.message) return err.message;
+    return null;
   };
 
   const guardarCambios = async () => {
     const hasChanges = Object.keys(rowChanges).length > 0;
     if (!hasChanges) {
-      setError("No hay cambios para guardar");
+      showError("No hay cambios para guardar");
       return;
     }
     setSaving(true);
@@ -257,17 +357,41 @@ const ListarGuiasDespacho: React.FC = () => {
         if (changes.fecha && allowed.includes("fecha")) {
           body.fecha = changes.fecha;
         }
+
         if (
+          (changes as any).id_transportista !== undefined &&
+          allowed.includes("transportista")
+        ) {
+          body.transportista = (changes as any).id_transportista;
+        } else if (
           (changes as any).transportista !== undefined &&
           allowed.includes("transportista")
         ) {
           body.transportista = (changes as any).transportista;
         }
+
         if (
-          (changes as any).id_encargado !== undefined &&
+          Object.prototype.hasOwnProperty.call(changes, "id_encargado") &&
           allowed.includes("id_encargado")
         ) {
-          body.id_encargado = (changes as any).id_encargado;
+          const newEnc = (changes as any).id_encargado;
+
+          if (newEnc === undefined || newEnc === null || newEnc === "") {
+            body.id_encargado = null;
+            if (allowed.includes("estado")) body.estado = "POR ASIGNAR";
+          } else {
+            const parsed = Number(newEnc);
+            if (Number.isFinite(parsed)) body.id_encargado = parsed;
+            else body.id_encargado = newEnc;
+
+            if (
+              !Object.prototype.hasOwnProperty.call(changes, "estado") &&
+              allowed.includes("estado")
+            ) {
+              body.estado = "ASIGNADA";
+              body.fecha = todayStr;
+            }
+          }
         }
         if (
           (changes as any).estado !== undefined &&
@@ -275,9 +399,7 @@ const ListarGuiasDespacho: React.FC = () => {
         ) {
           body.estado = (changes as any).estado;
         }
-        // `direccion_entrega` is not editable in this list view; do not send it
 
-        // If fecha exists, validate not before today and not before original recorded date
         if (body.fecha) {
           const guia = guias.find((g) => g.id_guia === id);
           if (new Date(body.fecha) < new Date(todayStr)) {
@@ -301,9 +423,71 @@ const ListarGuiasDespacho: React.FC = () => {
       setRowChanges({});
       setEditMode(false);
     } catch (err: any) {
-      setError(err.message || "Error al guardar cambios");
+      showError(getApiErrorMessage(err) || "Error al guardar cambios");
     } finally {
       setSaving(false);
+    }
+  };
+
+  const allowedStatesForTransportista: GuiaDespacho["estado"][] = [
+    "ASIGNADA",
+    "EN CAMINO",
+    "ENTREGADA",
+  ] as GuiaDespacho["estado"][];
+
+  const startQuickEdit = (id: number, current: GuiaDespacho["estado"] | "") => {
+    setQuickEditRow(id);
+
+    if (current === "FALLIDA" || current === "CANCELADA") {
+      setQuickEditValue("");
+      setTempEstados((t) => ({ ...t, [id]: "" }));
+    } else {
+      setQuickEditValue(current ?? "");
+      setTempEstados((t) => ({ ...t, [id]: current ?? "" }));
+    }
+  };
+
+  const editarGuiaDespacho = (id: number) => {
+    const guia = guias.find((g) => g.id_guia === id);
+    const current = guia?.estado ?? "";
+    startQuickEdit(id, current as GuiaDespacho["estado"] | "");
+  };
+
+  const cancelQuickEdit = () => {
+    setQuickEditRow(null);
+    setQuickEditValue("");
+    setTempEstados((t) => {
+      const copy = { ...t };
+      if (quickEditRow !== null) delete copy[quickEditRow];
+      return copy;
+    });
+  };
+
+  const confirmQuickEdit = async (id: number) => {
+    if (!quickEditValue) return;
+    try {
+      setQuickSaving((s) => ({ ...s, [id]: true }));
+      await despachoService.update(id, {
+        estado: quickEditValue as GuiaDespacho["estado"],
+      });
+      setGuias((prev) =>
+        prev.map((g) =>
+          g.id_guia === id
+            ? { ...g, estado: quickEditValue as GuiaDespacho["estado"] }
+            : g
+        )
+      );
+      setQuickEditRow(null);
+      setQuickEditValue("");
+      setTempEstados((t) => {
+        const copy = { ...t };
+        delete copy[id];
+        return copy;
+      });
+    } catch (err: any) {
+      showError(getApiErrorMessage(err) || "Error al actualizar estado");
+    } finally {
+      setQuickSaving((s) => ({ ...s, [id]: false }));
     }
   };
 
@@ -359,27 +543,27 @@ const ListarGuiasDespacho: React.FC = () => {
       </div>
     );
 
-  if (error) {
-    return (
-      <div className="list-container">
-        <AlertMessage
-          type="error"
-          message={error}
-          onClose={() => setError(null)}
-        />
-        <EmptyState
-          icon="❌"
-          title="Error al cargar guías"
-          description={error}
-          actionLabel="🔄 Reintentar"
-          onAction={cargarGuias}
-        />
-      </div>
-    );
-  }
-
   return (
     <div className="list-container">
+      {/* Floating error alert (non-blocking) */}
+      {error && (
+        <div
+          style={{
+            position: "fixed",
+            top: 16,
+            right: 16,
+            zIndex: 1100,
+            width: 360,
+            maxWidth: "calc(100% - 32px)",
+          }}
+        >
+          <AlertMessage
+            type="error"
+            message={error}
+            onClose={() => showError(null)}
+          />
+        </div>
+      )}
       <PageHeader
         title="Guías de Despacho"
         subtitle={`${guias.length} guías registradas`}
@@ -393,7 +577,7 @@ const ListarGuiasDespacho: React.FC = () => {
               onClick={() => {
                 const newEdit = !editMode;
                 setEditMode(newEdit);
-                // when exiting edit mode, clear any accumulated changes and temp estados
+
                 if (!newEdit) {
                   setRowChanges({});
                 }
@@ -429,6 +613,13 @@ const ListarGuiasDespacho: React.FC = () => {
           icon="📦"
           color="yellow"
           subtitle="Preparación"
+        />
+        <StatsCard
+          title="Por Asignar"
+          value={contarPorEstado("POR ASIGNAR")}
+          icon="🕒"
+          color="teal"
+          subtitle="Esperan asignación"
         />
         <StatsCard
           title="Asignadas"
@@ -487,6 +678,10 @@ const ListarGuiasDespacho: React.FC = () => {
                 label: `📦 En Picking (${contarPorEstado("EN PICKING")})`,
               },
               {
+                value: "POR ASIGNAR",
+                label: `🕒 Por Asignar (${contarPorEstado("POR ASIGNAR")})`,
+              },
+              {
                 value: "ASIGNADA",
                 label: `👷 Asignadas (${contarPorEstado("ASIGNADA")})`,
               },
@@ -498,10 +693,7 @@ const ListarGuiasDespacho: React.FC = () => {
                 value: "ENTREGADA",
                 label: `✅ Entregadas (${contarPorEstado("ENTREGADA")})`,
               },
-              {
-                value: "CANCELADA",
-                label: `❌ Canceladas (${contarPorEstado("CANCELADA")})`,
-              },
+              /* 'CANCELADA' hidden in this version */
             ]}
           />
           <SelectField
@@ -632,23 +824,26 @@ const ListarGuiasDespacho: React.FC = () => {
                   >
                     Estado OT
                   </th>
-                  <th
-                    style={{
-                      padding: "16px",
-                      textAlign: "center",
-                      fontWeight: "700",
-                      color: "#000000ff",
-                    }}
-                  >
-                    PDF
-                  </th>
+                  {!editMode && (
+                    <th
+                      style={{
+                        padding: "16px",
+                        textAlign: "center",
+                        fontWeight: "700",
+                        color: "#000000ff",
+                      }}
+                    >
+                      PDF
+                    </th>
+                  )}
                 </tr>
               </thead>
               <tbody>
                 {guiasFiltradas.map((guia) => {
                   const changes = rowChanges[guia.id_guia] || {};
                   const currentTransportista =
-                    (changes as any).transportista ?? guia.transportista;
+                    (changes as any).id_transportista ??
+                    (guia as any).id_transportista;
                   const currentEncargadoId =
                     (changes as any).id_encargado ?? guia.id_encargado;
                   const estadoSelected = (changes as any).estado ?? guia.estado;
@@ -677,31 +872,41 @@ const ListarGuiasDespacho: React.FC = () => {
                       </td>
                       <td style={{ padding: "16px", color: "#334155" }}>
                         {editMode ? (
-                          <input
-                            className="date-input-dark-icon"
-                            type="date"
-                            aria-label={`Fecha Guía #${guia.id_guia}`}
-                            value={
-                              (rowChanges[guia.id_guia] as any)?.fecha ??
-                              (guia.fecha
-                                ? new Date(guia.fecha)
-                                    .toISOString()
-                                    .slice(0, 10)
-                                : "")
-                            }
-                            onChange={(e) =>
-                              onRowChange(guia.id_guia, {
-                                fecha: e.target.value,
-                              } as any)
-                            }
-                            min={
-                              guia.fecha
-                                ? new Date(guia.fecha)
-                                    .toISOString()
-                                    .slice(0, 10)
-                                : todayStr
-                            }
-                          />
+                          user && user.rol === ROLES.JEFE_LOGISTICA ? (
+                            <input
+                              className="date-input-dark-icon"
+                              type="date"
+                              aria-label={`Fecha Guía #${guia.id_guia}`}
+                              value={
+                                (rowChanges[guia.id_guia] as any)?.fecha ??
+                                (guia.fecha
+                                  ? new Date(guia.fecha)
+                                      .toISOString()
+                                      .slice(0, 10)
+                                  : "")
+                              }
+                              onChange={(e) =>
+                                onRowChange(guia.id_guia, {
+                                  fecha: e.target.value,
+                                } as any)
+                              }
+                              min={
+                                guia.fecha
+                                  ? new Date(guia.fecha)
+                                      .toISOString()
+                                      .slice(0, 10)
+                                  : todayStr
+                              }
+                            />
+                          ) : guia.fecha ? (
+                            new Date(guia.fecha).toLocaleDateString("es-CL")
+                          ) : (
+                            <span
+                              style={{ color: "#a0aec0", fontStyle: "italic" }}
+                            >
+                              No definida
+                            </span>
+                          )
                         ) : guia.fecha ? (
                           new Date(guia.fecha).toLocaleDateString("es-CL")
                         ) : (
@@ -717,9 +922,11 @@ const ListarGuiasDespacho: React.FC = () => {
                         {editMode ? (
                           user && user.rol === ROLES.JEFE_LOGISTICA ? (
                             <select
-                              value={
-                                currentTransportista ?? guia.transportista ?? ""
-                              }
+                              value={(
+                                currentTransportista ??
+                                (guia as any).id_transportista ??
+                                ""
+                              ).toString()}
                               onChange={(e) =>
                                 onEmpresaChangeForRow(
                                   guia.id_guia,
@@ -734,72 +941,130 @@ const ListarGuiasDespacho: React.FC = () => {
                                 empresasList.map((emp, idx) => (
                                   <option
                                     key={idx}
-                                    value={emp.id ?? emp.nombre}
+                                    value={
+                                      emp.id !== undefined ? String(emp.id) : ""
+                                    }
                                   >
                                     {emp.nombre}
                                   </option>
                                 ))
                               ) : (
-                                // fallback: show the guia.transportista as an option so it doesn't disappear
-                                <option value={guia.transportista ?? ""}>
-                                  {guia.transportista ?? "(Sin empresa)"}
+                                <option
+                                  value={String(
+                                    guia.transportista_nombre ?? ""
+                                  )}
+                                >
+                                  {String(
+                                    guia.transportista_nombre ?? "(Sin empresa)"
+                                  )}
                                 </option>
                               )}
                             </select>
                           ) : user && user.rol === ROLES.TRANSPORTISTA ? (
-                            // transportista cannot change company; show their company (try user.id_empresa or derive)
                             <div>
                               {(() => {
                                 const uEmpresa =
                                   (user as any).id_empresa ??
-                                  (user as any).empresa ??
+                                  (user as any).id ??
                                   null;
-                                const display =
-                                  uEmpresa ??
-                                  guia.transportista ??
-                                  "Mi empresa";
+                                const display = getTransportistaDisplay({
+                                  id_transportista:
+                                    uEmpresa ?? (guia as any).id_transportista,
+                                  transportista_nombre: (guia as any)
+                                    .transportista_nombre,
+                                });
                                 return <>🚛 {display}</>;
                               })()}
                             </div>
                           ) : (
-                            // other roles: show company name as text
-                            <div>🚛 {guia.transportista}</div>
+                            <div>
+                              🚛{" "}
+                              {getTransportistaDisplay(
+                                guia.transportista_nombre
+                              )}
+                            </div>
                           )
                         ) : (
-                          <>🚛 {guia.transportista}</>
+                          <>🚛 {getTransportistaDisplay(guia)}</>
                         )}
                       </td>
 
                       <td style={{ padding: "16px", color: "#334155" }}>
                         {editMode ? (
                           (() => {
-                            // Build encargado options for this row
+                            const estadoActual = getGuiaEstado(guia);
+                            if (estadoActual === "EN PICKING") {
+                              return guia.encargado_name ? (
+                                guia.encargado_name
+                              ) : guia.id_encargado ? (
+                                `#${guia.id_encargado}`
+                              ) : (
+                                <span
+                                  style={{
+                                    color: "#a0aec0",
+                                    fontStyle: "italic",
+                                  }}
+                                >
+                                  Sin encargado (no editable mientras OT no está
+                                  completada)
+                                </span>
+                              );
+                            }
+
                             const opts = encargadosForRow(guia);
                             return (
                               <select
-                                value={
-                                  currentEncargadoId ?? guia.id_encargado ?? ""
-                                }
-                                onChange={(e) =>
+                                value={(() => {
+                                  const raw =
+                                    currentEncargadoId ?? guia.id_encargado;
+                                  const n = Number(raw);
+                                  return Number.isFinite(n) ? String(n) : "";
+                                })()}
+                                onChange={(e) => {
+                                  const v = e.target.value;
+                                  if (v === "") {
+                                    onRowChange(guia.id_guia, {
+                                      id_encargado: undefined,
+                                    } as any);
+                                    return;
+                                  }
+                                  const parsed = Number(v);
+                                  const final = Number.isFinite(parsed)
+                                    ? parsed
+                                    : undefined;
                                   onRowChange(guia.id_guia, {
-                                    id_encargado: e.target.value
-                                      ? Number(e.target.value)
-                                      : undefined,
-                                  } as any)
-                                }
+                                    id_encargado: final,
+                                  } as any);
+                                }}
                               >
                                 <option value="">
                                   -- Seleccionar encargado --
                                 </option>
                                 {opts && opts.length > 0 ? (
-                                  opts.map((emp: any) => (
-                                    <option key={emp.id} value={emp.id}>
-                                      {emp.nombre} {emp.apellido}
-                                    </option>
-                                  ))
+                                  opts.map((emp: any, idx: number) => {
+                                    const empId =
+                                      (emp as any)?.id_empleado_transportista ??
+                                      (emp as any)?.id_empleado ??
+                                      (emp as any)?.id ??
+                                      undefined;
+                                    return (
+                                      <option
+                                        key={`enc-${guia.id_guia}-${idx}`}
+                                        value={
+                                          empId !== undefined && empId !== null
+                                            ? String(empId)
+                                            : ""
+                                        }
+                                      >
+                                        {emp.nombre} {emp.apellido}
+                                      </option>
+                                    );
+                                  })
                                 ) : (
-                                  // fallback: show current encargado if none available in opts
-                                  <option value={guia.id_encargado ?? ""}>
+                                  <option
+                                    key={`fallback-${guia.id_guia}`}
+                                    value={String(guia.id_encargado ?? "")}
+                                  >
                                     {guia.encargado_name ??
                                       (guia.id_encargado
                                         ? `#${guia.id_encargado}`
@@ -871,12 +1136,129 @@ const ListarGuiasDespacho: React.FC = () => {
                           >
                             <option value="">-- Seleccionar estado --</option>
                             <option value="EN PICKING">📦 EN PICKING</option>
+                            <option value="POR ASIGNAR">🕒 POR ASIGNAR</option>
                             <option value="ASIGNADA">👷 ASIGNADA</option>
                             <option value="EN CAMINO">🚚 EN CAMINO</option>
                             <option value="ENTREGADA">✅ ENTREGADA</option>
-                            <option value="FALLIDA">❌ FALLIDA</option>
-                            <option value="CANCELADA">❌ CANCELADA</option>
+                            {/* 'FALLIDA' and 'CANCELADA' hidden in this version */}
                           </select>
+                        ) : user && user.rol === ROLES.TRANSPORTISTA ? (
+                          <div
+                            style={{
+                              display: "inline-flex",
+                              alignItems: "center",
+                              gap: 8,
+                            }}
+                          >
+                            {quickEditRow === guia.id_guia ? (
+                              <>
+                                <select
+                                  aria-label={`Editar estado Guía #${guia.id_guia}`}
+                                  value={quickEditValue}
+                                  onChange={(e) =>
+                                    setQuickEditValue(
+                                      e.target.value as
+                                        | GuiaDespacho["estado"]
+                                        | ""
+                                    )
+                                  }
+                                  style={{
+                                    padding: "6px 8px",
+                                    borderRadius: 8,
+                                    border: `2px solid ${getEstadoColorForSelect(
+                                      quickEditValue
+                                    )}`,
+                                    background: "white",
+                                    color: "#0f172a",
+                                    minWidth: 160,
+                                  }}
+                                >
+                                  {(() => {
+                                    const current = (tempEstados[
+                                      guia.id_guia
+                                    ] ?? guia.estado) as
+                                      | GuiaDespacho["estado"]
+                                      | "";
+                                    const base = [
+                                      ...allowedStatesForTransportista,
+                                    ];
+                                    if (
+                                      current &&
+                                      current !== "FALLIDA" &&
+                                      current !== "CANCELADA" &&
+                                      !base.includes(
+                                        current as GuiaDespacho["estado"]
+                                      )
+                                    ) {
+                                      return [
+                                        <option key={"current"} value={current}>
+                                          {current}
+                                        </option>,
+                                        ...base.map((s) => (
+                                          <option key={s} value={s}>
+                                            {s}
+                                          </option>
+                                        )),
+                                      ];
+                                    }
+                                    return base.map((s) => (
+                                      <option key={s} value={s}>
+                                        {s}
+                                      </option>
+                                    ));
+                                  })()}
+                                </select>
+                                <div style={{ display: "inline-flex", gap: 6 }}>
+                                  <Button
+                                    onClick={() =>
+                                      confirmQuickEdit(guia.id_guia)
+                                    }
+                                    size="small"
+                                    variant="primary"
+                                    disabled={quickSaving[guia.id_guia]}
+                                  >
+                                    {quickSaving[guia.id_guia] ? "..." : "✓"}
+                                  </Button>
+                                  <Button
+                                    onClick={cancelQuickEdit}
+                                    size="small"
+                                    variant="ghost"
+                                  >
+                                    ✕
+                                  </Button>
+                                </div>
+                              </>
+                            ) : (
+                              <div
+                                role="button"
+                                tabIndex={0}
+                                onClick={() => editarGuiaDespacho(guia.id_guia)}
+                                onKeyDown={(e) => {
+                                  if (e.key === "Enter" || e.key === " ")
+                                    editarGuiaDespacho(guia.id_guia);
+                                }}
+                                style={{
+                                  display: "inline-flex",
+                                  alignItems: "center",
+                                  gap: 6,
+                                  cursor: "pointer",
+                                }}
+                                title="Clic para editar rápidamente (Transportista)"
+                              >
+                                <Badge
+                                  variant={getEstadoVariant(
+                                    (tempEstados[guia.id_guia] ??
+                                      guia.estado) as string
+                                  )}
+                                >
+                                  {
+                                    (tempEstados[guia.id_guia] ??
+                                      guia.estado) as string
+                                  }
+                                </Badge>
+                              </div>
+                            )}
+                          </div>
                         ) : getGuiaEstado(guia) ? (
                           <Badge
                             variant={getEstadoVariant(getGuiaEstado(guia))}
@@ -892,15 +1274,17 @@ const ListarGuiasDespacho: React.FC = () => {
                         )}
                       </td>
 
-                      <td style={{ padding: "16px", textAlign: "center" }}>
-                        <Button
-                          onClick={() => descargarPdfGuia(guia.id_guia)}
-                          size="small"
-                          variant="ghost"
-                        >
-                          📄 PDF
-                        </Button>
-                      </td>
+                      {!editMode && (
+                        <td style={{ padding: "16px", textAlign: "center" }}>
+                          <Button
+                            onClick={() => descargarPdfGuia(guia.id_guia)}
+                            size="small"
+                            variant="ghost"
+                          >
+                            📄 PDF
+                          </Button>
+                        </td>
+                      )}
                     </tr>
                   );
                 })}
@@ -913,21 +1297,22 @@ const ListarGuiasDespacho: React.FC = () => {
   );
 };
 
-// small helper to pick border color for estado select
 const getEstadoColorForSelect = (estado?: string) => {
   switch (estado) {
     case "EN PICKING":
       return "#f59e0b";
+    case "POR ASIGNAR":
+      return "#06b6d4";
     case "ASIGNADA":
       return "#3b82f6";
     case "EN CAMINO":
       return "#8b5cf6";
     case "ENTREGADA":
       return "#10b981";
-    case "CANCELADA":
-      return "#ef4444";
-    case "FALLIDA":
-      return "#ef4444";
+    // case "CANCELADA":
+    //   return "#ef4444";
+    // case "FALLIDA":
+    //   return "#ef4444";
     default:
       return "#94a3b8";
   }

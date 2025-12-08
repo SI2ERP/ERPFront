@@ -30,7 +30,6 @@ const AlertMessage: React.FC<AlertMessageProps> = ({
         color: "white",
         border: "1px solid transparent",
       },
-      // Error: very light red background, normal red border, dark red text
       error: {
         background: "#fff5f5",
         color: "#991b1b",
@@ -71,7 +70,6 @@ const AlertMessage: React.FC<AlertMessageProps> = ({
           <button
             onClick={onClose}
             style={{
-              // Taller button, limited width to max 1/3 of the alert box
               height: "40px",
               maxWidth: "33%",
               padding: "8px 12px",
@@ -79,7 +77,6 @@ const AlertMessage: React.FC<AlertMessageProps> = ({
               cursor: "pointer",
               fontSize: 14,
               fontWeight: 600,
-              // Style the button differently when alert is error vs others
               background: type === "error" ? "#fff" : "transparent",
               color:
                 type === "error"

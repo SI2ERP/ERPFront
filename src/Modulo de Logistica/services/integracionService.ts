@@ -10,7 +10,9 @@ import type {
 export const integracionService = {
   // ========== PEDIDOS DE VENTAS ==========
 
-  // Listar todos los pedidos recibidos desde Ventas
+  /**
+   * Listar todos los pedidos de venta recibidos desde Ventas
+   */
   listarPedidosVentas: async () => {
     const response = await api.get<ApiResponse<PedidoVenta[]>>(
       "/integracion/pedidos-ventas"
@@ -18,7 +20,9 @@ export const integracionService = {
     return response.data;
   },
 
-  // Obtener un pedido específico con su detalle
+  /**
+   * Obtener un pedido específico con su detalle
+   */
   obtenerPedidoVenta: async (id: number) => {
     const response = await api.get<ApiResponse<PedidoVenta>>(
       `/integracion/pedidos-ventas/${id}`
@@ -26,7 +30,9 @@ export const integracionService = {
     return response.data;
   },
 
-  // Simular recepción de pedido desde ERP Ventas (para testing)
+  /**
+   * Simular recepción de pedido desde ERP Ventas (para testing)
+   */
   recibirPedidoVenta: async (pedido: CreatePedidoVenta) => {
     const response = await api.post<ApiResponse<PedidoVenta>>(
       "/integracion/recibir-pedido-venta",
@@ -37,7 +43,9 @@ export const integracionService = {
 
   // ========== ÓRDENES DE COMPRA ==========
 
-  // Listar todas las OC recibidas desde Compras
+  /**
+   * Listar todas las OC recibidas desde Compras
+   */
   listarOrdenesCompra: async () => {
     const response = await api.get<ApiResponse<OrdenCompra[]>>(
       "/integracion/ordenes-compra"
@@ -45,7 +53,9 @@ export const integracionService = {
     return response.data;
   },
 
-  // Obtener una OC específica con su detalle
+  /**
+   * Obtener una OC específica con su detalle
+   */
   obtenerOrdenCompra: async (id: number) => {
     const response = await api.get<ApiResponse<OrdenCompra>>(
       `/integracion/ordenes-compra/${id}`
@@ -53,11 +63,23 @@ export const integracionService = {
     return response.data;
   },
 
-  // Simular recepción de OC desde ERP Compras (para testing)
+  /**
+   * Simular recepción de OC desde ERP Compras (para testing)
+   */
   recibirOrdenCompra: async (orden: CreateOrdenCompra) => {
     const response = await api.post<ApiResponse<OrdenCompra>>(
       "/integracion/recibir-orden-compra",
       orden
+    );
+    return response.data;
+  },
+
+  /**
+   * Marcar recepción (log_recepcion) como RECIBIDA
+   */
+  recibirRecepcion: async (id: number) => {
+    const response = await api.put<ApiResponse<any>>(
+      `/integracion/recepciones/${id}/recibir`
     );
     return response.data;
   },

@@ -65,7 +65,6 @@ const PageHeader: React.FC<PageHeaderProps> = ({
             style={{
               margin: 0,
               fontSize: "15px",
-              // opacity: gradient ? 0.9 : 0.7,
               color: gradient ? "white" : "#000000ff",
             }}
           >

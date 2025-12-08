@@ -21,9 +21,10 @@ export interface GuiaDespacho {
   id_guia: number;
   id_ot: number;
   fecha: string;
-  transportista: string;
+  id_transportista: number;
+  // Nombre ya resuelto por el backend mediante join con public.empleado
+  transportista_nombre?: string | null;
   direccion_entrega: string;
-  // Estado actual de la guía (usar este campo). Valores posibles:
   // 'EN PICKING', 'ASIGNADA', 'EN CAMINO', 'ENTREGADA', 'FALLIDA', 'CANCELADA'
   estado?:
     | "EN PICKING"
@@ -32,11 +33,8 @@ export interface GuiaDespacho {
     | "ENTREGADA"
     | "FALLIDA"
     | "CANCELADA";
-  // Para compatibilidad con APIs antiguas que devuelven 'estado_ot'
   estado_ot?: string;
-  // Encargado (opcional) referencia a Logistica.log_transportistas.id_transportista
   id_encargado?: number;
-  // Nombre visual del encargado si lo retorna el backend
   encargado_name?: string | null;
 }
 
@@ -63,7 +61,7 @@ export interface PedidoVenta {
   id: number;
   numero_pedido: string;
   cliente: string;
-  direccion_despacho: string; // ⭐ IMPORTANTE: Viene automático
+  direccion_despacho: string;
   estado: "PENDIENTE" | "PROCESADO" | "RECHAZADO";
   fecha_pedido: string;
   fecha_recepcion: string;
@@ -91,6 +89,8 @@ export interface OrdenCompra {
   fecha_esperada_entrega?: string;
   observaciones?: string;
   cantidad_productos?: number;
+  empleado_logistica_nombre?: string;
+  total_compra?: number;
 }
 
 export interface DetalleOrdenCompra {

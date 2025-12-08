@@ -94,7 +94,6 @@ const Button: React.FC<ButtonProps> = ({
     ...style,
   };
 
-  // Override styles when disabled or loading to use a gray tone
   if (disabled || loading) {
     Object.assign(baseStyles, {
       background: "#808080",

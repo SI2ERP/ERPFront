@@ -24,9 +24,6 @@ export default function LogisticaApp(): JSX.Element {
   const location = useLocation();
 
   useEffect(() => {
-    // Redirect based on role only when we're exactly on the module root
-    // so direct visits to subroutes (e.g. /logistica/listar-ordenes-compra)
-    // are not overridden.
     if (!user) return;
     const atModuleRoot =
       location.pathname === "/logistica" || location.pathname === "/logistica/";
@@ -122,7 +119,6 @@ export default function LogisticaApp(): JSX.Element {
               - EMPLEADO_LOGISTICA: show single separator between OC and OT
               - TRANSPORTISTA: show none */}
           {(() => {
-            const canViewPedidos = !user || user.rol === ROLES.JEFE_LOGISTICA;
             const canViewOC =
               !user ||
               user.rol === ROLES.JEFE_LOGISTICA ||

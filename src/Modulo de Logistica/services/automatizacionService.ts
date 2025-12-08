@@ -69,10 +69,18 @@ export const automatizacionService = {
     const response = await api.get("/automatizacion/estadisticas-balanceo");
     return response.data;
   },
+
+  /**
+   * Edita una Orden de Trabajo
+   */
   editarOt: async (id_ot: number, data: { id_empleado: number }) => {
     const response = await api.put(`/automatizacion/ot/${id_ot}`, data);
     return response.data;
   },
+
+  /**
+   * Edita una Guía de Despacho
+   */
   editarGuia: async (
     id_guia: number,
     data: { transportista?: string; fecha?: string; direccion_entrega?: string }

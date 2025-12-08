@@ -25,7 +25,6 @@ const ProcesarPedidoAutomatico: React.FC = () => {
       const response = await integracionService.listarPedidosVentas();
 
       if (response.success && response.data) {
-        // Filtrar solo pedidos pendientes
         const pendientes = response.data.filter(
           (p: PedidoVenta) => p.estado === "PENDIENTE"
         );
@@ -55,7 +54,6 @@ const ProcesarPedidoAutomatico: React.FC = () => {
         });
         setResultado(response.data);
 
-        // Recargar lista de pedidos
         setTimeout(() => {
           cargarPedidosPendientes();
         }, 2000);
@@ -110,7 +108,6 @@ const ProcesarPedidoAutomatico: React.FC = () => {
             Asigna transportista con <strong>balanceo de carga</strong>
           </li>
           <li>Crea Guía de Despacho automáticamente</li>
-          <li>⚠️ Notificar a módulo de Ventas (manual por ahora)</li>
         </ol>
       </div>
 

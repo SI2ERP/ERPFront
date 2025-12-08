@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { automatizacionService } from '../services/automatizacionService';
-import LoadingSpinner from '../components/common/LoadingSpinner';
-import EmptyState from '../components/common/EmptyState';
-import Card from '../components/common/Card';
+import React, { useState, useEffect } from "react";
+import { automatizacionService } from "../services/automatizacionService";
+import LoadingSpinner from "../components/common/LoadingSpinner";
+import EmptyState from "../components/common/EmptyState";
+import Card from "../components/common/Card";
 
 interface Empleado {
   id_empleado: number;
@@ -31,22 +31,22 @@ const EstadisticasBalanceo: React.FC = () => {
     try {
       setLoading(true);
       const response = await automatizacionService.obtenerEstadisticas();
-      
+
       if (response.success) {
         setEmpleados(response.data.empleados);
         setTransportistas(response.data.transportistas);
       }
     } catch (error) {
-      console.error('Error al cargar estadísticas:', error);
+      console.error("Error al cargar estadísticas:", error);
     } finally {
       setLoading(false);
     }
   };
 
   const getColorCarga = (carga: number) => {
-    if (carga === 0) return '#10b981'; // Verde
-    if (carga <= 2) return '#f59e0b'; // Amarillo
-    return '#ef4444'; // Rojo
+    if (carga === 0) return "#10b981";
+    if (carga <= 2) return "#f59e0b";
+    return "#ef4444";
   };
 
   if (loading) {
@@ -66,59 +66,65 @@ const EstadisticasBalanceo: React.FC = () => {
         </button>
       </div>
 
-      <div className="info-box" style={{ marginBottom: '30px' }}>
-        <strong>ℹ️ Balanceo Automático:</strong> El sistema asigna nuevos pedidos al empleado y 
-        transportista con menor carga de trabajo para distribuir equitativamente.
+      <div className="info-box" style={{ marginBottom: "30px" }}>
+        <strong>ℹ️ Balanceo Automático:</strong> El sistema asigna nuevos
+        pedidos al empleado y transportista con menor carga de trabajo para
+        distribuir equitativamente.
       </div>
 
-      {/* Estadísticas de Empleados */}
-      <div style={{ marginBottom: '40px' }}>
-        <h2 style={{ marginBottom: '20px', color: '#667eea' }}>
+      <div style={{ marginBottom: "40px" }}>
+        <h2 style={{ marginBottom: "20px", color: "#667eea" }}>
           👷 Empleados ({empleados.length})
         </h2>
 
         {empleados.length === 0 ? (
-          <EmptyState 
+          <EmptyState
             icon="👷"
             title="No hay empleados disponibles"
             description="No se encontraron empleados en el sistema"
           />
         ) : (
-          <div style={{ display: 'grid', gap: '15px' }}>
+          <div style={{ display: "grid", gap: "15px" }}>
             {empleados.map((emp) => (
               <Card
                 key={emp.id_empleado}
-                style={{ 
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  padding: '20px'
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  padding: "20px",
                 }}
               >
                 <div>
-                  <h3 style={{ marginBottom: '5px' }}>
+                  <h3 style={{ marginBottom: "5px" }}>
                     {emp.nombre} {emp.apellido}
                   </h3>
-                  <p style={{ fontSize: '14px', color: '#718096' }}>
+                  <p style={{ fontSize: "14px", color: "#718096" }}>
                     Rol: {emp.rol}
                   </p>
                 </div>
 
-                <div style={{ textAlign: 'center' }}>
+                <div style={{ textAlign: "center" }}>
                   <div
                     style={{
                       background: getColorCarga(emp.ot_pendientes),
-                      color: 'white',
-                      padding: '10px 20px',
-                      borderRadius: '8px',
-                      fontSize: '18px',
-                      fontWeight: 'bold',
-                      minWidth: '80px'
+                      color: "white",
+                      padding: "10px 20px",
+                      borderRadius: "8px",
+                      fontSize: "18px",
+                      fontWeight: "bold",
+                      minWidth: "80px",
                     }}
                   >
                     {emp.ot_pendientes}
                   </div>
-                  <p style={{ fontSize: '12px', color: '#718096', marginTop: '5px' }}>
+                  <p
+                    style={{
+                      fontSize: "12px",
+                      color: "#718096",
+                      marginTop: "5px",
+                    }}
+                  >
                     OT Pendientes
                   </p>
                 </div>
@@ -128,51 +134,54 @@ const EstadisticasBalanceo: React.FC = () => {
         )}
       </div>
 
-      {/* Estadísticas de Transportistas */}
       <div>
-        <h2 style={{ marginBottom: '20px', color: '#667eea' }}>
+        <h2 style={{ marginBottom: "20px", color: "#667eea" }}>
           🚚 Transportistas ({transportistas.length})
         </h2>
 
         {transportistas.length === 0 ? (
-          <EmptyState 
+          <EmptyState
             icon="🚚"
             title="No hay transportistas disponibles"
             description="No se encontraron transportistas en el sistema"
           />
         ) : (
-          <div style={{ display: 'grid', gap: '15px' }}>
+          <div style={{ display: "grid", gap: "15px" }}>
             {transportistas.map((trans) => (
               <Card
                 key={trans.id_transportista}
-                style={{ 
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  padding: '20px'
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  padding: "20px",
                 }}
               >
                 <div>
-                  <h3 style={{ marginBottom: '5px' }}>
-                    {trans.nombre}
-                  </h3>
+                  <h3 style={{ marginBottom: "5px" }}>{trans.nombre}</h3>
                 </div>
 
-                <div style={{ textAlign: 'center' }}>
+                <div style={{ textAlign: "center" }}>
                   <div
                     style={{
                       background: getColorCarga(trans.entregas_activas),
-                      color: 'white',
-                      padding: '10px 20px',
-                      borderRadius: '8px',
-                      fontSize: '18px',
-                      fontWeight: 'bold',
-                      minWidth: '80px'
+                      color: "white",
+                      padding: "10px 20px",
+                      borderRadius: "8px",
+                      fontSize: "18px",
+                      fontWeight: "bold",
+                      minWidth: "80px",
                     }}
                   >
                     {trans.entregas_activas}
                   </div>
-                  <p style={{ fontSize: '12px', color: '#718096', marginTop: '5px' }}>
+                  <p
+                    style={{
+                      fontSize: "12px",
+                      color: "#718096",
+                      marginTop: "5px",
+                    }}
+                  >
                     Entregas Activas
                   </p>
                 </div>
