@@ -80,19 +80,10 @@ const FormularioEgreso = ({ isOpen, onClose, onSuccess, producto }: FormularioEg
         onSuccess(`Stock actualizado. Nuevo total: ${response.stockActual ?? stockFuturo}`)
       
       } else {
-        // OPCIÓN B: AGREGAR (SUMAR)
-        // Usamos la actualización genérica porque el endpoint de restar bloquea negativos.
-        const nuevoTotal = stockBase + cantidadValida;
-        
-        // Enviamos 'stock' (NO cantidad) y 'user' (para permisos si el backend lo pide)
-        const datosEnvio = { 
-            stock: nuevoTotal, 
-            user: user 
-        };
+        const response = await restarStockProducto(producto.id, -cantidadValida, user);
 
-        await actualizarProducto(producto.id, datosEnvio);
-        
-        onSuccess(`Stock actualizado. Nuevo total: ${nuevoTotal}`)
+        if (response.error) throw new Error(response.error);
+        onSuccess(`Stock actualizado. Nuevo total: ${response.stockActual ?? stockFuturo}`)
       }
 
     } catch (err: any) {
