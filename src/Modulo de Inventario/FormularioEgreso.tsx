@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import './Inventario.css'
-// Importamos actualizarProducto que acabamos de restaurar
+// Importamos actualizarProducto
 import { type Producto, restarStockProducto, actualizarProducto } from './inventario.service'
 import { useAuth } from "../utils/AuthContext";
 
@@ -30,10 +30,9 @@ const FormularioEgreso = ({ isOpen, onClose, onSuccess, producto }: FormularioEg
 
   if (!isOpen || !producto) return null
 
-  // --- 1. SOLUCIÓN AL PROBLEMA DE VISUALIZACIÓN ---
-  const p = producto as any; 
-  // Buscamos cantidad, si no existe buscamos stock, si no 0.
-  const stockBase = (p.cantidad !== undefined && p.cantidad !== null)
+  // --- LÓGICA ROBUSTA DE VISUALIZACIÓN ---
+  const p = producto as any; // Evitar errores si la estructura varía
+  const stockBase = (p.cantidad !== undefined && p.cantidad !== null) 
     ? Number(p.cantidad) 
     : ((p.stock !== undefined && p.stock !== null) ? Number(p.stock) : 0);
 
@@ -69,26 +68,27 @@ const FormularioEgreso = ({ isOpen, onClose, onSuccess, producto }: FormularioEg
     }
 
     try {
-      // --- 2. SOLUCIÓN AL PROBLEMA DE AGREGAR ---
+      // --- LÓGICA SEPARADA ---
       
       if (tipoAccion === 'QUITAR') {
-        // Para restar usamos el endpoint específico (funciona bien)
+        // Opción A: QUITAR (Usamos endpoint de restar stock)
         const response = await restarStockProducto(producto.id, cantidadValida, user);
         
         if (response.error) throw new Error(response.error);
         onSuccess(`Stock actualizado. Nuevo total: ${response.stockActual ?? stockFuturo}`)
       
       } else {
-        // Para agregar, calculamos el total y usamos el endpoint de actualización
+        // Opción B: AGREGAR (Usamos endpoint de actualización genérica)
+        // Calculamos el nuevo total nosotros mismos
         const nuevoTotal = stockBase + cantidadValida;
         
-        // ¡OJO AQUÍ! Enviamos 'stock', NO 'cantidad'. Esto arregla el error "property shouldn't exist"
-        const datosParaEnviar = {
+        // Enviamos 'stock' (no cantidad) y 'user' (para permisos)
+        const dataToSend = {
             stock: nuevoTotal,
             user: user
         };
 
-        await actualizarProducto(producto.id, datosParaEnviar);
+        await actualizarProducto(producto.id, dataToSend);
         
         onSuccess(`Stock actualizado. Nuevo total: ${nuevoTotal}`)
       }
@@ -106,7 +106,7 @@ const FormularioEgreso = ({ isOpen, onClose, onSuccess, producto }: FormularioEg
     }
   }
 
-  // Estilos visuales
+  // Estilos (Dark Mode)
   const radioGroupStyle: React.CSSProperties = { display: 'flex', gap: '20px', marginBottom: '20px', justifyContent: 'center' };
   const labelStyle: React.CSSProperties = { cursor: 'pointer', padding: '10px 20px', borderRadius: '8px', border: '1px solid #444', backgroundColor: '#1a1a1a', color: '#fff', display: 'flex', alignItems: 'center', gap: '8px', transition: 'all 0.2s' };
   const activeAddStyle: React.CSSProperties = { ...labelStyle, borderColor: '#646cff', backgroundColor: 'rgba(100, 108, 255, 0.2)', fontWeight: 'bold' };

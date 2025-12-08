@@ -5,6 +5,7 @@ const apiClient = axios.create({
   baseURL: API_URL,
 })
 
+// --- INTERFACES ---
 export interface Producto {
   id: number
   nombre: string
@@ -24,17 +25,17 @@ export interface User {
   email?: string;
 }
 
-// CAMBIO: Simplificado para la solicitud
 export interface CreateProductoDto {
   nombre: string
   descripcion?: string
   user: User | null
 }
 
+// RESTAURADA: Necesaria para enviar actualizaciones de stock (Agregar)
 export interface UpdateProductoDto {
   stock?: number;
   user?: any;
-  [key: string]: any;
+  [key: string]: any; // Flexibilidad
 }
 
 export interface RestarStockDto {
@@ -80,18 +81,18 @@ export const getProductos = async (): Promise<Producto[]> => {
 }
 
 export const createProducto = async (data: CreateProductoDto): Promise<any> => {
-  const payload = {
-      ...data,
-  };
+  const payload = { ...data };
   const response = await apiClient.post('/productos', payload)
   return response.data
 }
 
+// ✅ RESTAURADA: Función clave para "Agregar Stock" (calculando total)
 export const actualizarProducto = async (id: number, data: UpdateProductoDto): Promise<any> => {
   const response = await apiClient.patch(`/productos/${id}`, data)
   return response.data
 }
 
+// Función para "Quitar Stock"
 export const restarStockProducto = async (id: number, cantidadARestar: number, user: any) => {
   const dto: RestarStockDto = {
     stock: cantidadARestar,
