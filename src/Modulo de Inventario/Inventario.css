@@ -435,3 +435,84 @@ input[type=number] {
 .vista-productos-despacho .tabla-productos tbody td:nth-child(4) {
     width: 20% !important;
 }
+
+/* --- ESTILOS PARA TABS (VistaMovimientos) --- */
+
+.btn-tab {
+    background-color: #3a3a3a;
+    color: #f0f0f0;
+    border: 1px solid #555;
+    padding: 0.6em 1.2em;
+    font-weight: 500;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+.btn-tab:hover {
+    background-color: #4a4a4a;
+}
+
+.btn-tab-active {
+    /* Estilo para la pestaña seleccionada */
+    background-color: #646cff;
+    color: white;
+    border: 1px solid #646cff;
+    padding: 0.6em 1.2em;
+    font-weight: 700;
+    border-radius: 8px;
+    cursor: default;
+}
+
+/* --- AJUSTES DE ANCHO PARA VISTA DE MOVIMIENTOS (7 COLUMNAS) --- */
+
+/* 1. Código */
+.vista-movimientos-historial .tabla-productos th:nth-child(1),
+.vista-movimientos-historial .tabla-productos td:nth-child(1) {
+    width: 10% !important; 
+    text-align: left !important;
+}
+
+/* 2. Nombre Producto  */
+.vista-movimientos-historial .tabla-productos th:nth-child(2),
+.vista-movimientos-historial .tabla-productos td:nth-child(2) {
+    width: 18% !important; /* Más espacio para Nombre */
+    text-align: left !important;
+}
+
+/* 3. Empleado Encargado  */
+.vista-movimientos-historial .tabla-productos th:nth-child(3),
+.vista-movimientos-historial .tabla-productos td:nth-child(3) {
+    width: 15% !important; 
+}
+
+/* 4. Columna Variable  */
+.vista-movimientos-historial .tabla-productos th:nth-child(4),
+.vista-movimientos-historial .tabla-productos td:nth-child(4) {
+    width: 25% !important; 
+    text-align: left !important;
+}
+
+/* 5. Cantidad  */
+.vista-movimientos-historial .tabla-productos th:nth-child(5),
+.vista-movimientos-historial .tabla-productos td:nth-child(5) {
+    width: 10% !important; /* Estrecho */
+    text-align: center !important;
+}
+
+/* 6. Fecha  */
+.vista-movimientos-historial .tabla-productos th:nth-child(6),
+.vista-movimientos-historial .tabla-productos td:nth-child(6) {
+    width: 12% !important; 
+    text-align: left !important;
+}
+
+/* 7. Acciones*/
+.vista-movimientos-historial .tabla-productos thead th:nth-child(7) {
+    width: calc(10% - 17px) !important;
+    text-align: center !important;
+}
+.vista-movimientos-historial .tabla-productos tbody td:nth-child(7) {
+    width: 10% !important;
+    text-align: center !important;
+}

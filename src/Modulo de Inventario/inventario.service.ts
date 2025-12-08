@@ -92,6 +92,7 @@ export interface ProductoPorDespachar {
 
 export interface EmpleadoBase {
     nombre: string;
+    apellido: string
 }
 
 export interface ProductoBaseMovimiento {
