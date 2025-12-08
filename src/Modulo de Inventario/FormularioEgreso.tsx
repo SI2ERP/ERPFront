@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import './Inventario.css'
-// Importamos ambas funciones
+// Importamos actualizarProducto
 import { type Producto, restarStockProducto, actualizarProducto } from './inventario.service'
 import { useAuth } from "../utils/AuthContext";
 
@@ -30,9 +30,9 @@ const FormularioEgreso = ({ isOpen, onClose, onSuccess, producto }: FormularioEg
 
   if (!isOpen || !producto) return null
 
-  // --- LÓGICA DE VISUALIZACIÓN SEGURA ---
+  // --- LÓGICA DE VISUALIZACIÓN ---
   const p = producto as any; 
-  // Prioridad: 1. cantidad, 2. stock, 3. 0
+  // Intentamos leer 'cantidad', si no 'stock', si no 0.
   const stockBase = (p.cantidad !== undefined && p.cantidad !== null) 
     ? Number(p.cantidad) 
     : ((p.stock !== undefined && p.stock !== null) ? Number(p.stock) : 0);
@@ -72,26 +72,25 @@ const FormularioEgreso = ({ isOpen, onClose, onSuccess, producto }: FormularioEg
       // --- LÓGICA HÍBRIDA ---
       
       if (tipoAccion === 'QUITAR') {
-        // CASO A: RESTAR
-        // Usamos el endpoint específico que descuenta stock.
-        // El backend espera un número positivo para restar.
+        // OPCIÓN A: RESTAR
+        // Usamos el endpoint específico (funciona bien con positivos)
         const response = await restarStockProducto(producto.id, cantidadValida, user);
         
         if (response.error) throw new Error(response.error);
         onSuccess(`Stock actualizado. Nuevo total: ${response.stockActual ?? stockFuturo}`)
       
       } else {
-        // CASO B: AGREGAR (SUMAR)
-        // Como el backend bloquea negativos en /stock, usamos el endpoint genérico.
-        // Calculamos nosotros el total.
+        // OPCIÓN B: AGREGAR (SUMAR)
+        // Usamos la actualización genérica porque el endpoint de restar bloquea negativos.
         const nuevoTotal = stockBase + cantidadValida;
         
-        // Enviamos 'stock' y 'user'.
-        // Importante: Esto funcionará si el backend tiene whitelist: true pero UpdateProductoDto acepta 'stock'.
-        await actualizarProducto(producto.id, { 
+        // Enviamos 'stock' (NO cantidad) y 'user' (para permisos si el backend lo pide)
+        const datosEnvio = { 
             stock: nuevoTotal, 
             user: user 
-        });
+        };
+
+        await actualizarProducto(producto.id, datosEnvio);
         
         onSuccess(`Stock actualizado. Nuevo total: ${nuevoTotal}`)
       }
@@ -99,7 +98,6 @@ const FormularioEgreso = ({ isOpen, onClose, onSuccess, producto }: FormularioEg
     } catch (err: any) {
       console.error(err)
       if (axios.isAxiosError(err)) {
-        // Mostramos el mensaje exacto del backend si existe
         const msg = err.response?.data?.message || err.response?.data?.error;
         setError(msg || 'Error al conectar con el servidor.')
       } else {
