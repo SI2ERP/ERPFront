@@ -92,7 +92,7 @@ const InventarioPage = () => {
             <table className="tabla-productos">
               <thead>
                 <tr>
-                  <th>Código</th><th>Nombre</th><th>Stock</th><th>Precio Unitario</th><th>Precio Venta</th>{tienePermisoModificar && <th>Acciones</th>}
+                  <th>Código</th><th>Nombre</th><th>Stock</th><th>Precio Venta</th>{tienePermisoModificar && <th>Acciones</th>}
                 </tr>
               </thead>
               <tbody>
@@ -106,7 +106,6 @@ const InventarioPage = () => {
                       <td>{producto.codigo}</td>
                       <td>{producto.nombre}</td>
                       <td className={producto.stock <= 10 ? 'stock-bajo' : ''}>{producto.stock}</td>
-                      <td>${Number(producto.precio_unitario).toLocaleString('es-CL')}</td>
                       <td>${Number(producto.precio_venta).toLocaleString('es-CL')}</td>
                       {tienePermisoModificar && (
                         <td><button className="btn-retirar" onClick={() => handleOpenEgreso(producto)}>Actualizar Stock</button></td>

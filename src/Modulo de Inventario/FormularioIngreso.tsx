@@ -8,7 +8,6 @@ interface IngresoFormState {
   nombre: string;
   codigo: string;
   descripcion?: string;
-  precio_unitario: string; // <-- CAMBIO
   precio_venta: string; // <-- CAMBIO
   cantidad: string; // <-- CAMBIO
 }
@@ -17,7 +16,6 @@ const initialFormData: IngresoFormState = {
   nombre: '',
   codigo: '',
   descripcion: '',
-  precio_unitario: '', // <-- CAMBIO
   precio_venta: '', // <-- CAMBIO
   cantidad: '', // <-- CAMBIO
 }
@@ -50,20 +48,9 @@ const FormularioIngreso = ({ isOpen, onClose, onSuccess }: FormularioIngresoProp
 
     // 1. Convertimos los strings del formulario a números para la API
     const datosAPI: CreateProductoDto = {
-        nombre: formData.nombre,
-        codigo: formData.codigo,
-        descripcion: formData.descripcion,
-        precio_unitario: parseFloat(formData.precio_unitario) || 0,
-        precio_venta: parseFloat(formData.precio_venta) || 0,
-        stock: parseInt(formData.cantidad) || 0,
-        user: user,
-    }
-
-    // 2. Hacemos la validación con los números convertidos
-    if (datosAPI.precio_venta < datosAPI.precio_unitario) {
-        setError('Error: El Precio de Venta no puede ser menor al Costo (Precio Unitario).')
-        setIsLoading(false)
-        return
+      nombre: formData.nombre,
+      descripcion: formData.descripcion,
+      user: user,
     }
 
     try {
@@ -102,29 +89,13 @@ const FormularioIngreso = ({ isOpen, onClose, onSuccess }: FormularioIngresoProp
         <form onSubmit={handleSubmit}>
           <div className="modal-body">
             <div className="form-grid">
-              <div className="form-group">
+              <div className="form-group  full-width">
                 <label htmlFor="nombre">Nombre del Producto</label>
                 <input id="nombre" name="nombre" type="text" value={formData.nombre} onChange={handleChange} required />
-              </div>
-              <div className="form-group">
-                <label htmlFor="codigo">Código</label>
-                <input id="codigo" name="codigo" type="text" value={formData.codigo} onChange={handleChange} required />
-              </div>
-              <div className="form-group">
-                <label htmlFor="precio_unitario">Costo (Precio Unitario)</label>
-                <input id="precio_unitario" name="precio_unitario" type="number" min="0" step="0.01" value={formData.precio_unitario} onChange={handleChange} required />
-              </div>
-              <div className="form-group">
-                <label htmlFor="precio_venta">Precio Venta</label>
-                <input id="precio_venta" name="precio_venta" type="number" min="0" step="0.01" value={formData.precio_venta} onChange={handleChange} required />
               </div>
               <div className="form-group full-width">
                 <label htmlFor="descripcion">Descripción (Opcional)</label>
                 <textarea id="descripcion" name="descripcion" value={formData.descripcion} onChange={handleChange} />
-              </div>
-              <div className="form-group full-width">
-                <label htmlFor="cantidad">Stock Inicial (Cantidad)</label>
-                <input id="cantidad" name="cantidad" type="number" min="0" value={formData.cantidad} onChange={handleChange} />
               </div>
             </div>
             {error && <p className="error-mensaje" style={{marginTop: '1rem'}}>{error}</p>}

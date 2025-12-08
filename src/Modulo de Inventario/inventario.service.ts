@@ -10,7 +10,6 @@ export interface Producto {
   nombre: string
   codigo: string 
   descripcion?: string
-  precio_unitario: number | string 
   precio_venta: number | string
   cantidad: number 
   estado: boolean
@@ -26,11 +25,7 @@ export interface User {
 
 export interface CreateProductoDto {
   nombre: string
-  codigo: string
   descripcion?: string
-  precio_unitario: number
-  precio_venta: number
-  cantidad?: number
   user: User | null
 }
 
@@ -42,7 +37,6 @@ export interface ProductoSinStock {
   id_producto: number
   nombre: string
   descripcion: string
-  precio_unitario: string
   codigo: string
   precio_venta: string
   fecha_sin_stock: string
@@ -67,7 +61,6 @@ export const getProductos = async (): Promise<Producto[]> => {
 
 //Ingreso de nuevo producto
 export const createProducto = async (data: CreateProductoDto): Promise<Producto> => {
-  console.log(data);
   const response = await apiClient.post('/productos', data)
   return response.data
 }
