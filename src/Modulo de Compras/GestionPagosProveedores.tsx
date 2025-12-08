@@ -13,6 +13,7 @@ const GestionPagosProveedores: React.FC = () => {
   const [error, setError] = useState<string>('');
   const [filtroEstado, setFiltroEstado] = useState<string>('');
   const [filtroPagado, setFiltroPagado] = useState<string>('');
+  const [mostrarHistorial, setMostrarHistorial] = useState<boolean>(false);
   const [pagando, setPagando] = useState<number | null>(null);
   const [descargandoFactura, setDescargandoFactura] = useState<number | null>(null);
   const [mensaje, setMensaje] = useState<string>('');
@@ -32,12 +33,19 @@ const GestionPagosProveedores: React.FC = () => {
     }
 
     cargarOrdenes();
-  }, []);
+  }, [mostrarHistorial]);
 
   const cargarOrdenes = async () => {
     try {
       setCargando(true);
-      const ordenesData = await comprasService.obtenerOrdenesProveedores();
+      let ordenesData;
+      
+      if (mostrarHistorial) {
+        ordenesData = await comprasService.obtenerOrdenesProveedores();
+      } else {
+        ordenesData = await comprasService.obtenerOrdenesProveedoresActivas();
+      }
+      
       setOrdenes(ordenesData);
       setError('');
     } catch (error: any) {
@@ -167,6 +175,23 @@ const GestionPagosProveedores: React.FC = () => {
         </button>
         
         <h1>Gestion de Pagos a Proveedores</h1>
+
+        <button 
+          className={`btn-historial ${mostrarHistorial ? 'activo' : ''}`}
+          onClick={() => setMostrarHistorial(!mostrarHistorial)}
+          style={{
+            marginLeft: 'auto',
+            padding: '8px 16px',
+            backgroundColor: mostrarHistorial ? '#7f8c8d' : '#3498db',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer',
+            fontWeight: '500'
+          }}
+        >
+          {mostrarHistorial ? 'Ocultar Historial' : 'Ver Historial Completo'}
+        </button>
       </div>
 
       {mensaje && (

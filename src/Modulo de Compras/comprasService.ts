@@ -399,6 +399,16 @@ class ComprasService {
     }
   }
 
+  async obtenerOrdenesProveedoresActivas(): Promise<OrdenProveedor[]> {
+    try {
+      const response = await fetch(`${this.baseURL}/provider-orders/active`);
+      return this.handleResponse<OrdenProveedor[]>(response);
+    } catch (error) {
+      console.error('Error al obtener órdenes de proveedores activas:', error);
+      throw error;
+    }
+  }
+
   async pagarOrden(idOcProveedor: number): Promise<PagarOrdenResponse> {
     try {
       const response = await fetch(`${this.baseURL}/provider-orders/${idOcProveedor}/pagar`, {
