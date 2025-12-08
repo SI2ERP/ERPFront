@@ -87,27 +87,43 @@ const ProductosSinStock: React.FC = () => {
               <tr>
                 <th>Nombre</th>
                 <th>Stock Actual</th>
+                <th>Estado Reposición</th>
                 <th>Acciones</th>
               </tr>
             </thead>
             <tbody>
-              {productos.map((producto) => (
-                <tr key={producto.id_producto}>
-                  <td className="producto-nombre">{producto.nombre}</td>
-                  <td className="producto-stock">
-                    <span className="stock-cero">{producto.cantidad}</span>
-                  </td>
-                  <td>
-                    <button
-                      onClick={() => crearOrdenCompra(producto)}
-                      className="btn btn-primary btn-sm"
-                      title="Crear orden de compra para este producto"
-                    >
-                      Crear Orden
-                    </button>
-                  </td>
-                </tr>
-              ))}
+              {productos.map((producto) => {
+                const cantidadEnCamino = Number(producto.cantidad_en_camino || 0);
+                return (
+                  <tr key={producto.id_producto}>
+                    <td className="producto-nombre">{producto.nombre}</td>
+                    <td className="producto-stock">
+                      <span className="stock-cero">{producto.cantidad}</span>
+                    </td>
+                    <td>
+                      {cantidadEnCamino > 0 ? (
+                        <span className="badge-en-camino">
+                          En camino: {cantidadEnCamino}
+                        </span>
+                      ) : (
+                        <span className="badge-sin-reposicion">
+                          Sin reposición
+                        </span>
+                      )}
+                    </td>
+                    <td>
+                      <button
+                        onClick={() => crearOrdenCompra(producto)}
+                        className={`btn btn-sm ${cantidadEnCamino > 0 ? 'btn-warning' : 'btn-primary'}`}
+                        title={cantidadEnCamino > 0 ? "Ya existe una orden en curso" : "Crear orden de compra para este producto"}
+                        disabled={cantidadEnCamino > 0}
+                      >
+                        {cantidadEnCamino > 0 ? 'Orden en Curso' : 'Crear Orden'}
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>

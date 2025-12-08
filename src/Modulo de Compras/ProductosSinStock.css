@@ -349,3 +349,27 @@
     min-width: 1200px;
   }
 }
+.badge-en-camino {
+  background-color: #17a2b8;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 0.85em;
+  font-weight: 500;
+  display: inline-block;
+  min-width: 120px;
+  text-align: center;
+}
+
+.badge-sin-reposicion {
+  background-color: #dc3545;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 0.85em;
+  font-weight: 500;
+  display: inline-block;
+  min-width: 120px;
+  text-align: center;
+}
+

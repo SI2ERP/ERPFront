@@ -38,6 +38,7 @@ export interface ProductoSinStock {
   fecha_sin_stock: string;
   cantidad: number;
   estado: boolean;
+  cantidad_en_camino?: number | string;
 }
 
 export interface ProductosSinStockResponse {
