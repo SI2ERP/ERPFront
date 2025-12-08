@@ -31,11 +31,11 @@ export interface CreateProductoDto {
   user: User | null
 }
 
-// ✅ INTERFAZ NECESARIA PARA SUMAR STOCK
+// interfaz para sumar stock
 export interface UpdateProductoDto {
   stock?: number;
   user?: any;
-  [key: string]: any; // Flexibilidad extra
+  [key: string]: any; 
 }
 
 export interface RestarStockDto {
@@ -71,6 +71,53 @@ export interface Movimiento {
   fechaMovimiento: string
   productoId: number
   empleadoId: number
+}
+
+// Producto por despachar - interfaz para el listado
+export interface ProductoDespachoBase {
+    id: number;
+    codigo: string; 
+    nombre: string; 
+}
+
+// Producto por despachar - como viene del service
+export interface ProductoPorDespachar {
+    id: number; 
+    cantidad_por_despachar: number; 
+    producto: ProductoDespachoBase; 
+    fecha_registro: Date;
+}
+
+// --- INTERFACES PARA HISTORIAL DE MOVIMIENTOS ---
+
+export interface EmpleadoBase {
+    nombre: string;
+}
+
+export interface ProductoBaseMovimiento {
+    codigo: string;
+    nombre: string;
+}
+
+// Movimiento Automático
+export interface MovimientoLogistica {
+    id: number;
+    cantidad: number; 
+    es_recepcion: boolean; // TRUE: Ingreso, FALSE: Salida
+    id_referencia: number;
+    producto: ProductoBaseMovimiento; 
+    empleado: EmpleadoBase;
+    fechaMovimiento: Date;
+}
+
+// Ajuste Manual
+export interface AjusteManual {
+    id: number;
+    cantidad: number; // Puede ser positivo o negativo
+    observaciones: string; 
+    producto: ProductoBaseMovimiento; 
+    empleado: EmpleadoBase;
+    fechaAjuste: Date;
 }
 
 // --- FUNCIONES ---
@@ -120,4 +167,39 @@ export const getMovimientos = async (): Promise<Movimiento[]> => {
     console.warn("Error obteniendo movimientos", error);
     return [];
   }
+}
+
+// Obtener productos por despachar
+export const getProductosPorDespachar = async (): Promise<ProductoPorDespachar[]> => {
+    try {
+        const response = await apiClient.get('/productos-por-despachar'); 
+        return response.data;
+    } catch (error) {
+        console.error("Error al obtener productos por despachar:", error);
+        return []; 
+    }
+}
+
+// --- FUNCIONES PARA HISTORIAL DE MOVIMIENTOS ---
+
+// Obtener movimientos automáticos
+export const getMovimientosLogistica = async (): Promise<MovimientoLogistica[]> => {
+    try {
+        const response = await apiClient.get('/movimientos-inventario-logistica'); 
+        return response.data;
+    } catch (error) {
+        console.error("Error al obtener movimientos de logística:", error);
+        return [];
+    }
+}
+
+// Obtener ajustes manuales
+export const getAjustesManuales = async (): Promise<AjusteManual[]> => {
+    try {
+        const response = await apiClient.get('/ajustes-inventario'); 
+        return response.data;
+    } catch (error) {
+        console.error("Error al obtener ajustes manuales:", error);
+        return [];
+    }
 }
