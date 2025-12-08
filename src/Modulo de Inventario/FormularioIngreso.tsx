@@ -8,16 +8,18 @@ interface IngresoFormState {
   nombre: string;
   codigo: string;
   descripcion?: string;
-  precio_venta: string; // <-- CAMBIO
-  cantidad: string; // <-- CAMBIO
+  precio_unitario: string;
+  precio_venta: string;
+  cantidad: string;
 }
 
 const initialFormData: IngresoFormState = {
   nombre: '',
   codigo: '',
   descripcion: '',
-  precio_venta: '', // <-- CAMBIO
-  cantidad: '', // <-- CAMBIO
+  precio_unitario: '',
+  precio_venta: '',
+  cantidad: '',
 }
 
 interface FormularioIngresoProps {
@@ -46,17 +48,28 @@ const FormularioIngreso = ({ isOpen, onClose, onSuccess }: FormularioIngresoProp
     setIsLoading(true)
     setError(null)
 
-    // 1. Convertimos los strings del formulario a números para la API
+    // Convertimos los strings a números y asignamos 'cantidad' a 'stock'
     const datosAPI: CreateProductoDto = {
-      nombre: formData.nombre,
-      descripcion: formData.descripcion,
-      user: user,
+        nombre: formData.nombre,
+        codigo: formData.codigo,
+        descripcion: formData.descripcion,
+        precio_unitario: parseFloat(formData.precio_unitario) || 0,
+        precio_venta: parseFloat(formData.precio_venta) || 0,
+        stock: parseInt(formData.cantidad) || 0,
+        cantidad: parseInt(formData.cantidad) || 0,
+        user: user,
+    }
+
+    if (datosAPI.precio_venta < datosAPI.precio_unitario) {
+        setError('Error: El Precio de Venta no puede ser menor al Costo (Precio Unitario).')
+        setIsLoading(false)
+        return
     }
 
     try {
-        // 3. Enviamos los datos numéricos (datosAPI) al backend
         const res = await createProducto(datosAPI)
-        setFormData(initialFormData) // Resetea el formulario a strings vacíos
+        setFormData(initialFormData)
+        
         if (res.error) {
           alert(`${res.error}, Código ya existe.`)
         } else {
@@ -65,13 +78,13 @@ const FormularioIngreso = ({ isOpen, onClose, onSuccess }: FormularioIngresoProp
     } catch (err) {
         console.error(err)
         if (axios.isAxiosError(err)) {
-        if (err.response?.data?.error?.includes('unique constraint')) {
-            setError('Error: El Código ya existe.')
+            if (err.response?.data?.error?.includes('unique constraint')) {
+                setError('Error: El Código ya existe.')
+            } else {
+                setError('Error al crear el producto. Revise los campos.')
+            }
         } else {
-            setError('Error al crear el producto. Revise los campos.')
-        }
-        } else {
-        setError('Ocurrió un error inesperado.')
+            setError('Ocurrió un error inesperado.')
         }
     } finally {
         setIsLoading(false)
@@ -89,13 +102,29 @@ const FormularioIngreso = ({ isOpen, onClose, onSuccess }: FormularioIngresoProp
         <form onSubmit={handleSubmit}>
           <div className="modal-body">
             <div className="form-grid">
-              <div className="form-group  full-width">
+              <div className="form-group">
                 <label htmlFor="nombre">Nombre del Producto</label>
                 <input id="nombre" name="nombre" type="text" value={formData.nombre} onChange={handleChange} required />
+              </div>
+              <div className="form-group">
+                <label htmlFor="codigo">Código</label>
+                <input id="codigo" name="codigo" type="text" value={formData.codigo} onChange={handleChange} required />
+              </div>
+              <div className="form-group">
+                <label htmlFor="precio_unitario">Costo (Precio Unitario)</label>
+                <input id="precio_unitario" name="precio_unitario" type="number" min="0" step="0.01" value={formData.precio_unitario} onChange={handleChange} required />
+              </div>
+              <div className="form-group">
+                <label htmlFor="precio_venta">Precio Venta</label>
+                <input id="precio_venta" name="precio_venta" type="number" min="0" step="0.01" value={formData.precio_venta} onChange={handleChange} required />
               </div>
               <div className="form-group full-width">
                 <label htmlFor="descripcion">Descripción (Opcional)</label>
                 <textarea id="descripcion" name="descripcion" value={formData.descripcion} onChange={handleChange} />
+              </div>
+              <div className="form-group full-width">
+                <label htmlFor="cantidad">Stock Inicial (Cantidad)</label>
+                <input id="cantidad" name="cantidad" type="number" min="0" value={formData.cantidad} onChange={handleChange} />
               </div>
             </div>
             {error && <p className="error-mensaje" style={{marginTop: '1rem'}}>{error}</p>}

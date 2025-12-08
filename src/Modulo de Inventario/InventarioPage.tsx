@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, use } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import './Inventario.css'
 import { getProductos, type Producto } from './inventario.service'
 import FormularioIngreso from './FormularioIngreso'
@@ -7,15 +7,16 @@ import VistaReservas from './VistaReservas'
 import VistaPedidos from './VistaPedidos'
 import VistaMovimientos from './VistaMovimientos'
 import { useAuth } from "../utils/AuthContext";
-import { hasPermission } from '../utils/Permissions';
+import { hasPermission, type Role } from '../utils/Permissions';
 
 const InventarioPage = () => {
   const {user} = useAuth();
-  const tienePermisoModificar = hasPermission(user?.rol, 'puedeModificarInventario');
-  const tienePermisoVer = hasPermission(user?.rol, 'puedeVerInventario');
+  
+  const tienePermisoModificar = hasPermission(user?.rol as Role, 'puedeModificarInventario');
+  const tienePermisoVer = hasPermission(user?.rol as Role, 'puedeVerInventario');
 
-  if (!tienePermisoVer || !user) {
-    window.location.href = '/';
+  if (user && !tienePermisoVer) {
+    window.location.href = '/'; 
   }
 
   const [productos, setProductos] = useState<Producto[]>([])
@@ -71,6 +72,11 @@ const InventarioPage = () => {
     alert(message)
   }
 
+  // Función auxiliar para leer el stock de forma segura
+  const getStockSeguro = (p: any) => {
+      return p.cantidad !== undefined ? p.cantidad : (p.stock !== undefined ? p.stock : 0);
+  }
+
   return (
     <div className="inventario-container">
       <div className="inventario-header">
@@ -92,7 +98,8 @@ const InventarioPage = () => {
             <table className="tabla-productos">
               <thead>
                 <tr>
-                  <th>Código</th><th>Nombre</th><th>Stock</th><th>Precio Venta</th>{tienePermisoModificar && <th>Acciones</th>}
+                  <th>Código</th><th>Nombre</th><th>Stock</th><th>Precio Unitario</th><th>Precio Venta</th>
+                  {tienePermisoModificar && <th>Acciones</th>}
                 </tr>
               </thead>
               <tbody>
@@ -101,17 +108,21 @@ const InventarioPage = () => {
                 ) : productosFiltrados.length === 0 ? (
                   <tr><td colSpan={6} style={{ textAlign: 'center', padding: '2rem', color: '#888' }}>No se encontraron productos.</td></tr>
                 ) : (
-                  productosFiltrados.map(producto => (
+                  productosFiltrados.map(producto => {
+                    const stock = getStockSeguro(producto);
+                    return (
                     <tr key={producto.id}>
                       <td>{producto.codigo}</td>
                       <td>{producto.nombre}</td>
-                      <td className={producto.stock <= 10 ? 'stock-bajo' : ''}>{producto.stock}</td>
+                      <td className={stock <= 10 ? 'stock-bajo' : ''}>{stock}</td>
+                      <td>${Number(producto.precio_unitario).toLocaleString('es-CL')}</td>
                       <td>${Number(producto.precio_venta).toLocaleString('es-CL')}</td>
                       {tienePermisoModificar && (
                         <td><button className="btn-retirar" onClick={() => handleOpenEgreso(producto)}>Actualizar Stock</button></td>
                       )}
                     </tr>
-                  ))
+                    )
+                  })
                 )}
               </tbody>
             </table>
@@ -143,7 +154,7 @@ const InventarioPage = () => {
           <button className={seccionActual === 'inventario' ? 'active' : ''} onClick={() => { setSeccionActual('inventario'); setIsSidebarOpen(false); }}>Página Principal</button>
           <button className={seccionActual === 'reservas' ? 'active' : ''} onClick={() => { setSeccionActual('reservas'); setIsSidebarOpen(false); }}>Reservas</button>
           <button className={seccionActual === 'pedidos' ? 'active' : ''} onClick={() => { setSeccionActual('pedidos'); setIsSidebarOpen(false); }}>Productos con Stock Insuficiente</button>
-          {/* <button className={seccionActual === 'movimientos' ? 'active' : ''} onClick={() => { setSeccionActual('movimientos'); setIsSidebarOpen(false); }}>Historial Movimientos</button> */}
+          <button className={seccionActual === 'movimientos' ? 'active' : ''} onClick={() => { setSeccionActual('movimientos'); setIsSidebarOpen(false); }}>Historial Movimientos</button>
         </nav>
       </div>
     </div>
