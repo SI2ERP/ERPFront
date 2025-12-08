@@ -162,7 +162,7 @@ export const getReservas = async (): Promise<Reserva[]> => {
   return response.data
 }
 
-export const getMovimientos = async (): Promise<Movimiento[]> => {
+/* export const getMovimientos = async (): Promise<Movimiento[]> => {
   try {
     const response = await apiClient.get('/movimientos-inventario')
     return response.data
@@ -170,7 +170,7 @@ export const getMovimientos = async (): Promise<Movimiento[]> => {
     console.warn("Error obteniendo movimientos", error);
     return [];
   }
-}
+} */
 
 // Obtener productos por despachar
 export const getProductosPorDespachar = async (): Promise<ProductoPorDespachar[]> => {

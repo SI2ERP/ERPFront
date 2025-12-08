@@ -94,7 +94,10 @@ const VistaMovimientos = () => {
                                         {mov.es_recepcion ? 'Ingreso' : 'Salida'}
                                     </span>
                                 </td>
-                                <td style={{ textAlign: 'center' }}>{mov.cantidad}</td>
+                                <td style={{ textAlign: 'center' }}>
+                                    {mov.es_recepcion ? '' : '-'}
+                                    {mov.cantidad}
+                                </td>
                                 <td>{formatFecha(mov.fechaMovimiento)}</td>
                                 <td>
                                     <button className="btn-retirar" onClick={() => {}}>
