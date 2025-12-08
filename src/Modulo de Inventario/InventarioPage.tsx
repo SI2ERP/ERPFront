@@ -79,13 +79,16 @@ const InventarioPage = () => {
       let aviso = null;
       let claseAviso = '';
 
-      if (numericStock >= 0 && numericStock <= 3) { 
-          aviso = (numericStock === 0) ? 'El producto no cuenta con stock' : 'El stock es crítico';
-          claseAviso = 'aviso-stock-rojo'; 
-      } else if (numericStock >= 4 && numericStock <= 10) {
-          aviso = 'El stock es bajo';
-          claseAviso = 'aviso-stock-amarillo'; // Stock Bajo
-      }
+      if (numericStock === 0) { 
+          aviso = 'El producto no cuenta con stock';
+          claseAviso = 'aviso-stock-rojo'; 
+      } else if (numericStock >= 1 && numericStock <= 3) {
+          aviso = 'El stock es muy bajo';
+          claseAviso = 'aviso-stock-naranja';
+      } else if (numericStock >= 4 && numericStock <= 10) {
+          aviso = 'El stock es bajo';
+          claseAviso = 'aviso-stock-amarillo'; 
+      }
 
       return aviso ? <div className={claseAviso}>{aviso}</div> : null;
   };

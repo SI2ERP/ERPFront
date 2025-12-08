@@ -37,7 +37,7 @@ const VistaPedidos = () => {
             {loading ? (
               <tr><td colSpan={3} style={{ textAlign: 'center', padding: '2rem', color: '#ccc' }}>Cargando alertas...</td></tr>
             ) : pedidos.length === 0 ? (
-              <tr><td colSpan={3} style={{ textAlign: 'center', padding: '2rem', color: '#888' }}>¡Todo bien! No hay productos con stock crítico por ahora.</td></tr>
+              <tr><td colSpan={3} style={{ textAlign: 'center', padding: '2rem', color: '#888' }}>No hay productos con stock crítico.</td></tr>
             ) : (
               pedidos.map((p, index) => (
                 <tr key={`${p.codigo}-${index}`}>

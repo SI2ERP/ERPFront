@@ -1,11 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './Inventario.css';
-import { 
-    getMovimientosLogistica, 
-    getAjustesManuales, 
-    type MovimientoLogistica, 
-    type AjusteManual 
-} from './inventario.service';
+import { getMovimientosLogistica, getAjustesManuales, type MovimientoLogistica, type AjusteManual , generarPDFMovimiento} from './inventario.service';
 
 type TipoMovimiento = 'logistica' | 'ajustes';
 
@@ -64,6 +59,30 @@ const VistaMovimientos = () => {
         return `${empleado.nombre} ${empleado.apellido}`;
     };
 
+    // Generar PDF
+
+    type MovimientoData = MovimientoLogistica | AjusteManual; // Definición del tipo para uso local
+
+    const handleGenerarPdf = (id: number, tipo: TipoMovimiento) => {
+        let movimiento: MovimientoData | undefined;
+
+        if (tipo === 'ajustes') {
+            // Busca el ajuste manual por ID
+            movimiento = ajustesManuales.find(a => a.id === id);
+        } else {
+            // Busca el movimiento de logística por ID
+            movimiento = movimientosLogistica.find(m => m.id === id);
+        }
+
+        if (movimiento) {
+            // Llama a la nueva función del servicio para generar el PDF serio
+            generarPDFMovimiento(movimiento, tipo); 
+        } else {
+            // Mensaje de error si no se encuentra el registro
+            alert("Error: No se encontró el registro para generar el PDF.");
+        }
+    };
+
     // --- Tabla de Movimientos Automáticos (Logística) ---
 
     const TablaLogistica = () => (
@@ -98,9 +117,9 @@ const VistaMovimientos = () => {
                                     {mov.es_recepcion ? '' : '-'}
                                     {mov.cantidad}
                                 </td>
-                                <td>{formatFecha(mov.fechaMovimiento)}</td>
+                                <td>{formatFecha(mov.fecha_movimiento)}</td>
                                 <td>
-                                    <button className="btn-retirar" onClick={() => {}}>
+                                    <button className="btn-retirar" onClick={() => handleGenerarPdf(mov.id, 'logistica')}>
                                         Generar PDF
                                     </button>
                                 </td>
@@ -145,7 +164,7 @@ const VistaMovimientos = () => {
                                 </td>
                                 <td>{formatFecha(ajuste.fechaAjuste)}</td>
                                 <td>
-                                    <button className="btn-retirar" onClick={() => {}}>
+                                    <button className="btn-retirar" onClick={() => handleGenerarPdf(ajuste.id, 'ajustes')}>
                                         Generar PDF
                                     </button>
                                 </td>

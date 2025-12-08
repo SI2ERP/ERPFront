@@ -394,6 +394,13 @@ input[type=number] {
     margin-top: 5px;
 }
 
+.aviso-stock-naranja {
+    font-size: 0.75rem;
+    color: #FF8C00; /* Naranja Oscuro */
+    font-weight: bold;
+    margin-top: 5px;
+}
+
 .aviso-stock-rojo {
     font-size: 0.75rem;
     color: #FF0000;

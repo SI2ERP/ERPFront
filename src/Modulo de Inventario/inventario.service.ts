@@ -1,4 +1,6 @@
 import axios from 'axios'
+import jsPDF from 'jspdf';
+
 const API_URL = import.meta.env.VITE_URL_INVENTORY_BACKEND || 'http://localhost:3003'; 
 
 const apiClient = axios.create({
@@ -109,7 +111,7 @@ export interface MovimientoLogistica {
     id_referencia: number;
     producto: ProductoBaseMovimiento; 
     empleado: EmpleadoBase;
-    fechaMovimiento: Date;
+    fecha_movimiento: Date;
 }
 
 // Ajuste Manual
@@ -121,6 +123,8 @@ export interface AjusteManual {
     empleado: EmpleadoBase;
     fechaAjuste: Date;
 }
+
+type MovimientoData = MovimientoLogistica | AjusteManual;
 
 // --- FUNCIONES ---
 
@@ -206,3 +210,110 @@ export const getAjustesManuales = async (): Promise<AjusteManual[]> => {
         return [];
     }
 }
+
+// --- FUNCIÓN PARA GENERAR PDF ---
+
+export const generarPDFMovimiento = (data: MovimientoData, tipo: 'logistica' | 'ajustes'): void => {
+    const doc = new jsPDF();
+    const isAjuste = tipo === 'ajustes';
+    const titulo = isAjuste ? 'REPORTE DE AJUSTE DE INVENTARIO (MANUAL)' : 'COMPROBANTE DE MOVIMIENTO DE LOGÍSTICA';
+    let y = 15; // Posición inicial vertical
+
+    // --- ENCABEZADO ---
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(18);
+    doc.setTextColor(40, 40, 40);
+    doc.text("MINI ERP", 20, y);
+    y += 10;
+    
+    doc.setFontSize(14);
+    doc.setTextColor(90, 90, 90);
+    doc.text(titulo, 20, y);
+    y += 15;
+    
+    // Línea divisoria 
+    doc.setDrawColor(150, 150, 150);
+    doc.setLineWidth(0.5);
+    doc.line(20, y, 190, y);
+    y += 5;
+    
+    // --- METADATOS DEL DOCUMENTO ---
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(10);
+    doc.text(`Fecha de Emisión: ${new Date().toLocaleDateString('es-CL')}`, 190, y, { align: 'right' });
+    y += 5;
+    doc.text(`ID de Registro: ${data.id}`, 20, y);
+    y += 10;
+
+    // --- DETALLE DEL RESPONSABLE Y FECHAS ---
+    const fechaMovimiento = isAjuste ? (data as AjusteManual).fechaAjuste : (data as MovimientoLogistica).fecha_movimiento;
+    const empleado = data.empleado.nombre + ' ' + data.empleado.apellido;
+
+    doc.setFont('helvetica', 'bold');
+    doc.text("Responsable:", 20, y);
+    doc.setFont('helvetica', 'normal');
+    doc.text(empleado, 60, y);
+    y += 5;
+
+    doc.setFont('helvetica', 'bold');
+    doc.text("Fecha de Operación:", 20, y);
+    doc.setFont('helvetica', 'normal');
+    doc.text(new Date(fechaMovimiento).toLocaleDateString('es-CL'), 60, y);
+    y += 10;
+    
+    // --- DETALLE DEL PRODUCTO ---
+    doc.setFont('helvetica', 'bold');
+    doc.text("PRODUCTO Y CANTIDAD:", 20, y);
+    y += 7;
+    
+    const xProducto = 20;
+    const xCantidad = 150;
+    
+    doc.setDrawColor(200, 200, 200);
+    doc.setFillColor(240, 240, 240);
+    doc.rect(xProducto, y, 170, 7, 'F');
+    doc.setTextColor(40, 40, 40);
+    doc.text('CÓDIGO / PRODUCTO', xProducto + 2, y + 5);
+    doc.text('CANTIDAD', xCantidad, y + 5);
+    y += 7;
+    
+    doc.setTextColor(0, 0, 0);
+    doc.text(`${data.producto.codigo} - ${data.producto.nombre}`, xProducto + 2, y + 5);
+    doc.text(Math.abs(data.cantidad).toLocaleString(), xCantidad, y + 5);
+    y += 10;
+
+
+    // --- SECCIÓN ESPECÍFICA (AJUSTE vs. LOGÍSTICA) ---
+    y += 10; 
+    
+    if (isAjuste) {
+        const ajusteData = data as AjusteManual;
+        
+        doc.setFont('helvetica', 'bold');
+        doc.text("MOTIVO DEL AJUSTE:", 20, y);
+        
+        doc.setFont('helvetica', 'normal');
+        const observacionesFormato = doc.splitTextToSize(ajusteData.observaciones, 160);
+        doc.text(observacionesFormato, 20, y + 7);
+        
+        doc.setFont('helvetica', 'bold');
+        const accion = ajusteData.cantidad >= 0 ? "ACCIÓN: INGRESO DE STOCK" : "ACCIÓN: RETIRO DE STOCK";
+        doc.text(accion, 20, y + 20);
+
+    } else {
+        const logisticaData = data as MovimientoLogistica;
+      
+  
+        const tipoOp = logisticaData.es_recepcion ? 'RECEPCIÓN' : 'ENVÍO';
+        doc.setFont('helvetica', 'normal');
+        doc.text(`Tipo de Operación: ${tipoOp}`, 20, y + 7);
+    }
+    
+    // --- PIE DE PÁGINA ---
+    doc.setFontSize(8);
+    doc.setFont('helvetica', 'italic');
+    doc.setTextColor(150, 150, 150);
+    doc.text("Documento generado por el Módulo de Inventario del ERP.", 190, 290, { align: 'right' });
+    
+    doc.save(`Comprobante_${titulo.replace(/ /g, '_')}_ID_${data.id}.pdf`);
+};
