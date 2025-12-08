@@ -1,5 +1,5 @@
 import axios from 'axios'
-const API_URL = import.meta.env.VITE_URL_INVENTORY_BACKEND; 
+const API_URL = import.meta.env.VITE_URL_INVENTORY_BACKEND || 'http://localhost:3003'; 
 
 const apiClient = axios.create({
   baseURL: API_URL,
@@ -24,7 +24,6 @@ export interface User {
   email?: string;
 }
 
-// Se cambia a interface para evitar errores de inicialización estricta
 export interface CreateProductoDto {
   nombre: string
   codigo: string
@@ -32,13 +31,21 @@ export interface CreateProductoDto {
   precio_unitario: number
   precio_venta: number
   cantidad?: number
-  stock?: number // Propiedad esperada por el backend
+  stock?: number
   user: User | null
 }
 
+// Interfaz para actualizar (usada al Agregar stock)
+export interface UpdateProductoDto {
+  stock?: number;
+  cantidad?: number;
+  user?: User | null;
+  // otras propiedades opcionales...
+}
+
 export interface RestarStockDto {
-  stock: number // cantidad a restar
-  user: any // Usuario que realiza la acción
+  stock: number 
+  user: any 
 }
 
 export interface ProductoSinStock {
@@ -53,7 +60,7 @@ export interface ProductoSinStock {
 
 export interface Reserva {
   id: number
-  stock: number // cantidad reservada
+  stock: number 
   fechaReserva: string
   producto: {
     id: number
@@ -71,15 +78,14 @@ export interface Movimiento {
   empleadoId: number
 }
 
-//Consulta de productos
+// --- FUNCIONES ---
+
 export const getProductos = async (): Promise<Producto[]> => {
   const response = await apiClient.get('/productos')
   return response.data
 }
 
-//Ingreso de nuevo producto
 export const createProducto = async (data: CreateProductoDto): Promise<any> => {
-  // Aseguramos que se envíe 'stock' si el backend lo requiere
   const payload = {
     ...data,
     stock: data.stock || data.cantidad
@@ -88,7 +94,13 @@ export const createProducto = async (data: CreateProductoDto): Promise<any> => {
   return response.data
 }
 
-//Egreso/retiro de stock
+// ✅ RESTAURADA: Función para actualizar datos (se usa para SUMAR stock)
+export const actualizarProducto = async (id: number, data: UpdateProductoDto): Promise<any> => {
+  const response = await apiClient.patch(`/productos/${id}`, data)
+  return response.data
+}
+
+// Función para RESTAR stock (endpoint específico)
 export const restarStockProducto = async (id: number, cantidadARestar: number, user: any) => {
   const dto: RestarStockDto = {
     stock: cantidadARestar,
@@ -98,7 +110,6 @@ export const restarStockProducto = async (id: number, cantidadARestar: number, u
   return response.data 
 }
 
-//Obtener productos sin stock
 export const getProductosSinStock = async (): Promise<ProductoSinStock[]> => {
   const response = await apiClient.get('/productos-sin-stock') 
   return response.data
@@ -109,7 +120,6 @@ export const getReservas = async (): Promise<Reserva[]> => {
   return response.data
 }
 
-// Obtener historial de movimientos
 export const getMovimientos = async (): Promise<Movimiento[]> => {
   try {
     const response = await apiClient.get('/movimientos-inventario')

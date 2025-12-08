@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import './Inventario.css'
-import { type Producto, restarStockProducto } from './inventario.service'
+import { type Producto, restarStockProducto, actualizarProducto } from './inventario.service'
 import { useAuth } from "../utils/AuthContext";
 
 interface FormularioEgresoProps {
@@ -29,16 +29,15 @@ const FormularioEgreso = ({ isOpen, onClose, onSuccess, producto }: FormularioEg
 
   if (!isOpen || !producto) return null
 
-  // Obtener el stock actual verificando ambas propiedades posibles (cantidad o stock)
   const p = producto as any; 
-  const stockBase = p.cantidad !== undefined && p.cantidad !== null 
+  const stockBase = (p.cantidad !== undefined && p.cantidad !== null) 
     ? Number(p.cantidad) 
-    : (p.stock !== undefined ? Number(p.stock) : 0);
+    : ((p.stock !== undefined && p.stock !== null) ? Number(p.stock) : 0);
 
   const cantidadInput = cantidadStr === '' ? 0 : parseInt(cantidadStr);
   const cantidadValida = isNaN(cantidadInput) ? 0 : cantidadInput;
 
-  // Cálculo visual del stock resultante
+  // Cálculo visual
   const stockFuturo = tipoAccion === 'AGREGAR' 
     ? stockBase + cantidadValida
     : stockBase - cantidadValida;
@@ -67,21 +66,20 @@ const FormularioEgreso = ({ isOpen, onClose, onSuccess, producto }: FormularioEg
     }
 
     try {
-      let response;
-
-      // Se utiliza la función restarStockProducto enviando el usuario para validación de permisos.
-      // Si la acción es AGREGAR, se envía el valor en negativo para que el backend sume.
+      
       if (tipoAccion === 'QUITAR') {
-        response = await restarStockProducto(producto.id, cantidadValida, user);
+        const response = await restarStockProducto(producto.id, cantidadValida, user);
+        
+        if (response.error) throw new Error(response.error);
+        onSuccess(`Stock actualizado. Nuevo total: ${response.stockActual ?? stockFuturo}`)
+      
       } else {
-        response = await restarStockProducto(producto.id, -cantidadValida, user);
+        const nuevoTotal = stockBase + cantidadValida;
+
+        await actualizarProducto(producto.id, { stock: nuevoTotal, user: user } as any);
+        
+        onSuccess(`Stock actualizado. Nuevo total: ${nuevoTotal}`)
       }
-      
-      if (response.error) {
-        throw new Error(response.error)
-      }
-      
-      onSuccess(`Stock actualizado. Nuevo total: ${response.stockActual ?? stockFuturo}`)
 
     } catch (err: any) {
       console.error(err)
@@ -96,7 +94,7 @@ const FormularioEgreso = ({ isOpen, onClose, onSuccess, producto }: FormularioEg
     }
   }
 
-  // Estilos para modo oscuro
+  // Estilos
   const radioGroupStyle: React.CSSProperties = { display: 'flex', gap: '20px', marginBottom: '20px', justifyContent: 'center' };
   const labelStyle: React.CSSProperties = { cursor: 'pointer', padding: '10px 20px', borderRadius: '8px', border: '1px solid #444', backgroundColor: '#1a1a1a', color: '#fff', display: 'flex', alignItems: 'center', gap: '8px', transition: 'all 0.2s' };
   const activeAddStyle: React.CSSProperties = { ...labelStyle, borderColor: '#646cff', backgroundColor: 'rgba(100, 108, 255, 0.2)', fontWeight: 'bold' };
@@ -133,6 +131,7 @@ const FormularioEgreso = ({ isOpen, onClose, onSuccess, producto }: FormularioEg
               <input id="cantidadAjuste" type="number" min="1" value={cantidadStr} onChange={(e) => setCantidadStr(e.target.value)} required autoFocus style={inputStyle} />
             </div>
 
+            {/* Resumen Visual */}
             <div style={{
               marginTop: '20px', padding: '15px', backgroundColor: '#1a1a1a', 
               borderRadius: '8px', textAlign: 'center', border: '1px solid #444',
