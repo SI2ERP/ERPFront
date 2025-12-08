@@ -143,7 +143,7 @@ export const PERMISSIONS = {
 
   [ROLES.EMPLEADO_INVENTARIO]: {
     puedeVerCompras: false,
-    puedeModificarInventario: true,
+    puedeModificarInventario: false,
     puedeVerInventario: true,
     puedeVerLogistica: false,
     puedeVerRRHH: false,

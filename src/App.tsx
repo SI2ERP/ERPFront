@@ -43,7 +43,7 @@ function App() {
                 /* ProtectedRoute significa que revisa login y los roles (opcional) */
                 <ProtectedRoute 
                   element={<InventarioPage />}
-                  roles={[ROLES.ADMIN, ROLES.GERENTE, ROLES.EMPLEADO, ROLES.TESTING]}
+                  roles={[ROLES.ADMIN_INVENTARIO, ROLES.TESTING, ROLES.EMPLEADO_INVENTARIO, ROLES.JEFE_INVENTARIO]}
                 />
               }
             />
