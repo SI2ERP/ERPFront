@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import './Inventario.css'
-// Importamos actualizarProducto
+// Importamos ambas funciones
 import { type Producto, restarStockProducto, actualizarProducto } from './inventario.service'
 import { useAuth } from "../utils/AuthContext";
 
@@ -30,8 +30,9 @@ const FormularioEgreso = ({ isOpen, onClose, onSuccess, producto }: FormularioEg
 
   if (!isOpen || !producto) return null
 
-  // --- LÓGICA ROBUSTA DE VISUALIZACIÓN ---
-  const p = producto as any; // Evitar errores si la estructura varía
+  // --- LÓGICA DE VISUALIZACIÓN SEGURA ---
+  const p = producto as any; 
+  // Prioridad: 1. cantidad, 2. stock, 3. 0
   const stockBase = (p.cantidad !== undefined && p.cantidad !== null) 
     ? Number(p.cantidad) 
     : ((p.stock !== undefined && p.stock !== null) ? Number(p.stock) : 0);
@@ -68,27 +69,29 @@ const FormularioEgreso = ({ isOpen, onClose, onSuccess, producto }: FormularioEg
     }
 
     try {
-      // --- LÓGICA SEPARADA ---
+      // --- LÓGICA HÍBRIDA ---
       
       if (tipoAccion === 'QUITAR') {
-        // Opción A: QUITAR (Usamos endpoint de restar stock)
+        // CASO A: RESTAR
+        // Usamos el endpoint específico que descuenta stock.
+        // El backend espera un número positivo para restar.
         const response = await restarStockProducto(producto.id, cantidadValida, user);
         
         if (response.error) throw new Error(response.error);
         onSuccess(`Stock actualizado. Nuevo total: ${response.stockActual ?? stockFuturo}`)
       
       } else {
-        // Opción B: AGREGAR (Usamos endpoint de actualización genérica)
-        // Calculamos el nuevo total nosotros mismos
+        // CASO B: AGREGAR (SUMAR)
+        // Como el backend bloquea negativos en /stock, usamos el endpoint genérico.
+        // Calculamos nosotros el total.
         const nuevoTotal = stockBase + cantidadValida;
         
-        // Enviamos 'stock' (no cantidad) y 'user' (para permisos)
-        const dataToSend = {
-            stock: nuevoTotal,
-            user: user
-        };
-
-        await actualizarProducto(producto.id, dataToSend);
+        // Enviamos 'stock' y 'user'.
+        // Importante: Esto funcionará si el backend tiene whitelist: true pero UpdateProductoDto acepta 'stock'.
+        await actualizarProducto(producto.id, { 
+            stock: nuevoTotal, 
+            user: user 
+        });
         
         onSuccess(`Stock actualizado. Nuevo total: ${nuevoTotal}`)
       }
@@ -96,6 +99,7 @@ const FormularioEgreso = ({ isOpen, onClose, onSuccess, producto }: FormularioEg
     } catch (err: any) {
       console.error(err)
       if (axios.isAxiosError(err)) {
+        // Mostramos el mensaje exacto del backend si existe
         const msg = err.response?.data?.message || err.response?.data?.error;
         setError(msg || 'Error al conectar con el servidor.')
       } else {
@@ -106,7 +110,7 @@ const FormularioEgreso = ({ isOpen, onClose, onSuccess, producto }: FormularioEg
     }
   }
 
-  // Estilos (Dark Mode)
+  // Estilos
   const radioGroupStyle: React.CSSProperties = { display: 'flex', gap: '20px', marginBottom: '20px', justifyContent: 'center' };
   const labelStyle: React.CSSProperties = { cursor: 'pointer', padding: '10px 20px', borderRadius: '8px', border: '1px solid #444', backgroundColor: '#1a1a1a', color: '#fff', display: 'flex', alignItems: 'center', gap: '8px', transition: 'all 0.2s' };
   const activeAddStyle: React.CSSProperties = { ...labelStyle, borderColor: '#646cff', backgroundColor: 'rgba(100, 108, 255, 0.2)', fontWeight: 'bold' };

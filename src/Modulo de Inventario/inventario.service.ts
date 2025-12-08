@@ -25,17 +25,21 @@ export interface User {
   email?: string;
 }
 
+// Interface alineada con tu Backend
 export interface CreateProductoDto {
   nombre: string
+  codigo?: string // Opcional porque lo generamos si falta
   descripcion?: string
+  precio_unitario?: number
+  precio_venta?: number
+  stock?: number
   user: User | null
 }
 
-// RESTAURADA: Necesaria para enviar actualizaciones de stock (Agregar)
+// Interface para la actualización genérica (Sumar)
 export interface UpdateProductoDto {
   stock?: number;
-  user?: any;
-  [key: string]: any; // Flexibilidad
+  user?: User | null; // El backend espera un 'user' en el DTO
 }
 
 export interface RestarStockDto {
@@ -81,18 +85,26 @@ export const getProductos = async (): Promise<Producto[]> => {
 }
 
 export const createProducto = async (data: CreateProductoDto): Promise<any> => {
-  const payload = { ...data };
+  const payload = {
+      ...data,
+      // Valores por defecto para pasar validaciones del backend
+      stock: data.stock || 0,
+      codigo: data.codigo || `SOL-${Date.now()}`,
+      precio_unitario: data.precio_unitario || 0,
+      precio_venta: data.precio_venta || 0
+  };
   const response = await apiClient.post('/productos', payload)
   return response.data
 }
 
-// ✅ RESTAURADA: Función clave para "Agregar Stock" (calculando total)
+// ✅ Función para SUMAR (Calculamos total y pisamos el valor)
 export const actualizarProducto = async (id: number, data: UpdateProductoDto): Promise<any> => {
+  // Enviamos PATCH a /productos/:id
   const response = await apiClient.patch(`/productos/${id}`, data)
   return response.data
 }
 
-// Función para "Quitar Stock"
+// ✅ Función para RESTAR (Usa la lógica del backend de descontar)
 export const restarStockProducto = async (id: number, cantidadARestar: number, user: any) => {
   const dto: RestarStockDto = {
     stock: cantidadARestar,
