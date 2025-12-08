@@ -61,6 +61,38 @@
   table-layout: fixed;
 }
 
+.tabla-productos th:nth-child(1), .tabla-productos td:nth-child(1) {
+    width: 15%;
+}
+
+.tabla-productos th:nth-child(2), .tabla-productos td:nth-child(2) {
+    width: 35%; 
+    white-space: normal; 
+}
+
+.tabla-productos th:nth-child(3), .tabla-productos td:nth-child(3) {
+    width: 10%; 
+    text-align: center;
+}
+
+.tabla-productos th:nth-child(4) {
+    /* Aplicar la compensación de 17px al TH para ver si se alinea */
+    width: calc(15% - 17px); 
+    text-align: center; 
+}
+
+.tabla-productos td:nth-child(4) {
+    /* El cuerpo (TD) debe mantener su ancho completo */
+    width: 15%;
+    text-align: center; 
+}
+
+/* 5. Acciones (Botón) - Simplificado */
+.tabla-productos th:nth-child(5), .tabla-productos td:nth-child(5) {
+    width: 25%;
+    text-align: center;
+}
+
 .tabla-productos thead th {
   position: sticky;
   top: 0;
@@ -348,8 +380,21 @@ input[type=number] {
   color: white;
 }
 
-/* Estilo para el botón activo (la sección actual) */
 .sidebar-nav button.active {
   background-color: #646cff;
   color: white;
+}
+
+.aviso-stock-amarillo {
+    font-size: 0.75rem;
+    color: #FFA500; 
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+.aviso-stock-rojo {
+    font-size: 0.75rem;
+    color: #FF0000;
+    font-weight: bold;
+    margin-top: 5px;
 }

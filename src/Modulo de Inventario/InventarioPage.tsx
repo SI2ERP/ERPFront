@@ -72,6 +72,23 @@ const InventarioPage = () => {
     alert(message)
   }
 
+  const renderStockAvisos = (stock: number | string) => {
+      // asegurar stock como número
+      const numericStock = Number(stock); 
+      let aviso = null;
+      let claseAviso = '';
+
+      if (numericStock === 0) { 
+          aviso = 'El producto no cuenta con stock';
+          claseAviso = 'aviso-stock-rojo'; // Stock Cero
+      } else if (numericStock > 0 && numericStock <= 10) {
+          aviso = 'El producto tiene menos de 10 unidades';
+          claseAviso = 'aviso-stock-amarillo'; // Stock Bajo
+      }
+
+      return aviso ? <div className={claseAviso}>{aviso}</div> : null;
+  };
+
   // Función auxiliar para leer el stock de forma segura
   const getStockSeguro = (p: any) => {
       return p.cantidad !== undefined ? p.cantidad : (p.stock !== undefined ? p.stock : 0);
@@ -98,7 +115,7 @@ const InventarioPage = () => {
             <table className="tabla-productos">
               <thead>
                 <tr>
-                  <th>Código</th><th>Nombre</th><th>Stock</th><th>Precio Unitario</th><th>Precio Venta</th>
+                  <th>Código</th><th>Nombre</th><th>Stock</th><th>Precio Venta</th>
                   {tienePermisoModificar && <th>Acciones</th>}
                 </tr>
               </thead>
@@ -113,9 +130,8 @@ const InventarioPage = () => {
                     return (
                     <tr key={producto.id}>
                       <td>{producto.codigo}</td>
-                      <td>{producto.nombre}</td>
+                      <td>{producto.nombre} {renderStockAvisos(stock)}</td>
                       <td className={stock <= 10 ? 'stock-bajo' : ''}>{stock}</td>
-                      <td>${Number(producto.precio_unitario).toLocaleString('es-CL')}</td>
                       <td>${Number(producto.precio_venta).toLocaleString('es-CL')}</td>
                       {tienePermisoModificar && (
                         <td><button className="btn-retirar" onClick={() => handleOpenEgreso(producto)}>Actualizar Stock</button></td>
