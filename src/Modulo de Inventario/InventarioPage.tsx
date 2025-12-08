@@ -94,7 +94,7 @@ const InventarioPage = () => {
                     <tr key={producto.id}>
                       <td>{producto.codigo}</td>
                       <td>{producto.nombre}</td>
-                      <td className={producto.cantidad <= 10 ? 'stock-bajo' : ''}>{producto.cantidad}</td>
+                      <td className={producto.stock <= 10 ? 'stock-bajo' : ''}>{producto.stock}</td>
                       <td>${Number(producto.precio_unitario).toLocaleString('es-CL')}</td>
                       <td>${Number(producto.precio_venta).toLocaleString('es-CL')}</td>
                       <td><button className="btn-retirar" onClick={() => handleOpenEgreso(producto)}>Actualizar Stock</button></td>
@@ -129,7 +129,7 @@ const InventarioPage = () => {
           <button className={seccionActual === 'inventario' ? 'active' : ''} onClick={() => { setSeccionActual('inventario'); setIsSidebarOpen(false); }}>Página Principal</button>
           <button className={seccionActual === 'reservas' ? 'active' : ''} onClick={() => { setSeccionActual('reservas'); setIsSidebarOpen(false); }}>Reservas</button>
           <button className={seccionActual === 'pedidos' ? 'active' : ''} onClick={() => { setSeccionActual('pedidos'); setIsSidebarOpen(false); }}>Productos con Stock Insuficiente</button>
-          <button className={seccionActual === 'movimientos' ? 'active' : ''} onClick={() => { setSeccionActual('movimientos'); setIsSidebarOpen(false); }}>Historial Movimientos</button>
+          {/* <button className={seccionActual === 'movimientos' ? 'active' : ''} onClick={() => { setSeccionActual('movimientos'); setIsSidebarOpen(false); }}>Historial Movimientos</button> */}
         </nav>
       </div>
     </div>
