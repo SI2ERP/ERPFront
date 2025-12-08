@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import './Inventario.css'
+// Ahora sí encontrará estas exportaciones porque actualizaste el servicio arriba
 import { getMovimientos, type Movimiento } from './inventario.service'
 
 const VistaMovimientos = () => {
@@ -12,8 +13,10 @@ const VistaMovimientos = () => {
       setLoading(true)
       try {
         const data = await getMovimientos()
-        // Ordenar por fecha descendente
-        const sorted = data.sort((a, b) => new Date(b.fechaMovimiento).getTime() - new Date(a.fechaMovimiento).getTime());
+        // CORRECCIÓN AQUÍ: Tipamos (a: Movimiento, b: Movimiento) para que TS no llore
+        const sorted = data.sort((a: Movimiento, b: Movimiento) => 
+            new Date(b.fechaMovimiento).getTime() - new Date(a.fechaMovimiento).getTime()
+        );
         setMovimientos(sorted)
       } catch (err) {
         console.error("Error cargando historial", err)

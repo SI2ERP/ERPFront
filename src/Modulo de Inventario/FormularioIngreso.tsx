@@ -6,20 +6,12 @@ import { useAuth } from "../utils/AuthContext";
 
 interface IngresoFormState {
   nombre: string;
-  codigo: string;
   descripcion?: string;
-  precio_unitario: string;
-  precio_venta: string;
-  cantidad: string;
 }
 
 const initialFormData: IngresoFormState = {
   nombre: '',
-  codigo: '',
   descripcion: '',
-  precio_unitario: '',
-  precio_venta: '',
-  cantidad: '',
 }
 
 interface FormularioIngresoProps {
@@ -41,91 +33,83 @@ const FormularioIngreso = ({ isOpen, onClose, onSuccess }: FormularioIngresoProp
         ...prev,
         [name]: value,
     }))
-}
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
     setError(null)
 
-    // Convertimos los strings a números y asignamos 'cantidad' a 'stock'
+    // Creamos el objeto solo con lo necesario para la solicitud
     const datosAPI: CreateProductoDto = {
         nombre: formData.nombre,
-        codigo: formData.codigo,
         descripcion: formData.descripcion,
-        precio_unitario: parseFloat(formData.precio_unitario) || 0,
-        precio_venta: parseFloat(formData.precio_venta) || 0,
-        stock: parseInt(formData.cantidad) || 0,
-        cantidad: parseInt(formData.cantidad) || 0,
         user: user,
-    }
-
-    if (datosAPI.precio_venta < datosAPI.precio_unitario) {
-        setError('Error: El Precio de Venta no puede ser menor al Costo (Precio Unitario).')
-        setIsLoading(false)
-        return
     }
 
     try {
         const res = await createProducto(datosAPI)
-        setFormData(initialFormData)
+        setFormData(initialFormData) // Limpiar formulario
         
         if (res.error) {
-          alert(`${res.error}, Código ya existe.`)
+          alert(`${res.error}`)
         } else {
-          onSuccess('Producto creado exitosamente.')
+          onSuccess('Solicitud de producto creada exitosamente.')
         }
     } catch (err) {
         console.error(err)
         if (axios.isAxiosError(err)) {
-            if (err.response?.data?.error?.includes('unique constraint')) {
-                setError('Error: El Código ya existe.')
-            } else {
-                setError('Error al crear el producto. Revise los campos.')
-            }
+            // Manejo genérico de errores
+            const msg = err.response?.data?.message || 'Error al solicitar el producto.';
+            setError(msg)
         } else {
             setError('Ocurrió un error inesperado.')
         }
     } finally {
         setIsLoading(false)
     }
-}
+  }
 
   return (
     <div className="modal-backdrop" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
-          <h2>+ Ingresar Nuevo Producto</h2>
+          {/* CAMBIO: Título actualizado */}
+          <h2>Solicitar Nuevo Producto</h2>
           <button className="btn-cerrar" onClick={onClose}>&times;</button>
         </div>
         
         <form onSubmit={handleSubmit}>
           <div className="modal-body">
             <div className="form-grid">
-              <div className="form-group">
+              
+              {/* Solo Nombre */}
+              <div className="form-group full-width">
                 <label htmlFor="nombre">Nombre del Producto</label>
-                <input id="nombre" name="nombre" type="text" value={formData.nombre} onChange={handleChange} required />
+                <input 
+                  id="nombre" 
+                  name="nombre" 
+                  type="text" 
+                  value={formData.nombre} 
+                  onChange={handleChange} 
+                  required 
+                  placeholder="Ej: Monitor LED 24''"
+                />
               </div>
-              <div className="form-group">
-                <label htmlFor="codigo">Código</label>
-                <input id="codigo" name="codigo" type="text" value={formData.codigo} onChange={handleChange} required />
-              </div>
-              <div className="form-group">
-                <label htmlFor="precio_unitario">Costo (Precio Unitario)</label>
-                <input id="precio_unitario" name="precio_unitario" type="number" min="0" step="0.01" value={formData.precio_unitario} onChange={handleChange} required />
-              </div>
-              <div className="form-group">
-                <label htmlFor="precio_venta">Precio Venta</label>
-                <input id="precio_venta" name="precio_venta" type="number" min="0" step="0.01" value={formData.precio_venta} onChange={handleChange} required />
-              </div>
+
+              {/* Solo Descripción */}
               <div className="form-group full-width">
                 <label htmlFor="descripcion">Descripción (Opcional)</label>
-                <textarea id="descripcion" name="descripcion" value={formData.descripcion} onChange={handleChange} />
+                <textarea 
+                  id="descripcion" 
+                  name="descripcion" 
+                  value={formData.descripcion} 
+                  onChange={handleChange} 
+                  placeholder="Detalles adicionales..."
+                  rows={3}
+                />
               </div>
-              <div className="form-group full-width">
-                <label htmlFor="cantidad">Stock Inicial (Cantidad)</label>
-                <input id="cantidad" name="cantidad" type="number" min="0" value={formData.cantidad} onChange={handleChange} />
-              </div>
+
             </div>
             {error && <p className="error-mensaje" style={{marginTop: '1rem'}}>{error}</p>}
           </div>
@@ -135,7 +119,8 @@ const FormularioIngreso = ({ isOpen, onClose, onSuccess }: FormularioIngresoProp
               Cancelar
             </button>
             <button type="submit" className="btn-submit" disabled={isLoading}>
-              {isLoading ? 'Guardando...' : 'Guardar Producto'}
+              {/* CAMBIO: Texto del botón */}
+              {isLoading ? 'Enviando...' : 'Solicitar Producto'}
             </button>
           </div>
         </form>

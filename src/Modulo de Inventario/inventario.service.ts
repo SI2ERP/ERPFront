@@ -24,23 +24,17 @@ export interface User {
   email?: string;
 }
 
+// CAMBIO: Simplificado para la solicitud
 export interface CreateProductoDto {
   nombre: string
-  codigo: string
   descripcion?: string
-  precio_unitario: number
-  precio_venta: number
-  cantidad?: number
-  stock?: number
   user: User | null
 }
 
-// Interfaz para actualizar (usada al Agregar stock)
 export interface UpdateProductoDto {
   stock?: number;
-  cantidad?: number;
-  user?: User | null;
-  // otras propiedades opcionales...
+  user?: any;
+  [key: string]: any;
 }
 
 export interface RestarStockDto {
@@ -60,7 +54,7 @@ export interface ProductoSinStock {
 
 export interface Reserva {
   id: number
-  stock: number 
+  stock: number
   fechaReserva: string
   producto: {
     id: number
@@ -87,20 +81,17 @@ export const getProductos = async (): Promise<Producto[]> => {
 
 export const createProducto = async (data: CreateProductoDto): Promise<any> => {
   const payload = {
-    ...data,
-    stock: data.stock || data.cantidad
+      ...data,
   };
   const response = await apiClient.post('/productos', payload)
   return response.data
 }
 
-// ✅ RESTAURADA: Función para actualizar datos (se usa para SUMAR stock)
 export const actualizarProducto = async (id: number, data: UpdateProductoDto): Promise<any> => {
   const response = await apiClient.patch(`/productos/${id}`, data)
   return response.data
 }
 
-// Función para RESTAR stock (endpoint específico)
 export const restarStockProducto = async (id: number, cantidadARestar: number, user: any) => {
   const dto: RestarStockDto = {
     stock: cantidadARestar,
