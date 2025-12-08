@@ -247,7 +247,6 @@ const GestionPagosProveedores: React.FC = () => {
         <table className="tabla-pagos">
           <thead>
             <tr>
-              <th>ID OC Proveedor</th>
               <th>ID Orden Compra</th>
               <th>Proveedor</th>
               <th>Empleado</th>
@@ -263,14 +262,13 @@ const GestionPagosProveedores: React.FC = () => {
           <tbody>
             {ordenesFiltradas.length === 0 ? (
               <tr>
-                <td colSpan={11} className="no-data">
+                <td colSpan={10} className="no-data">
                   No se encontraron órdenes de proveedores
                 </td>
               </tr>
             ) : (
               ordenesFiltradas.map(orden => (
                 <tr key={orden.id_oc_proveedor}>
-                  <td>{orden.id_oc_proveedor}</td>
                   <td>{orden.id_orden_compra}</td>
                   <td>{orden.proveedor_nombre || `Proveedor #${orden.id_proveedor}`}</td>
                   <td>{orden.empleado_nombre || `Empleado #${orden.id_empleado}`}</td>
