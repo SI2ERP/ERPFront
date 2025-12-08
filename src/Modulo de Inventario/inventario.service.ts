@@ -41,6 +41,7 @@ export interface UpdateProductoDto {
 export interface RestarStockDto {
   stock: number 
   user: any 
+  observaciones: string
 }
 
 export interface ProductoSinStock {
@@ -141,10 +142,11 @@ export const actualizarProducto = async (id: number, data: UpdateProductoDto): P
 }
 
 // Función para RESTAR stock (endpoint específico que requiere user)
-export const restarStockProducto = async (id: number, cantidadARestar: number, user: any) => {
+export const restarStockProducto = async (id: number, cantidadARestar: number, user: any, observaciones: string) => {
   const dto: RestarStockDto = {
     stock: cantidadARestar,
     user: user,
+    observaciones: observaciones,
   }
   const response = await apiClient.patch(`/productos/${id}/stock`, dto)
   return response.data 

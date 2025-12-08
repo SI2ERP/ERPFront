@@ -122,9 +122,9 @@ const InventarioPage = () => {
               </thead>
               <tbody>
                 {loading ? (
-                  <tr><td colSpan={6} style={{ textAlign: 'center', padding: '2rem', color: '#ccc' }}>Cargando inventario...</td></tr>
+                  <tr><td colSpan={6} style={{ textAlign: 'center', padding: '2rem', color: '#ccc' }}>Cargando inventario</td></tr>
                 ) : productosFiltrados.length === 0 ? (
-                  <tr><td colSpan={6} style={{ textAlign: 'center', padding: '2rem', color: '#888' }}>No se encontraron productos.</td></tr>
+                  <tr><td colSpan={6} style={{ textAlign: 'center', padding: '2rem', color: '#888' }}>No se encontraron productos</td></tr>
                 ) : (
                   productosFiltrados.map(producto => {
                     const stock = getStockSeguro(producto);
@@ -147,7 +147,7 @@ const InventarioPage = () => {
           
           {tienePermisoModificar && (
             <div className="footer-acciones">
-              <button className="btn-nuevo-producto" onClick={() => setIsIngresoOpen(true)}>+ Nuevo Producto</button>
+              <button className="btn-nuevo-producto" onClick={() => setIsIngresoOpen(true)}>+ Solicitar Producto</button>
             </div>
           )}
 

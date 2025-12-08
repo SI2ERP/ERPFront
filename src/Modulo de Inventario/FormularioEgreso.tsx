@@ -19,11 +19,13 @@ const FormularioEgreso = ({ isOpen, onClose, onSuccess, producto }: FormularioEg
   const [tipoAccion, setTipoAccion] = useState<'AGREGAR' | 'QUITAR'>('AGREGAR')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [observaciones, setObservaciones] = useState('');
 
   useEffect(() => {
     if (isOpen) {
       setCantidadStr("1")
       setTipoAccion("AGREGAR")
+      setObservaciones('')
       setError(null)
     }
   }, [isOpen, producto])
@@ -68,19 +70,21 @@ const FormularioEgreso = ({ isOpen, onClose, onSuccess, producto }: FormularioEg
       return;
     }
 
+    const observacionFinal = observaciones.trim() === '' ? 'Ajuste realizado manualmente' : observaciones;
+
     try {
       // --- LÓGICA HÍBRIDA ---
       
       if (tipoAccion === 'QUITAR') {
         // OPCIÓN A: RESTAR
         // Usamos el endpoint específico (funciona bien con positivos)
-        const response = await restarStockProducto(producto.id, cantidadValida, user);
+        const response = await restarStockProducto(producto.id, cantidadValida, user, observacionFinal);
         
         if (response.error) throw new Error(response.error);
         onSuccess(`Stock actualizado. Nuevo total: ${response.stockActual ?? stockFuturo}`)
       
       } else {
-        const response = await restarStockProducto(producto.id, -cantidadValida, user);
+        const response = await restarStockProducto(producto.id, -cantidadValida, user, observacionFinal);
 
         if (response.error) throw new Error(response.error);
         onSuccess(`Stock actualizado. Nuevo total: ${response.stockActual ?? stockFuturo}`)
@@ -134,6 +138,12 @@ const FormularioEgreso = ({ isOpen, onClose, onSuccess, producto }: FormularioEg
             <div className="form-group full-width">
               <label htmlFor="cantidadAjuste" style={{marginBottom:'8px', display:'block'}}>Cantidad</label>
               <input id="cantidadAjuste" type="number" min="1" value={cantidadStr} onChange={(e) => setCantidadStr(e.target.value)} required autoFocus style={inputStyle} />
+            </div>
+
+            <div className="form-group full-width" style={{ marginTop: '1.5rem' }}>
+                <label htmlFor="observaciones" style={{marginBottom:'8px', display:'block'}}>Observaciones</label>
+                <textarea id="observaciones" value={observaciones} onChange={(e) => setObservaciones(e.target.value)}
+                    style={{...inputStyle, minHeight: '80px', textAlign: 'left'}}/>
             </div>
 
             <div style={{
