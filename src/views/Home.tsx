@@ -1,18 +1,64 @@
-import React from "react";
-import './Home.css';
-import { useNavigate } from 'react-router-dom';
+import "./Home.css";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../utils/AuthContext";
+import { hasPermission } from "../utils/Permissions";
+import type { Role } from "../utils/Permissions";
 
 const Home = () => {
   const navigate = useNavigate();
+  const { logout, user } = useAuth();
 
-  // Ir a la página de inventario
+  if (!user) return null;
+
+  const irARRHH = () => {
+    if (!user) return;
+    console.log("a ver: ",user.rol);
+    // 1. ADMIN → admin RRHH
+    if (user.rol === "ADMIN") {
+      console.log("entra a admin");
+      navigate("/rrhh/admin/");
+      return;
+    }
+
+    // 2. JEFE → ruta jefe con id departamento
+    if (/^JEFE_/i.test(user.rol)) {
+      const idDepto = user.id_departamento || null;
+      console.log("Entra a jefe");
+      if (!idDepto) {
+        console.warn("El usuario jefe no tiene id_departamento definido");
+        navigate("/");
+        return;
+      }
+
+      navigate(`/rrhh/jefe/mis-empleados/${idDepto}`);
+      return;
+    }
+
+    // 3. Cualquier usuario puede entrar a rrhh, pero entrará como empleado
+    console.log("entra a empleado");
+    navigate("/rrhh/empleado/");
+  };
+
   const irAInventario = () => {
-    navigate('/inventario'); 
+    navigate("/inventario");
   };
 
   const irAVentas = () => {
-    navigate('/ventas');
-  }
+    navigate("/ventas");
+  };
+
+  const irACompras = () => {
+    navigate('/compras');
+  };
+
+  const handleLogout = () => {
+    logout();
+  };
+
+  // Helper para verificar permisos
+  const puedeVer = (permiso: "puedeVerInventario" | "puedeVerVentas" | "puedeVerRRHH" | "puedeVerCompras" | "puedeVerLogistica") => {
+    return hasPermission(user.rol as Role, permiso);
+  };
 
   return (
     <div className="home-container">
@@ -20,28 +66,40 @@ const Home = () => {
       <p>Selecciona el módulo al que deseas ingresar:</p>
 
       <div className="module-grid">
-        {/* 1. Botón de Inventario (Aún sin navegación) */}
-        <button className="module-button" onClick={irAInventario}>
-          Inventario
-        </button>
+        {puedeVer("puedeVerInventario") && (
+          <button className="module-button" onClick={irAInventario}>
+            Inventario
+          </button>
+        )}
 
-        {/* 2. Botones de otros módulos (Deshabilitados) */}
-        <button className="module-button" onClick={irAVentas}>
-          Ventas
-        </button>
+        {puedeVer("puedeVerVentas") && (
+          <button className="module-button" onClick={irAVentas}>
+            Ventas
+          </button>
+        )}
 
-        <button className="module-button disabled" disabled>
-          Compras
-        </button>
+        {puedeVer("puedeVerRRHH") && (
+          <button className="module-button" onClick={irARRHH}>
+            RRHH
+          </button>
+        )}
 
-        <button className="module-button disabled" disabled>
-          RRHH
-        </button>
-        
-        <button className="module-button disabled" disabled>
-          Logística/Despacho
-        </button>
+        {puedeVer("puedeVerCompras") && (
+          <button className="module-button" onClick={irACompras}>
+            Compras
+          </button>
+        )}
+
+        {puedeVer("puedeVerLogistica") && (
+          <button className="module-button disabled" disabled>
+            Logística/Despacho
+          </button>
+        )}
       </div>
+
+      <button className="logout-button" onClick={handleLogout}>
+        Cerrar sesión
+      </button>
     </div>
   );
 };

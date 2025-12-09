@@ -6,6 +6,7 @@
     justify-content: center;
     height: 100vh;
     gap: 2em;
+    background-color: #0d1117;
 }
 
 .formGroup {
@@ -13,13 +14,27 @@
     flex-direction: column;
     margin: 0.5em 1em;
     font-size: 1em;
-    
-    input {
-        margin-top: 0.5em;
-        padding: 0.5em;
-        font-size: 1em;
-        background: var(--background-secondary);
-    }
+}
+
+.formGroup input {
+    margin-top: 0.5em;
+    padding: 0.8em 1.2em;
+    font-size: 1em;
+    background-color: #242424;
+    color: #fff;
+    border: 1px solid #555;
+    border-radius: 8px;
+    font-family: inherit;
+}
+
+.formGroup input:focus {
+    outline: none;
+    border-color: #646cff;
+}
+
+.formGroup label {
+    color: #ccc;
+    font-weight: 500;
 }
 
 .loginForm {
@@ -27,21 +42,38 @@
     flex-direction: column;
     justify-content: center;
     gap: 1em;
-    height: 50%;
-    background: var(--background-primary);
-    color: var(--text-primary);
-    padding: 1em;
+    min-height: 400px;
+    background-color: #1a1a1a;
+    color: #fff;
+    padding: 2em;
+    border-radius: 8px;
+    border: 1px solid #444;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+}
 
-    h1 {
-        text-align: center;
-        width: 100%;
-        margin-bottom: 1em;
-    }
+.loginForm h1 {
+    text-align: center;
+    width: 100%;
+    margin-bottom: 1em;
+    color: #fff;
+}
 
-    button {
-        text-align: center;
-        margin: 2em 25%;
-    }
+.loginForm button {
+    text-align: center;
+    margin: 2em 25%;
+    background-color: #646cff;
+    color: white;
+    border: 1px solid #646cff;
+    padding: 0.8em 1.2em;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.loginForm button:hover {
+    background-color: #535bf2;
+    border-color: #535bf2;
 }
 
 .registerForm {
@@ -49,18 +81,35 @@
     flex-direction: column;
     justify-content: center;
     gap: 1em;
-    height: 50%;
-    background: var(--background-primary);
-    color: var(--text-primary);
-    padding: 1em;
+    min-height: 400px;
+    background-color: #1a1a1a;
+    color: #fff;
+    padding: 2em;
+    border-radius: 8px;
+    border: 1px solid #444;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+}
 
-    h1 {
-        text-align: center;
-        width: 100%;
-    }
+.registerForm h1 {
+    text-align: center;
+    width: 100%;
+    color: #fff;
+}
 
-    button {
-        text-align: center;
-        margin: 2em 25%;
-    }
+.registerForm button {
+    text-align: center;
+    margin: 2em 25%;
+    background-color: #646cff;
+    color: white;
+    border: 1px solid #646cff;
+    padding: 0.8em 1.2em;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.registerForm button:hover {
+    background-color: #535bf2;
+    border-color: #535bf2;
 }

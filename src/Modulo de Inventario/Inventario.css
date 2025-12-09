@@ -61,6 +61,40 @@
   table-layout: fixed;
 }
 
+.tabla-productos th:nth-child(1), .tabla-productos td:nth-child(1) {
+    width: 15%;
+}
+
+.tabla-productos th:nth-child(2), .tabla-productos td:nth-child(2) {
+    width: 35%; 
+    white-space: normal; 
+}
+
+.tabla-productos th:nth-child(3), .tabla-productos td:nth-child(3) {
+    width: 10%; 
+    text-align: center;
+}
+
+/* 4. Precio Venta (Ancho: 15% | Alineación: Centrada) */
+.tabla-productos th:nth-child(4), .tabla-productos td:nth-child(4) {
+    width: 15%;
+    text-align: center; 
+}
+
+/* 5. Acciones (Botón): COMPENSACIÓN DEL SCROLLBAR (25% total) */
+
+/* Aplica la compensación de 17px SÓLO al encabezado (TH) */
+.tabla-productos thead th:nth-child(5) {
+    width: calc(25% - 17px); 
+    text-align: center;
+}
+
+/* El cuerpo (TD) mantiene el ancho completo sin compensación */
+.tabla-productos tbody td:nth-child(5) {
+    width: 25%; 
+    text-align: center;
+}
+
 .tabla-productos thead th {
   position: sticky;
   top: 0;
@@ -253,4 +287,278 @@ input[type=number]::-webkit-outer-spin-button {
 input[type=number] {
   -moz-appearance: textfield;
   appearance: textfield;
+}
+
+/* --- ESTILOS DEL SIDEBAR Y MENÚ --- */
+
+/* Agrupador para el título y el botón hamburguesa en el header */
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Botón de las 3 rayitas */
+.btn-hamburguesa {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.8rem;
+  cursor: pointer;
+  padding: 0.2rem 0.5rem;
+  line-height: 1;
+  border-radius: 4px;
+}
+.btn-hamburguesa:hover {
+  background-color: #3a3a3a;
+}
+
+/* Fondo oscuro cuando el menú está abierto */
+.sidebar-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+
+/* El contenedor del menú lateral */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: -280px; /* Oculto a la izquierda inicialmente */
+  width: 280px;
+  height: 100%;
+  background-color: #1a1a1a;
+  border-right: 1px solid #444;
+  box-shadow: 2px 0 10px rgba(0,0,0,0.5);
+  z-index: 1001;
+  transition: left 0.3s ease-in-out; /* Animación suave */
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+  box-sizing: border-box;
+}
+
+/* Clase para cuando el menú está abierto */
+.sidebar.open {
+  left: 0;
+}
+
+.sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid #333;
+  padding-bottom: 1rem;
+}
+
+.sidebar-header h3 {
+  margin: 0;
+  color: #fff;
+}
+
+/* Botones del menú */
+.sidebar-nav button {
+  display: block;
+  width: 100%;
+  padding: 1rem;
+  text-align: left;
+  background: none;
+  border: none;
+  color: #ccc;
+  font-size: 1rem;
+  cursor: pointer;
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
+  transition: background 0.2s;
+}
+
+.sidebar-nav button:hover {
+  background-color: #333;
+  color: white;
+}
+
+.sidebar-nav button.active {
+  background-color: #646cff;
+  color: white;
+}
+
+.aviso-stock-amarillo {
+    font-size: 0.75rem;
+    color: #FFA500; 
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+.aviso-stock-naranja {
+    font-size: 0.75rem;
+    color: #FF8C00; /* Naranja Oscuro */
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+.aviso-stock-rojo {
+    font-size: 0.75rem;
+    color: #FF0000;
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+/* --- AJUSTES DE ANCHO PARA VISTAS SECUNDARIAS DE 4 COLUMNAS --- */
+
+/* Selector específico para anular la configuración de 5 columnas en tablas con 4 */
+.vista-productos-despacho .tabla-productos {
+    /* Si tienes la compensación de scrollbar, aquí es donde debe ir */
+    width: 100%;
+    table-layout: fixed;
+}
+
+/* 1. Código */
+.vista-productos-despacho .tabla-productos th:nth-child(1), .vista-productos-despacho .tabla-productos td:nth-child(1) {
+    width: 20% !important; 
+    text-align: left !important;
+}
+
+/* 2. Nombre del Producto (Más ancho) */
+.vista-productos-despacho .tabla-productos th:nth-child(2), .vista-productos-despacho .tabla-productos td:nth-child(2) {
+    width: 45% !important; 
+    text-align: left !important;
+}
+
+/* 3. Cantidad a Despachar */
+.vista-productos-despacho .tabla-productos th:nth-child(3), .vista-productos-despacho .tabla-productos td:nth-child(3) {
+    width: 15% !important; 
+    text-align: center !important;
+}
+
+/* 4. Fecha de Registro (Última columna - Debe compensar scrollbar si aplica) */
+.vista-productos-despacho .tabla-productos thead th:nth-child(4) {
+    width: calc(20% - 17px) !important; /* Compensación del scrollbar */
+}
+.vista-productos-despacho .tabla-productos tbody td:nth-child(4) {
+    width: 20% !important;
+}
+
+/* --- ESTILOS PARA TABS (VistaMovimientos) --- */
+
+.btn-tab {
+    background-color: #3a3a3a;
+    color: #f0f0f0;
+    border: 1px solid #555;
+    padding: 0.6em 1.2em;
+    font-weight: 500;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+.btn-tab:hover {
+    background-color: #4a4a4a;
+}
+
+.btn-tab-active {
+    /* Estilo para la pestaña seleccionada */
+    background-color: #646cff;
+    color: white;
+    border: 1px solid #646cff;
+    padding: 0.6em 1.2em;
+    font-weight: 700;
+    border-radius: 8px;
+    cursor: default;
+}
+
+/* --- AJUSTES DE ANCHO PARA VISTA DE MOVIMIENTOS (7 COLUMNAS) --- */
+
+/* 1. Código */
+.vista-movimientos-historial .tabla-productos th:nth-child(1),
+.vista-movimientos-historial .tabla-productos td:nth-child(1) {
+    width: 10% !important; 
+    text-align: left !important;
+}
+
+/* 2. Nombre Producto  */
+.vista-movimientos-historial .tabla-productos th:nth-child(2),
+.vista-movimientos-historial .tabla-productos td:nth-child(2) {
+    width: 18% !important; /* Más espacio para Nombre */
+    text-align: left !important;
+}
+
+/* 3. Empleado Encargado  */
+.vista-movimientos-historial .tabla-productos th:nth-child(3),
+.vista-movimientos-historial .tabla-productos td:nth-child(3) {
+    width: 15% !important; 
+}
+
+/* 4. Columna Variable  */
+.vista-movimientos-historial .tabla-productos th:nth-child(4),
+.vista-movimientos-historial .tabla-productos td:nth-child(4) {
+    width: 25% !important; 
+    text-align: left !important;
+}
+
+/* 5. Cantidad  */
+.vista-movimientos-historial .tabla-productos th:nth-child(5),
+.vista-movimientos-historial .tabla-productos td:nth-child(5) {
+    width: 10% !important; /* Estrecho */
+    text-align: center !important;
+}
+
+/* 6. Fecha  */
+.vista-movimientos-historial .tabla-productos th:nth-child(6),
+.vista-movimientos-historial .tabla-productos td:nth-child(6) {
+    width: 12% !important; 
+    text-align: left !important;
+}
+
+/* 7. Acciones*/
+.vista-movimientos-historial .tabla-productos thead th:nth-child(7) {
+    width: calc(10% - 17px) !important;
+    text-align: center !important;
+}
+.vista-movimientos-historial .tabla-productos tbody td:nth-child(7) {
+    width: 10% !important;
+    text-align: center !important;
+}
+
+/* --- AJUSTES DE ANCHO PARA TABLA DE PRODUCTOS SOLICITADOS (5 COLUMNAS) --- */
+
+/* 1. ID Solicitud (Reducido) */
+.vista-productos-solicitados .tabla-productos th:nth-child(1), 
+.vista-productos-solicitados .tabla-productos td:nth-child(1) {
+    width: 8% !important; /* De 15% a 8% */
+    text-align: center !important;
+}
+
+/* 2. Nombre Producto (Mantenido) */
+.vista-productos-solicitados .tabla-productos th:nth-child(2), 
+.vista-productos-solicitados .tabla-productos td:nth-child(2) {
+    width: 25% !important; /* Suficiente espacio */
+}
+
+/* 3. Descripción (Aumentado) */
+.vista-productos-solicitados .tabla-productos th:nth-child(3), 
+.vista-productos-solicitados .tabla-productos td:nth-child(3) {
+    width: 35% !important; /* Más espacio para descripciones largas */
+    white-space: normal !important;
+}
+
+/* 4. Fecha Solicitud (Mantenido) */
+.vista-productos-solicitados .tabla-productos th:nth-child(4), 
+.vista-productos-solicitados .tabla-productos td:nth-child(4) {
+    width: 17% !important;
+    text-align: center !important;
+}
+
+/* 5. Estado (Columna Final - Ajuste de Scrollbar) */
+.vista-productos-solicitados .tabla-productos thead th:nth-child(5) {
+    width: calc(15% - 17px) !important; /* Ajuste por scrollbar en thead */
+    text-align: center !important;
+}
+.vista-productos-solicitados .tabla-productos tbody td:nth-child(5) {
+    width: 15% !important;
+    text-align: center !important;
 }

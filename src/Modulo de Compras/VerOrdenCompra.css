@@ -1,0 +1,478 @@
+/* Estilos globales para Ver Orden de Compra - Usando herencia de estilos globales */
+/* REMOVED: html, body, #root declarations to use global styles from index.css */
+
+/* Contenedor principal */
+.ver-orden-container {
+  padding: 2.5rem;
+  width: 100%;
+  box-sizing: border-box; 
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--background-primary);
+  color: #fff;
+}
+
+/* Header de la orden */
+.ver-orden-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #444;
+  margin-bottom: 1.5rem;
+  flex-shrink: 0;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.header-left h1 {
+  margin: 0;
+  color: #fff;
+  font-size: 2.2em;
+  font-weight: 600;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+}
+
+/* Botón volver */
+.btn-volver {
+  background-color: #4a4a4a;
+  color: #f0f0f0;
+  border: 1px solid #555;
+  padding: 0.6em 1.2em;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9em;
+  font-weight: 500;
+  transition: all 0.3s;
+}
+
+.btn-volver:hover {
+  background-color: #5a5a5a;
+  border-color: #666;
+}
+
+/* Contenido principal */
+.orden-contenido {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  flex-grow: 1;
+}
+
+/* Secciones de información */
+.seccion-info {
+  padding: 1.5rem 0;
+  flex-shrink: 0;
+}
+
+.seccion-info h2 {
+  margin: 0 0 20px 0;
+  color: #fff;
+  font-size: 1.3rem;
+  font-weight: 600;
+  border-bottom: 2px solid #646cff;
+  padding-bottom: 10px;
+}
+
+/* Grid de información */
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.info-item label {
+  font-weight: 600;
+  color: #ccc;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.info-item span {
+  color: #fff;
+  font-size: 1rem;
+  padding: 8px 0;
+}
+
+.total-orden {
+  font-weight: 700;
+  font-size: 1.2rem !important;
+  color: #4caf50 !important;
+}
+
+/* Estados */
+.estado-badge {
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  color: white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.estado-pendiente {
+  background-color: #ff9500;
+  color: white;
+  border: 1px solid #ff8c00;
+}
+
+.estado-aprobada {
+  background-color: #27ae60;
+  color: white;
+  border: 1px solid #229954;
+}
+
+.estado-rechazada {
+  background-color: #e74c3c;
+  color: white;
+  border: 1px solid #c0392b;
+}
+
+.estado-completada {
+  background-color: #646cff;
+  color: white;
+  border: 1px solid #535bf2;
+}
+
+/* Sección de productos */
+.seccion-productos {
+  padding: 1.5rem 0;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.seccion-productos h2 {
+  margin: 0 0 20px 0;
+  color: #fff;
+  font-size: 1.3rem;
+  font-weight: 600;
+  border-bottom: 2px solid #646cff;
+  padding-bottom: 10px;
+}
+
+/* Tabla de productos */
+.tabla-productos-container {
+  overflow-x: auto;
+  margin-bottom: 1.5rem;
+  border: 1px solid #444;
+  border-radius: 8px;
+}
+
+.tabla-productos {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+  table-layout: fixed;
+}
+
+.tabla-productos tr {
+  background-color: transparent;
+}
+
+.tabla-productos th {
+  background-color: #3a3a3a;
+  color: #fff;
+  font-weight: 600;
+  padding: 0.75rem 1rem;
+  text-align: center;
+  border-bottom: 1px solid #444;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  vertical-align: middle;
+}
+
+.tabla-productos th:first-child {
+  text-align: center;
+  padding-left: 2rem;
+}
+
+.tabla-productos th:nth-child(2) {
+  text-align: center;
+  padding-left: 1.5rem;
+}
+
+.tabla-productos td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #444;
+  vertical-align: top;
+  color: #fff;
+  text-align: center;
+  box-sizing: border-box;
+  background-color: transparent;
+}
+
+.tabla-productos tr:hover {
+  background-color: #2a2a2a;
+}
+
+/* Columnas específicas */
+.producto-nombre {
+  font-weight: 600;
+  color: #fff;
+  text-align: left;
+  width: 25%;
+  vertical-align: top;
+}
+
+.producto-descripcion {
+  color: #ccc;
+  font-size: 0.9rem;
+  text-align: left;
+  word-wrap: break-word;
+  width: 30%;
+  vertical-align: top;
+  line-height: 1.5;
+}
+
+.cantidad {
+  text-align: center;
+  font-weight: 600;
+  color: #fff;
+  width: 15%;
+}
+
+.precio-unitario,
+.subtotal {
+  text-align: center;
+  font-weight: 600;
+  color: #fff;
+  width: 15%;
+  min-width: 100px;
+}
+
+.subtotal {
+  color: #4caf50;
+}
+
+/* Estilos para el tfoot (totales integrados en la tabla) */
+.tabla-productos tfoot tr {
+  border-top: 2px solid #444;
+  /* background-color: #1a1a1a; REMOVED */
+}
+
+.tabla-productos tfoot td {
+  padding: 12px 15px;
+  font-size: 1rem;
+}
+
+.texto-derecha {
+  text-align: right !important;
+  color: #ccc;
+  padding-right: 20px;
+}
+
+.valor-total {
+  text-align: center !important;
+  color: #fff;
+  font-size: 1.1rem;
+}
+
+.fila-iva {
+  background-color: #1a1a1a;
+}
+
+.fila-total {
+  background-color: #1a2a1a;
+  border-top: 2px solid #4caf50 !important;
+}
+
+.fila-total td {
+  padding: 15px !important;
+}
+
+.fila-total .texto-derecha {
+  color: #fff;
+  font-size: 1.1rem;
+}
+
+.valor-total-final {
+  text-align: center !important;
+  color: #4caf50 !important;
+  font-size: 1.3rem !important;
+  font-weight: 700 !important;
+}
+
+/* Total final (ahora oculto, se usa el tfoot) */
+.total-final {
+  display: none;
+}
+
+/* Resto de estilos de total-row para otras vistas */
+.total-row {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  background-color: #2a2a2a;
+  padding: 12px 20px;
+  border-radius: 8px;
+  border: 1px solid #444;
+  min-width: 350px;
+}
+
+.total-row.total-principal {
+  background-color: #1a2a1a;
+  border: 2px solid #4caf50;
+  padding: 15px 20px;
+  margin-top: 5px;
+}
+
+.total-label {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #ccc;
+  flex: 1;
+}
+
+.total-row.total-principal .total-label {
+  font-size: 1.2rem;
+  color: #fff;
+}
+
+.total-valor {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #fff;
+  min-width: 150px;
+  text-align: right;
+}
+
+.total-row.total-principal .total-valor {
+  font-size: 1.4rem;
+  color: #4caf50;
+}
+
+/* Estados de carga y error */
+.cargando,
+.error-mensaje {
+  background-color: #1a1a1a;
+  padding: 40px;
+  border-radius: 8px;
+  border: 1px solid #444;
+  text-align: center;
+}
+
+.cargando p {
+  color: #ccc;
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+.error-mensaje h3 {
+  color: #ff6b6b;
+  margin: 0 0 15px 0;
+}
+
+.error-mensaje p {
+  color: #ccc;
+  margin: 0 0 20px 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .ver-orden-container {
+    padding: 1rem;
+    height: calc(100vh - 2rem);
+  }
+
+  .ver-orden-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+    padding: 1rem;
+  }
+
+  .header-left {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .header-left h1 {
+    font-size: 1.5rem;
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .seccion-info,
+  .seccion-productos {
+    padding: 1.5rem 1rem;
+  }
+
+  .tabla-productos {
+    font-size: 0.85rem;
+  }
+
+  .tabla-productos th,
+  .tabla-productos td {
+    padding: 8px 6px;
+  }
+
+  .producto-descripcion {
+    max-width: 150px;
+  }
+
+  .total-row {
+    flex-direction: column;
+    text-align: center;
+    gap: 5px;
+  }
+}
+
+@media (max-width: 576px) {
+  .ver-orden-container {
+    padding: 0.5rem;
+    height: calc(100vh - 1rem);
+  }
+  
+  .ver-orden-header {
+    padding: 0.8rem;
+  }
+
+  .header-left h1 {
+    font-size: 1.3rem;
+  }
+
+  .seccion-info h2,
+  .seccion-productos h2 {
+    font-size: 1.1rem;
+  }
+
+  .tabla-productos {
+    font-size: 0.8rem;
+  }
+
+  .tabla-productos th,
+  .tabla-productos td {
+    padding: 6px 4px;
+  }
+
+  .estado-badge {
+    font-size: 0.7rem;
+    padding: 3px 6px;
+  }
+}
