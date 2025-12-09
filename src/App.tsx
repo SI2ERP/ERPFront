@@ -45,7 +45,7 @@ function App() {
                   element={<InventarioPage />}
                   roles={[ROLES.ADMIN_INVENTARIO, ROLES.TESTING, ROLES.EMPLEADO_INVENTARIO, ROLES.JEFE_INVENTARIO]}
                 />
-              }
+              } 
             />
             <Route path="/ventas"
               element={

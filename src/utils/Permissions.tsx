@@ -158,7 +158,7 @@ export const PERMISSIONS = {
     puedeVerRRHH: false,
     puedeVerVentas: false,
   },
-
+ 
   [ROLES.ADMIN_INVENTARIO]: {
     puedeVerCompras: false,
     puedeModificarInventario: true,

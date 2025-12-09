@@ -9,7 +9,7 @@ const AUTH_BACKEND_URL = import.meta.env.VITE_URL_AUTH_BACKEND;
 const Login = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
-
+ 
   const [rut, setRut] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
