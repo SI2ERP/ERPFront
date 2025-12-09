@@ -27,6 +27,7 @@ const Login = () => {
 
       login(
         {
+          id: user.id,
           nombre: user.nombre,
           rol: user.rol || "EMPLEADO",
           email: user.email,
