@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import '../../Venta.css'
 import ClipIcon from '../ClipIcon'
 import type { MensajeCorreoFormData } from './FormularioMensaje'
@@ -9,12 +10,30 @@ interface MensajeEditorProps {
     handleCorreoData : (e : React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void 
     handleAdjuntarVenta : () => void
     handleEliminarVentaAdjunta : (id : number) => void
+    handleSubmitCorreo: (e : React.FormEvent) => void
     onClose : () => void
 }
 
 
 
-export default function MensajeEditor({ onClose, destinatario, correoData, handleCorreoData, handleAdjuntarVenta, handleEliminarVentaAdjunta } : MensajeEditorProps) {
+export default function MensajeEditor({ onClose, destinatario, correoData, handleCorreoData, handleAdjuntarVenta, handleEliminarVentaAdjunta, handleSubmitCorreo } : MensajeEditorProps) {
+
+
+    const [ msgError, setMsgError ] = useState<string | null>(null)
+
+    
+    const handleSubmit = (e : React.FormEvent) => {
+
+        if(correoData.asunto.trim() === "") {
+            setMsgError("Asunto no puede ser vacio")
+            return 
+        } else if(correoData.cuerpo.trim() === "") {
+            setMsgError("El cuerpo del correo no puede estar vacio")
+            return 
+        } 
+        setMsgError(null)
+        handleSubmitCorreo(e)
+    }
 
     return (
         <div className='transition-all duration-300 opacity-100'>
@@ -48,6 +67,9 @@ export default function MensajeEditor({ onClose, destinatario, correoData, handl
                             ))}
                         </div>
                     </div>
+                    <div className='min-h-6'>
+                        { msgError && <h2 className='text-red-500'>{msgError}</h2> }
+                    </div>
                 </div>
 
                 <div className='modal-footer justify-between!'>
@@ -58,7 +80,7 @@ export default function MensajeEditor({ onClose, destinatario, correoData, handl
                         <button type='button' className='btn-cancelar' onClick={onClose}>
                             Descartar
                         </button>
-                        <button type='submit' className='btn-submit'>
+                        <button type='submit' className='btn-submit' onClick={handleSubmit}>
                             Enviar Mensaje
                         </button>
                     </div>

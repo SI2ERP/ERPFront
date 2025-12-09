@@ -679,3 +679,11 @@ input[type=number] {
   color: rgba(255, 255, 255, 1);
 }
 
+.error-box {
+  background: #fee;
+  border: 1px solid #f88;
+  padding: 8px;
+  border-radius: 4px;
+  white-space: pre-wrap;
+  margin-top: 8px;
+}

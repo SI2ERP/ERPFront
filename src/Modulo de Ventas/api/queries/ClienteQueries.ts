@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query"
+import { useMutation, useQuery } from "@tanstack/react-query"
 import { ClienteService } from "../services/cliente.service"
 
 
@@ -16,5 +16,11 @@ export function useDireccionCliente( clientID ?: number) {
         queryKey: ['clientes_direccion', clientID],
         queryFn: () => (ClienteService.GetDireccionesPorClienteID(clientID as number)),
         enabled: !!clientID
+    })
+}
+
+export function useSendEmail() {
+    return useMutation({
+        mutationFn: ClienteService.SendEmail
     })
 }

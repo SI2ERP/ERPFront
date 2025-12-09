@@ -167,7 +167,7 @@ export default function GestionVentas({ selectedClient, onSelectVenta, filtrarVe
                                 <tr key={venta.id_venta} onClick={() => onSelectVenta && onSelectVenta(venta)}>
                                     <td>{venta.id_venta}</td>
                                     <td>{venta.id_cliente}</td>
-                                    <td>{venta.cliente.email}</td>
+                                    <td className="text-xs">{venta.cliente.email}</td>
                                     <td className="text-xs">{(new Date(venta.fecha_pedido)).toLocaleString("es-CL")}</td>
                                     <td><span className="chip success">{venta.estado}</span></td>
                                     <td onClick={(e) => handleVerDetallesVenta(e, venta)} className="font-semibold cursor-pointer">{`$ ${venta.total.toLocaleString("es-CL")}`}</td>

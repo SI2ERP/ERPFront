@@ -28,8 +28,6 @@ export default function GestionCliente({ onSelectClient, setSection } : GestionC
     const [ isVerDireccionesOpen, setIsVerDireccionesOpen ] = useState(false)
     const [ selectedClient, setSelectedClient ] = useState<Cliente | null>(null)
 
-    const [ destinatario, setDestinatario ] = useState<string | null>('')
-
 
     const filtrosFns = useMemo(() => [
         (c: Cliente) => !correoFiltro || c.email.toLowerCase().includes(correoFiltro.toLowerCase()),
@@ -163,7 +161,7 @@ export default function GestionCliente({ onSelectClient, setSection } : GestionC
                                     <td>
                                         <button onClick={(e) => {
                                             setIsEnviarCorreoOpen(true)
-                                            setDestinatario(cliente.email)
+                                            setSelectedClient(cliente)
                                             e.stopPropagation()
                                         }} 
                                             className='tooltip tooltip-button'
@@ -186,7 +184,7 @@ export default function GestionCliente({ onSelectClient, setSection } : GestionC
             </div>
             <FormularioMensaje 
                 isOpen={isEnviarCorreoOpen} 
-                destinatario={destinatario} 
+                destinatario={selectedClient} 
                 onClose={() => setIsEnviarCorreoOpen(false)}                
             />
             <FormularioDireccion 
