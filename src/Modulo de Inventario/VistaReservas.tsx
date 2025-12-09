@@ -25,7 +25,7 @@ const VistaReservas = () => {
 
   return (
     <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
-      <h2 style={{ marginBottom: '1rem', fontSize: '1.5em' }}>Reservas de Ventas</h2>
+      <h2 style={{ marginBottom: '1rem', fontSize: '1.5em', color: 'white' }}>Reservas de Ventas</h2>
       {error && <p className="error-mensaje">{error}</p>}
 
       <div className="tabla-wrapper">

@@ -180,7 +180,7 @@ const VistaMovimientos = () => {
 
     return (
         <div className="vista-movimientos-historial" style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
-            <h2 style={{ marginBottom: '1.5rem', fontSize: '1.5em' }}>Historial de Movimientos</h2>
+            <h2 style={{ marginBottom: '1.5rem', fontSize: '1.5em', color: 'white' }}>Historial de Movimientos</h2>
 
             {/* Pestañas */}
             <div className="tabs-movimientos" style={{ display: 'flex', gap: '1rem', marginBottom: '1rem' }}>
