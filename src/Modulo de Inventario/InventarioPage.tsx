@@ -180,6 +180,7 @@ const InventarioPage = () => {
           <button className={seccionActual === 'despachos' ? 'active' : ''} onClick={() => { setSeccionActual('despachos'); setIsSidebarOpen(false); }}>Productos por Despachar</button>
           <button className={seccionActual === 'solicitados' ? 'active' : ''} onClick={() => { setSeccionActual('solicitados'); setIsSidebarOpen(false); }}>Productos Solicitados</button>
           <button className={seccionActual === 'pedidos' ? 'active' : ''} onClick={() => { setSeccionActual('pedidos'); setIsSidebarOpen(false); }}>Productos con Stock Insuficiente</button>
+          <button onClick={() => { window.location.replace('/'); setIsSidebarOpen(false); }}>Volver</button>
         </nav>
       </div>
     </div>

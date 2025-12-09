@@ -42,7 +42,7 @@ const VistaProductosSolicitados = () => {
 
     return (
         <div className="vista-productos-solicitados" style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
-            <h2 style={{ marginBottom: '1.5rem', fontSize: '1.5em' }}>Historial de Productos Solicitados</h2>
+            <h2 style={{ marginBottom: '1.5rem', fontSize: '1.5em', color: 'white' }}>Historial de Productos Solicitados</h2>
 
             {error && <p className="error-mensaje">{error}</p>}
 
