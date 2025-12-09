@@ -523,3 +523,42 @@ input[type=number] {
     width: 10% !important;
     text-align: center !important;
 }
+
+/* --- AJUSTES DE ANCHO PARA TABLA DE PRODUCTOS SOLICITADOS (5 COLUMNAS) --- */
+
+/* 1. ID Solicitud (Reducido) */
+.vista-productos-solicitados .tabla-productos th:nth-child(1), 
+.vista-productos-solicitados .tabla-productos td:nth-child(1) {
+    width: 8% !important; /* De 15% a 8% */
+    text-align: center !important;
+}
+
+/* 2. Nombre Producto (Mantenido) */
+.vista-productos-solicitados .tabla-productos th:nth-child(2), 
+.vista-productos-solicitados .tabla-productos td:nth-child(2) {
+    width: 25% !important; /* Suficiente espacio */
+}
+
+/* 3. Descripción (Aumentado) */
+.vista-productos-solicitados .tabla-productos th:nth-child(3), 
+.vista-productos-solicitados .tabla-productos td:nth-child(3) {
+    width: 35% !important; /* Más espacio para descripciones largas */
+    white-space: normal !important;
+}
+
+/* 4. Fecha Solicitud (Mantenido) */
+.vista-productos-solicitados .tabla-productos th:nth-child(4), 
+.vista-productos-solicitados .tabla-productos td:nth-child(4) {
+    width: 17% !important;
+    text-align: center !important;
+}
+
+/* 5. Estado (Columna Final - Ajuste de Scrollbar) */
+.vista-productos-solicitados .tabla-productos thead th:nth-child(5) {
+    width: calc(15% - 17px) !important; /* Ajuste por scrollbar en thead */
+    text-align: center !important;
+}
+.vista-productos-solicitados .tabla-productos tbody td:nth-child(5) {
+    width: 15% !important;
+    text-align: center !important;
+}

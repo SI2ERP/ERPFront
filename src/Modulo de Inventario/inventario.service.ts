@@ -126,6 +126,16 @@ export interface AjusteManual {
 
 type MovimientoData = MovimientoLogistica | AjusteManual;
 
+// --- INTERFAZ PARA PRODUCTOS SOLICITADOS ---
+
+export interface ProductoSolicitado {
+    id_solicitud: number; // Coincide con PrimaryGeneratedColumn
+    nombre: string;
+    descripcion: string;
+    estado_solicitud: boolean; // TRUE = Procesado, FALSE = Pendiente (asumimos esta lógica)
+    fecha_solicitud: Date;
+}
+
 // --- FUNCIONES ---
 
 export const getProductos = async (): Promise<Producto[]> => {
@@ -317,3 +327,14 @@ export const generarPDFMovimiento = (data: MovimientoData, tipo: 'logistica' | '
     
     doc.save(`Comprobante_${titulo.replace(/ /g, '_')}_ID_${data.id}.pdf`);
 };
+
+// Función para obtener la lista de productos solicitados
+export const getProductosSolicitados = async (): Promise<ProductoSolicitado[]> => {
+    try {
+        const response = await apiClient.get('/solicitud-producto'); 
+        return response.data;
+    } catch (error) {
+        console.error("Error al obtener productos solicitados:", error);
+        return [];
+    }
+}

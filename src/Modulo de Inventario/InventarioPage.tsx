@@ -7,6 +7,7 @@ import VistaReservas from './VistaReservas'
 import VistaPedidos from './VistaPedidos'
 import VistaMovimientos from './VistaMovimientos'
 import VistaProductosDespacho from './VistaProductosDespacho'
+import VistaProductosSolicitados from './VistaProductosSolicitados'
 import { useAuth } from "../utils/AuthContext";
 import { hasPermission, type Role } from '../utils/Permissions';
 
@@ -30,7 +31,7 @@ const InventarioPage = () => {
   const [selectedProducto, setSelectedProducto] = useState<Producto | null>(null)
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
-  const [seccionActual, setSeccionActual] = useState<'inventario' | 'reservas' | 'pedidos' | 'movimientos'| 'despachos'>('inventario')
+  const [seccionActual, setSeccionActual] = useState<'inventario' | 'reservas' | 'pedidos' | 'movimientos'| 'despachos'| 'solicitados'>('inventario')
 
   const cargarProductos = async () => {
     setLoading(true)
@@ -163,6 +164,7 @@ const InventarioPage = () => {
       {seccionActual === 'pedidos' && <VistaPedidos />}
       {seccionActual === 'movimientos' && <VistaMovimientos />}
       {seccionActual === 'despachos' && <VistaProductosDespacho />}
+      {seccionActual === 'solicitados' && <VistaProductosSolicitados />}
 
       {isSidebarOpen && <div className="sidebar-backdrop" onClick={() => setIsSidebarOpen(false)} />}
 
@@ -173,10 +175,11 @@ const InventarioPage = () => {
         </div>
         <nav className="sidebar-nav">
           <button className={seccionActual === 'inventario' ? 'active' : ''} onClick={() => { setSeccionActual('inventario'); setIsSidebarOpen(false); }}>Página Principal</button>
-          <button className={seccionActual === 'reservas' ? 'active' : ''} onClick={() => { setSeccionActual('reservas'); setIsSidebarOpen(false); }}>Reservas</button>
-          <button className={seccionActual === 'pedidos' ? 'active' : ''} onClick={() => { setSeccionActual('pedidos'); setIsSidebarOpen(false); }}>Productos con Stock Insuficiente</button>
+          <button className={seccionActual === 'reservas' ? 'active' : ''} onClick={() => { setSeccionActual('reservas'); setIsSidebarOpen(false); }}>Reservas de Inventario</button>
           <button className={seccionActual === 'movimientos' ? 'active' : ''} onClick={() => { setSeccionActual('movimientos'); setIsSidebarOpen(false); }}>Historial Movimientos</button>
           <button className={seccionActual === 'despachos' ? 'active' : ''} onClick={() => { setSeccionActual('despachos'); setIsSidebarOpen(false); }}>Productos por Despachar</button>
+          <button className={seccionActual === 'solicitados' ? 'active' : ''} onClick={() => { setSeccionActual('solicitados'); setIsSidebarOpen(false); }}>Productos Solicitados</button>
+          <button className={seccionActual === 'pedidos' ? 'active' : ''} onClick={() => { setSeccionActual('pedidos'); setIsSidebarOpen(false); }}>Productos con Stock Insuficiente</button>
         </nav>
       </div>
     </div>
