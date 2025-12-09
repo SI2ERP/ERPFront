@@ -72,6 +72,24 @@ export default function App() {
               <ProtectedRoute element={<Home />} />
             }/>
 
+            {/* Ejemplo: ruta protegida para Inventario */}
+            <Route path="/inventario"
+              element={
+                /* ProtectedRoute significa que revisa login y los roles (opcional) */
+                <ProtectedRoute 
+                  element={<InventarioPage />}
+                  roles={[ROLES.ADMIN_INVENTARIO, ROLES.TESTING, ROLES.EMPLEADO_INVENTARIO, ROLES.JEFE_INVENTARIO]}
+                />
+              }
+            />
+            <Route path="/ventas"
+              element={
+                <ProtectedRoute
+                  element={<VentasPage />}
+                  roles={[ROLES.ADMIN, ROLES.GERENTE, ROLES.EMPLEADO, ROLES.TESTING]}
+                />
+              }
+            />
             {/* ================== INVENTARIO ================== */}
             <Route path="/inventario" element={
               <ProtectedRoute 

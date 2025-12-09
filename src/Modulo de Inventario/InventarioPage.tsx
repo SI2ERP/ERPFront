@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import './Inventario.css'
 import { getProductos, type Producto } from './inventario.service'
 import FormularioIngreso from './FormularioIngreso'
@@ -6,8 +6,21 @@ import FormularioEgreso from './FormularioEgreso'
 import VistaReservas from './VistaReservas'
 import VistaPedidos from './VistaPedidos'
 import VistaMovimientos from './VistaMovimientos'
+import VistaProductosDespacho from './VistaProductosDespacho'
+import VistaProductosSolicitados from './VistaProductosSolicitados'
+import { useAuth } from "../utils/AuthContext";
+import { hasPermission, type Role } from '../utils/Permissions';
 
 const InventarioPage = () => {
+  const {user} = useAuth();
+  
+  const tienePermisoModificar = hasPermission(user?.rol as Role, 'puedeModificarInventario');
+  const tienePermisoVer = hasPermission(user?.rol as Role, 'puedeVerInventario');
+
+  if (user && !tienePermisoVer) {
+    window.location.href = '/'; 
+  }
+
   const [productos, setProductos] = useState<Producto[]>([])
   const [filtro, setFiltro] = useState('')
   const [error, setError] = useState<string | null>(null)
@@ -18,7 +31,7 @@ const InventarioPage = () => {
   const [selectedProducto, setSelectedProducto] = useState<Producto | null>(null)
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
-  const [seccionActual, setSeccionActual] = useState<'inventario' | 'reservas' | 'pedidos' | 'movimientos'>('inventario')
+  const [seccionActual, setSeccionActual] = useState<'inventario' | 'reservas' | 'pedidos' | 'movimientos'| 'despachos'| 'solicitados'>('inventario')
 
   const cargarProductos = async () => {
     setLoading(true)
@@ -44,6 +57,7 @@ const InventarioPage = () => {
   }, [productos, filtro])
 
   const handleOpenEgreso = (producto: Producto) => {
+    if (!tienePermisoModificar) return;
     setSelectedProducto(producto)
     setIsEgresoOpen(true)
   }
@@ -58,6 +72,31 @@ const InventarioPage = () => {
     handleCloseModals()
     cargarProductos()
     alert(message)
+  }
+
+  const renderStockAvisos = (stock: number | string) => {
+      // asegurar stock como número
+      const numericStock = Number(stock); 
+      let aviso = null;
+      let claseAviso = '';
+
+      if (numericStock === 0) { 
+          aviso = 'El producto no cuenta con stock';
+          claseAviso = 'aviso-stock-rojo'; 
+      } else if (numericStock >= 1 && numericStock <= 3) {
+          aviso = 'El stock es muy bajo';
+          claseAviso = 'aviso-stock-naranja';
+      } else if (numericStock >= 4 && numericStock <= 10) {
+          aviso = 'El stock es bajo';
+          claseAviso = 'aviso-stock-amarillo'; 
+      }
+
+      return aviso ? <div className={claseAviso}>{aviso}</div> : null;
+  };
+
+  // Función auxiliar para leer el stock de forma segura
+  const getStockSeguro = (p: any) => {
+      return p.cantidad !== undefined ? p.cantidad : (p.stock !== undefined ? p.stock : 0);
   }
 
   return (
@@ -81,33 +120,40 @@ const InventarioPage = () => {
             <table className="tabla-productos">
               <thead>
                 <tr>
-                  <th>Código</th><th>Nombre</th><th>Stock</th><th>Precio Unitario</th><th>Precio Venta</th><th>Acciones</th>
+                  <th>Código</th><th>Nombre</th><th>Stock</th><th>Precio Venta</th>
+                  {tienePermisoModificar && <th>Acciones</th>}
                 </tr>
               </thead>
               <tbody>
                 {loading ? (
-                  <tr><td colSpan={6} style={{ textAlign: 'center', padding: '2rem', color: '#ccc' }}>Cargando inventario...</td></tr>
+                  <tr><td colSpan={6} style={{ textAlign: 'center', padding: '2rem', color: '#ccc' }}>Cargando inventario</td></tr>
                 ) : productosFiltrados.length === 0 ? (
-                  <tr><td colSpan={6} style={{ textAlign: 'center', padding: '2rem', color: '#888' }}>No se encontraron productos.</td></tr>
+                  <tr><td colSpan={6} style={{ textAlign: 'center', padding: '2rem', color: '#888' }}>No se encontraron productos</td></tr>
                 ) : (
-                  productosFiltrados.map(producto => (
+                  productosFiltrados.map(producto => {
+                    const stock = getStockSeguro(producto);
+                    return (
                     <tr key={producto.id}>
                       <td>{producto.codigo}</td>
-                      <td>{producto.nombre}</td>
-                      <td className={producto.stock <= 10 ? 'stock-bajo' : ''}>{producto.stock}</td>
-                      <td>${Number(producto.precio_unitario).toLocaleString('es-CL')}</td>
+                      <td>{producto.nombre} {renderStockAvisos(stock)}</td>
+                      <td className={stock <= 10 ? 'stock-bajo' : ''}>{stock}</td>
                       <td>${Number(producto.precio_venta).toLocaleString('es-CL')}</td>
-                      <td><button className="btn-retirar" onClick={() => handleOpenEgreso(producto)}>Actualizar Stock</button></td>
+                      {tienePermisoModificar && (
+                        <td><button className="btn-retirar" onClick={() => handleOpenEgreso(producto)}>Actualizar Stock</button></td>
+                      )}
                     </tr>
-                  ))
+                    )
+                  })
                 )}
               </tbody>
             </table>
           </div>
-
-          <div className="footer-acciones">
-            <button className="btn-nuevo-producto" onClick={() => setIsIngresoOpen(true)}>+ Nuevo Producto</button>
-          </div>
+          
+          {tienePermisoModificar && (
+            <div className="footer-acciones">
+              <button className="btn-nuevo-producto" onClick={() => setIsIngresoOpen(true)}>+ Solicitar Producto</button>
+            </div>
+          )}
 
           <FormularioIngreso isOpen={isIngresoOpen} onClose={handleCloseModals} onSuccess={handleSuccess} />
           <FormularioEgreso isOpen={isEgresoOpen} onClose={handleCloseModals} onSuccess={handleSuccess} producto={selectedProducto} />
@@ -117,6 +163,8 @@ const InventarioPage = () => {
       {seccionActual === 'reservas' && <VistaReservas />}
       {seccionActual === 'pedidos' && <VistaPedidos />}
       {seccionActual === 'movimientos' && <VistaMovimientos />}
+      {seccionActual === 'despachos' && <VistaProductosDespacho />}
+      {seccionActual === 'solicitados' && <VistaProductosSolicitados />}
 
       {isSidebarOpen && <div className="sidebar-backdrop" onClick={() => setIsSidebarOpen(false)} />}
 
@@ -127,9 +175,11 @@ const InventarioPage = () => {
         </div>
         <nav className="sidebar-nav">
           <button className={seccionActual === 'inventario' ? 'active' : ''} onClick={() => { setSeccionActual('inventario'); setIsSidebarOpen(false); }}>Página Principal</button>
-          <button className={seccionActual === 'reservas' ? 'active' : ''} onClick={() => { setSeccionActual('reservas'); setIsSidebarOpen(false); }}>Reservas</button>
+          <button className={seccionActual === 'reservas' ? 'active' : ''} onClick={() => { setSeccionActual('reservas'); setIsSidebarOpen(false); }}>Reservas de Inventario</button>
+          <button className={seccionActual === 'movimientos' ? 'active' : ''} onClick={() => { setSeccionActual('movimientos'); setIsSidebarOpen(false); }}>Historial Movimientos</button>
+          <button className={seccionActual === 'despachos' ? 'active' : ''} onClick={() => { setSeccionActual('despachos'); setIsSidebarOpen(false); }}>Productos por Despachar</button>
+          <button className={seccionActual === 'solicitados' ? 'active' : ''} onClick={() => { setSeccionActual('solicitados'); setIsSidebarOpen(false); }}>Productos Solicitados</button>
           <button className={seccionActual === 'pedidos' ? 'active' : ''} onClick={() => { setSeccionActual('pedidos'); setIsSidebarOpen(false); }}>Productos con Stock Insuficiente</button>
-          {/* <button className={seccionActual === 'movimientos' ? 'active' : ''} onClick={() => { setSeccionActual('movimientos'); setIsSidebarOpen(false); }}>Historial Movimientos</button> */}
         </nav>
       </div>
     </div>

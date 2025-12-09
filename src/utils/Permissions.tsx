@@ -42,6 +42,7 @@ export const PERMISSIONS = {
   //uso extra de admin, al logear en rrhh pasa directo a la vista admin
   [ROLES.ADMIN]: {
     puedeVerCompras: true,
+    puedeModificarInventario: true,
     puedeVerInventario: true,
     puedeVerLogistica: true,
     puedeVerRRHH: true,
@@ -50,6 +51,7 @@ export const PERMISSIONS = {
 
   [ROLES.ADMIN_TI]: {
     puedeVerCompras: false,
+    puedeModificarInventario: false,
     puedeVerInventario: false,
     puedeVerLogistica: true,
     puedeVerRRHH: true,
@@ -58,6 +60,7 @@ export const PERMISSIONS = {
 
   [ROLES.GERENTE]: {
     puedeVerCompras: true,
+    puedeModificarInventario: false,
     puedeVerInventario: true,
     puedeVerLogistica: true,
     puedeVerRRHH: true,
@@ -66,6 +69,7 @@ export const PERMISSIONS = {
   //uso extra de 
   [ROLES.JEFE_DEPARTAMENTO]: {
     puedeVerCompras: true,
+    puedeModificarInventario: false,
     puedeVerInventario: true,
     puedeVerLogistica: false,
     puedeVerRRHH: true,
@@ -74,6 +78,7 @@ export const PERMISSIONS = {
 
   [ROLES.JEFE_AREA]: {
     puedeVerCompras: true,
+    puedeModificarInventario: false,
     puedeVerInventario: true,
     puedeVerLogistica: false,
     puedeVerRRHH: true,
@@ -82,6 +87,7 @@ export const PERMISSIONS = {
 
   [ROLES.JEFE_RRHH]: {
     puedeVerCompras: false,
+    puedeModificarInventario: false,
     puedeVerInventario: false,
     puedeVerLogistica: false,
     puedeVerRRHH: true,
@@ -90,6 +96,7 @@ export const PERMISSIONS = {
 
   [ROLES.SUPERVISOR_RRHH]: {
     puedeVerCompras: false,
+    puedeModificarInventario: false,
     puedeVerInventario: false,
     puedeVerLogistica: false,
     puedeVerRRHH: true,
@@ -98,6 +105,7 @@ export const PERMISSIONS = {
 
   [ROLES.ANALISTA_SELECCION]: {
     puedeVerCompras: false,
+    puedeModificarInventario: false,
     puedeVerInventario: false,
     puedeVerLogistica: false,
     puedeVerRRHH: true,
@@ -106,6 +114,7 @@ export const PERMISSIONS = {
 
   [ROLES.ANALISTA_NOMINA]: {
     puedeVerCompras: false,
+    puedeModificarInventario: false,
     puedeVerInventario: false,
     puedeVerLogistica: false,
     puedeVerRRHH: true,
@@ -114,6 +123,7 @@ export const PERMISSIONS = {
 
   [ROLES.EMPLEADO]: {
     puedeVerCompras: false,
+    puedeModificarInventario: false,
     puedeVerInventario: false,
     puedeVerLogistica: false,
     puedeVerRRHH: true,
@@ -122,7 +132,8 @@ export const PERMISSIONS = {
 
   [ROLES.EMPLEADO_GENERAL]: {
     puedeVerCompras: false,
-    puedeVerInventario: true,
+    puedeModificarInventario: false,
+    puedeVerInventario: false,
     puedeVerLogistica: false,
     puedeVerRRHH: true,
     puedeVerVentas: true,
@@ -130,7 +141,8 @@ export const PERMISSIONS = {
 
   [ROLES.TRANSPORTISTA]: {
     puedeVerCompras: false,
-    puedeVerInventario: true,
+    puedeModificarInventario: false,
+    puedeVerInventario: false,
     puedeVerLogistica: true,
     puedeVerRRHH: true,
     puedeVerVentas: false,
@@ -138,6 +150,7 @@ export const PERMISSIONS = {
 
   [ROLES.TESTING]: {
     puedeVerCompras: true,
+    puedeModificarInventario: true,
     puedeVerInventario: true,
     puedeVerLogistica: true,
     puedeVerRRHH: true,
