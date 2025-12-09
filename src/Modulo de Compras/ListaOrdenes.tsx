@@ -19,6 +19,12 @@ const ListaOrdenes: React.FC = () => {
   const [mensaje, setMensaje] = useState<string>('');
   const [tipoMensaje, setTipoMensaje] = useState<'success' | 'error' | 'warning'>('success');
   const [contadorSinStock, setContadorSinStock] = useState<number>(0);
+  
+  // Estado para el modal de confirmación
+  const [mostrarConfirmacion, setMostrarConfirmacion] = useState<boolean>(false);
+  const [accionConfirmar, setAccionConfirmar] = useState<() => void>(() => {});
+  const [mensajeConfirmacion, setMensajeConfirmacion] = useState<string>('');
+  const [tituloConfirmacion, setTituloConfirmacion] = useState<string>('Confirmar Acción');
 
   // Verificar si el usuario es Jefe de Compras (tiene permisos para aprobar/rechazar/eliminar)
   const esJefeCompras = user?.rol === 'JEFE_COMPRAS' || user?.rol === 'ADMIN' || user?.rol === 'GERENTE' || user?.rol === 'TESTING';
@@ -105,8 +111,20 @@ const ListaOrdenes: React.FC = () => {
     }, 5000);
   };
 
+  const cancelarConfirmacion = () => {
+    setMostrarConfirmacion(false);
+    setAccionConfirmar(() => {});
+  };
+
+  const ejecutarConfirmacion = () => {
+    accionConfirmar();
+    setMostrarConfirmacion(false);
+  };
+
   const eliminarOrden = async (id: number) => {
-    if (confirm('¿Está seguro de que desea eliminar esta orden de compra? Esta acción no se puede deshacer.')) {
+    setTituloConfirmacion('Eliminar Orden');
+    setMensajeConfirmacion('¿Está seguro de que desea eliminar esta orden de compra? Esta acción no se puede deshacer.');
+    setAccionConfirmar(() => async () => {
       try {
         setEliminando(id); // Marcar que esta orden se está eliminando
         console.log(`Intentando eliminar orden con ID: ${id}`);
@@ -125,14 +143,15 @@ const ListaOrdenes: React.FC = () => {
         });
         
         // Mostrar mensaje de éxito
-        alert('Orden eliminada exitosamente');
+        mostrarMensaje('Orden eliminada exitosamente', 'success');
       } catch (error) {
         console.error('Error al eliminar orden:', error);
-        alert(`Error al eliminar la orden: ${error instanceof Error ? error.message : 'Error desconocido'}`);
+        mostrarMensaje(`Error al eliminar la orden: ${error instanceof Error ? error.message : 'Error desconocido'}`, 'error');
       } finally {
         setEliminando(null); // Limpiar el estado de eliminando
       }
-    }
+    });
+    setMostrarConfirmacion(true);
   };
 
   const toggleSeleccionOrden = (id: number) => {
@@ -164,11 +183,13 @@ const ListaOrdenes: React.FC = () => {
     const cantidadSeleccionadas = ordenesSeleccionadas.size;
     
     if (cantidadSeleccionadas === 0) {
-      alert('No hay órdenes seleccionadas para eliminar.');
+      mostrarMensaje('No hay órdenes seleccionadas para eliminar.', 'warning');
       return;
     }
 
-    if (confirm(`¿Está seguro de que desea eliminar ${cantidadSeleccionadas} orden(es) seleccionada(s)? Esta acción no se puede deshacer.`)) {
+    setTituloConfirmacion('Eliminar Órdenes Seleccionadas');
+    setMensajeConfirmacion(`¿Está seguro de que desea eliminar ${cantidadSeleccionadas} orden(es) seleccionada(s)? Esta acción no se puede deshacer.`);
+    setAccionConfirmar(() => async () => {
       try {
         setEliminandoSeleccionadas(true);
         
@@ -185,14 +206,15 @@ const ListaOrdenes: React.FC = () => {
         // Limpiar selecciones
         setOrdenesSeleccionadas(new Set());
         
-        alert(`${cantidadSeleccionadas} orden(es) eliminada(s) exitosamente`);
+        mostrarMensaje(`${cantidadSeleccionadas} orden(es) eliminada(s) exitosamente`, 'success');
       } catch (error) {
         console.error('Error al eliminar órdenes seleccionadas:', error);
-        alert(`Error al eliminar algunas órdenes: ${error instanceof Error ? error.message : 'Error desconocido'}`);
+        mostrarMensaje(`Error al eliminar algunas órdenes: ${error instanceof Error ? error.message : 'Error desconocido'}`, 'error');
       } finally {
         setEliminandoSeleccionadas(false);
       }
-    }
+    });
+    setMostrarConfirmacion(true);
   };
 
   const formatearFecha = (fecha: string): string => {
@@ -359,7 +381,8 @@ const ListaOrdenes: React.FC = () => {
 
       {mensaje && (
         <div className={`mensaje-notificacion ${tipoMensaje}`}>
-          {mensaje}
+          <p>{mensaje}</p>
+          <button onClick={() => setMensaje('')} className="btn-cerrar-mensaje">×</button>
         </div>
       )}
 
@@ -479,6 +502,28 @@ const ListaOrdenes: React.FC = () => {
           </div>
         )}
       </div>
+
+      {/* Modal de Confirmación */}
+      {mostrarConfirmacion && (
+        <div className="modal-overlay" onClick={cancelarConfirmacion}>
+          <div className="modal-dialog" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3>{tituloConfirmacion}</h3>
+            </div>
+            <div className="modal-body">
+              <p>{mensajeConfirmacion}</p>
+            </div>
+            <div className="modal-footer">
+              <button onClick={cancelarConfirmacion} className="btn-modal-cancelar">
+                Cancelar
+              </button>
+              <button onClick={ejecutarConfirmacion} className="btn-modal-confirmar">
+                Confirmar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -10,6 +10,8 @@ const SolicitudesNuevosProductos: React.FC = () => {
   const [solicitudes, setSolicitudes] = useState<SolicitudProducto[]>([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState('');
+  const [mensaje, setMensaje] = useState('');
+  const [tipoMensaje, setTipoMensaje] = useState<'success' | 'error'>('success');
   
   // Estado para el modal
   const [solicitudSeleccionada, setSolicitudSeleccionada] = useState<SolicitudProducto | null>(null);
@@ -18,6 +20,12 @@ const SolicitudesNuevosProductos: React.FC = () => {
   useEffect(() => {
     cargarSolicitudes();
   }, []);
+
+  const mostrarMensaje = (texto: string, tipo: 'success' | 'error' = 'success') => {
+    setMensaje(texto);
+    setTipoMensaje(tipo);
+    setTimeout(() => setMensaje(''), 5000);
+  };
 
   const cargarSolicitudes = async () => {
     try {
@@ -42,6 +50,7 @@ const SolicitudesNuevosProductos: React.FC = () => {
     setSolicitudSeleccionada(null);
     if (recargar) {
       cargarSolicitudes();
+      mostrarMensaje('Producto creado y vinculado al proveedor exitosamente.', 'success');
     }
   };
 
@@ -55,6 +64,13 @@ const SolicitudesNuevosProductos: React.FC = () => {
           ← Volver
         </button>
       </div>
+
+      {mensaje && (
+        <div className={`mensaje-notificacion ${tipoMensaje}`}>
+          <p>{mensaje}</p>
+          <button onClick={() => setMensaje('')} className="btn-cerrar-mensaje">×</button>
+        </div>
+      )}
 
       {error && <div className="mensaje-error">{error}</div>}
 
@@ -183,7 +199,7 @@ const ProcesarSolicitudModal: React.FC<ModalProps> = ({ solicitud, onClose, user
       };
 
       await comprasService.procesarSolicitud(payload);
-      alert('Producto creado y vinculado al proveedor exitosamente.');
+      // alert('Producto creado y vinculado al proveedor exitosamente.'); // Eliminado para usar notificación en el padre
       onClose(true); // Cerrar y recargar
     } catch (err) {
       console.error(err);
