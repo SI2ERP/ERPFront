@@ -25,7 +25,7 @@ const VistaPedidos = () => {
 
   return (
     <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
-      <h2 style={{ marginBottom: '1rem', fontSize: '1.5em' }}>Productos con Stock Insuficiente</h2>
+      <h2 style={{ marginBottom: '1rem', fontSize: '1.5em', color: 'white' }}>Productos con Stock Insuficiente</h2>
       {error && <p className="error-mensaje">{error}</p>}
 
       <div className="tabla-wrapper">

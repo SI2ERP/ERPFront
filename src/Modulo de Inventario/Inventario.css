@@ -263,6 +263,8 @@
   background-color: #4a4a4a;
   border-color: #555;
   color: #f0f0f0;
+  border-radius: 25px;
+  padding: 5px 15px;
 }
 .modal-footer .btn-cancelar:hover {
   background-color: #5a5a5a;
@@ -273,6 +275,9 @@
   background-color: #646cff;
   border-color: #646cff;
   color: white;
+  
+  border-radius: 25px;
+  padding: 5px 15px;
 }
 .modal-footer .btn-submit:hover {
   background-color: #535bf2;
