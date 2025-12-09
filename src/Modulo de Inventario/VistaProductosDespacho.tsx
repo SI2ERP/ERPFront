@@ -41,7 +41,7 @@ const VistaProductosDespacho = () => {
 
     return (
         <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
-            <h2 style={{ marginBottom: '1.5rem', fontSize: '1.5em' }}>Productos Pendientes de Despacho</h2>
+            <h2 style={{ marginBottom: '1.5rem', fontSize: '1.5em', color: 'white' }}>Productos Pendientes de Despacho</h2>
 
             {error && <p className="error-mensaje">{error}</p>}
 
