@@ -75,7 +75,7 @@ const FormularioIngreso = ({ isOpen, onClose, onSuccess }: FormularioIngresoProp
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
           {/* CAMBIO: Título actualizado */}
-          <h2>Solicitar Nuevo Producto</h2>
+          <h2 style={{ color: 'white' }}>Solicitar Nuevo Producto</h2>
           <button className="btn-cerrar" onClick={onClose}>&times;</button>
         </div>
         
