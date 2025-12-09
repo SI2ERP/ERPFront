@@ -14,7 +14,7 @@ type Empleado = {
 };
 const AUTH_BACKEND_URL = import.meta.env.VITE_URL_AUTH_BACKEND;
 
-const Login = () => {
+/* const Login = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
 
@@ -129,7 +129,7 @@ const Login = () => {
     </div>
   );
 };
-
+ */
 export default function Login() {
   const { login } = useAuth();
 

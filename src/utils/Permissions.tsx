@@ -25,6 +25,8 @@ export const ROLES = {
   EMPLEADO_INVENTARIO: "EMPLEADO_INVENTARIO",
   EMPLEADO_AREA: "EMPLEADO_AREA",
 
+  ADMIN_INVENTARIO: "ADMIN_INVENTARIO",
+
 } as const;
 
 export type PermissionKey =
@@ -159,6 +161,7 @@ export const PERMISSIONS = {
 
   [ROLES.JEFE_COMPRAS]: {
     puedeVerCompras: true,
+    puedeModificarInventario: false,
     puedeVerInventario: false,
     puedeVerLogistica: false,
     puedeVerRRHH: true,
@@ -167,6 +170,7 @@ export const PERMISSIONS = {
 
   [ROLES.JEFE_LOGISTICA]: {
     puedeVerCompras: false,
+    puedeModificarInventario: false,
     puedeVerInventario: false,
     puedeVerLogistica: true,
     puedeVerRRHH: true,
@@ -175,6 +179,7 @@ export const PERMISSIONS = {
 
   [ROLES.JEFE_VENTAS]: {
     puedeVerCompras: false,
+    puedeModificarInventario: false,
     puedeVerInventario: false,
     puedeVerLogistica: false,
     puedeVerRRHH: true,
@@ -183,6 +188,7 @@ export const PERMISSIONS = {
 
   [ROLES.JEFE_INVENTARIO]: {
     puedeVerCompras: false,
+    puedeModificarInventario: true,
     puedeVerInventario: true,
     puedeVerLogistica: false,
     puedeVerRRHH: true,
@@ -191,6 +197,7 @@ export const PERMISSIONS = {
 
   [ROLES.EMPLEADO_COMPRAS]: {
     puedeVerCompras: true,
+    puedeModificarInventario: false,
     puedeVerInventario: false,
     puedeVerLogistica: false,
     puedeVerRRHH: true,
@@ -199,6 +206,7 @@ export const PERMISSIONS = {
 
   [ROLES.EMPLEADO_LOGISTICA]: {
     puedeVerCompras: false,
+    puedeModificarInventario: false,
     puedeVerInventario: false,
     puedeVerLogistica: true,
     puedeVerRRHH: true,
@@ -207,6 +215,7 @@ export const PERMISSIONS = {
 
   [ROLES.EMPLEADO_VENTAS]: {
     puedeVerCompras: false,
+    puedeModificarInventario: false,
     puedeVerInventario: false,
     puedeVerLogistica: false,
     puedeVerRRHH: true,
@@ -215,6 +224,7 @@ export const PERMISSIONS = {
 
   [ROLES.EMPLEADO_INVENTARIO]: {
     puedeVerCompras: false,
+    puedeModificarInventario: false,
     puedeVerInventario: true,
     puedeVerLogistica: false,
     puedeVerRRHH: true,
@@ -223,14 +233,21 @@ export const PERMISSIONS = {
 
   [ROLES.EMPLEADO_AREA]: {
     puedeVerCompras: false,
-    puedeVerInventario: true,
+    puedeModificarInventario: false,
+    puedeVerInventario: false,
     puedeVerLogistica: false,
     puedeVerRRHH: true,
     puedeVerVentas: true,
   },
 
-
-
+  [ROLES.ADMIN_INVENTARIO]: {
+    puedeVerCompras: false,
+    puedeModificarInventario: true,
+    puedeVerInventario: true,
+    puedeVerLogistica: false,
+    puedeVerRRHH: true,
+    puedeVerVentas: true,
+  },
 };
 
 /* Función para ver permisos */
